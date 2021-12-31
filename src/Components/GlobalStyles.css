@@ -1,0 +1,54 @@
+.containerBox {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    width: 100%;
+    height: 100vh;
+}
+
+.roundButton {
+  border-radius: 100px;
+}
+
+.title {
+  font-size: 600%;
+  text-align: center;
+  width: 100%;
+}
+
+.buttonGrid {
+  width: 40%;
+}
+
+.loginPaper {
+  max-width: 400px;
+  width: 50%; 
+  height: 35%;
+  min-height: 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+}
+
+.loginTextField.MuiInputBase-root {
+  border: 2px solid rgb(207, 207, 207);
+  border-radius: 90px;
+  padding-left: 20px; 
+  padding-right: 20px;
+  width: 80%;
+  transition: border 1s linear;
+  height: 50px;
+}
+.loginTextField.Mui-focused {
+  border: 2px solid #3f51b5;
+  transition: border 1s linear;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
