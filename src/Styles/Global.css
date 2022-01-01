@@ -1,0 +1,67 @@
+.containerBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  text-align: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.roundButton {
+  border-radius: 100px!important;
+  font-family: 'Roboto';
+  background-color: #eef7ff!important;
+  color: #0284fe!important;
+  box-shadow: none!important;
+  font-weight: 900!important;
+  letter-spacing: 3px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.EmailField.MuiInputBase-root {
+  border: 2px solid rgb(180, 178, 178);
+  border-radius: 90px;
+  padding-left: 20px; 
+  padding-right: 20px;
+  width: 80%;
+  transition: border 0.5s linear;
+  height: 50px;
+  font-family: 'Roboto';
+  margin-bottom: 2%;
+  margin-top: 2%!important;
+  font-weight: 900;
+}
+.EmailField.Mui-focused {
+  border: 2px solid #0284fe;
+  transition: border 0.5s linear;
+}
+
+.PasswordField.MuiInputBase-root {
+  border: 2px solid rgb(180, 178, 178);
+  border-radius: 90px;
+  padding-left: 20px; 
+  padding-right: 23px;
+  width: 80%;
+  transition: border 0.5s linear;
+  height: 50px;
+  font-family: 'Roboto';
+  margin-top: 2%;
+  margin-bottom: 2%;
+  font-weight: 900;
+}
+.PasswordField.Mui-focused {
+  border: 2px solid #0284fe;
+  transition: border 0.5s linear;
+}
+.PasswordField.Mui-error {
+  border: 2px solid #ff0800;
+  transition: border 0.5s linear;
+}
+
+

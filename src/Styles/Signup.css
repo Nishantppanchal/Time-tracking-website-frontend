@@ -1,0 +1,93 @@
+.registerPaper {
+    max-width: 700px;
+    width: 70%; 
+    height: 85%;
+    min-height: 250px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px!important;
+    border-radius: 10%/10%!important;
+  }
+  
+.nameField.MuiInputBase-root {
+    border: 2px solid rgb(180, 178, 178);
+    border-radius: 90px;
+    padding-left: 20px; 
+    padding-right: 20px;
+    width: 100%;
+    transition: border 0.5s linear;
+    height: 50px;
+    font-family: 'Roboto';
+    margin-top: 0%!important;
+    font-weight: 900;
+  }
+.nameField.Mui-focused {
+    border: 2px solid #0284fe;
+    transition: border 0.5s linear;
+  }
+
+.nameGrid {
+    width: 80%!important;
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
+
+.registerRoundButton {
+    border-radius: 100px!important;
+    font-family: 'Roboto';
+    background-color: #cee7fd!important;
+    color: #0284fe!important;
+    box-shadow: none!important;
+    height: 50px;
+    font-weight: 900!important;
+    letter-spacing: 3px;
+    margin-top: 4%!important;
+}
+.registerRoundButton:hover {
+    background-color: #a9d7ff!important;
+  
+}
+
+.spacerRegister {
+    height: 5%;
+}
+
+.createPasswordCollapse {
+    width: 100%!important;
+}
+
+.collapseBoxAlign {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    text-align: center;
+}
+
+.passwordPopOver {
+    pointer-events: none;
+    
+}
+
+.passwordPopOver .MuiPopover-paper{  /* Combine after CSS injection */
+    border-radius: 10%/15%!important;
+}
+
+.passwordAlert {
+    border-radius: 100px!important;
+    width: 80%;
+    margin-bottom: 0%;
+    margin-top: 1%;
+    height: 50px;
+    padding: 0px!important;
+    align-items: center;
+
+}
+.passwordAlert .MuiAlert-icon { /* Combine after CSS injection */
+    padding-left: 5%!important;
+}

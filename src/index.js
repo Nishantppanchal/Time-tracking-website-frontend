@@ -6,16 +6,17 @@ import {
   Route
 } from "react-router-dom";
 // Import Apps 
-import Home from './Components/Home';
+import Entry from './Components/Entry';
 import Login from './Components/Login';
 import SignUp from './Components/Signup'
+import Home from './Components/Home';
 // Import Material UI components
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 // Create custom theme
 const theme = createTheme({
   palette: {
-    type: 'light', //Dark or light them
+    type: 'light', //Dark or light theme
     primary: {
       main: '#3f51b5', // Primary color
     },
@@ -23,6 +24,17 @@ const theme = createTheme({
       main: '#f50057', // Seconday color
     },
     divider: '#929292', // Divider color
+    visiblity: {
+      main: '#81c784',
+    },
+    visibilityOff: {
+      main: '#b4b2b2',
+    },
+  },
+  typography: {
+    fontFamily: [
+      'Roboto',
+    ],
   },
 });
 
@@ -33,9 +45,10 @@ render(
       <ThemeProvider theme={theme} > {/* Assign custom theme */}
         <Routes> 
           <Route path='/' > {/* Root directory */}
-            <Route index element={<Home />} /> {/* Assigns a component to the root directory */}
+            <Route index element={<Entry />} /> {/* Assigns a component to the root directory */}
             <Route path='login' element={<Login />} /> {/* Login page */}
-            <Route path='login' element={<SignUp />} /> {/* Sign Up page */}
+            <Route path='Signup' element={<SignUp />} /> {/* Sign Up page */}
+            <Route path='Home' element={<Home />} /> {/* Home page */}
           </Route>
         </Routes>
       </ThemeProvider>
