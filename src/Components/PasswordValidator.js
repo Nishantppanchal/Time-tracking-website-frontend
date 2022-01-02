@@ -1,4 +1,6 @@
-function passwordValidator(password, retypedPassword) {
+function passwordValidator(inputs) {
+    let password = inputs.password
+    let retypedPassword = inputs.retypedPassword
     var validLength = ((password.length >= 8) ? true : false);
     var hasUpperCase = (password.toLowerCase() !== password);
     var hasLowerCase = (password.toUpperCase() !== password);
@@ -23,9 +25,9 @@ function passwordValidator(password, retypedPassword) {
     if (!hasSpecialChar) {
         errors.push('Password must have atleat one special character')
     }
-    // if (!doesMatch) {
-    //     errors.push('The passwords do not match')
-    // }
+    if (!doesMatch) {
+        errors.push('The passwords do not match')
+    }
 
     return errors
 };

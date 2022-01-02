@@ -8,12 +8,12 @@
   justify-content: center;
   align-items: center;
   align-content: center;
-  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px!important;
-  border-radius: 10%/10%!important;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  border-radius: 10%/10%;
 }
 
 .createOneLink {
-  color: #0284fe!important;
+  color: #0284fe;
   text-decoration: none;
 }
 
@@ -26,17 +26,17 @@
 }
 
 .loginRoundButton {
-  border-radius: 100px!important;
+  border-radius: 100px;
   font-family: 'Roboto';
-  background-color: #cee7fd!important;
-  color: #0284fe!important;
-  box-shadow: none!important;
+  background-color: #cee7fd;
+  color: #0284fe;
+  box-shadow: none;
   height: 50px;
-  font-weight: 900!important;
+  font-weight: 900;
   letter-spacing: 3px;
-  margin-top: 2%!important;
+  margin-top: 2%;
   }
 .loginRoundButton:hover {
-  background-color: #a9d7ff!important;
+  background-color: #a9d7ff;
 
 }

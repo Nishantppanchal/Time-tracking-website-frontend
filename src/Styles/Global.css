@@ -10,12 +10,12 @@
 }
 
 .roundButton {
-  border-radius: 100px!important;
+  border-radius: 100px;
   font-family: 'Roboto';
-  background-color: #eef7ff!important;
-  color: #0284fe!important;
-  box-shadow: none!important;
-  font-weight: 900!important;
+  background-color: #eef7ff;
+  color: #0284fe;
+  box-shadow: none;
+  font-weight: 900;
   letter-spacing: 3px;
 }
 
@@ -34,7 +34,7 @@
   height: 50px;
   font-family: 'Roboto';
   margin-bottom: 2%;
-  margin-top: 2%!important;
+  margin-top: 2%;
   font-weight: 900;
 }
 .EmailField.Mui-focused {
@@ -60,6 +60,10 @@
   transition: border 0.5s linear;
 }
 .PasswordField.Mui-error {
+  border: 2px solid #ff0800;
+  transition: border 0.5s linear;
+}
+.PasswordField.Mui-su {
   border: 2px solid #ff0800;
   transition: border 0.5s linear;
 }

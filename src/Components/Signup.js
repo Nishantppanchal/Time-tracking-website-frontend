@@ -16,7 +16,6 @@ import { VisibilityOutlined } from '@mui/icons-material';
 import Grid from '@mui/material/Grid';
 import Collapse from '@mui/material/Collapse';
 import Alert from '@mui/material/Alert'
-import Popover from '@mui/material/Popover';
 // Import React Components
 import { Link, useNavigate } from "react-router-dom";
 // Import Custom Components
@@ -55,8 +54,11 @@ function SignUp () {
             };
         };
         if (e.target.name == 'password' || 'retypedPassword') {
-            console.log(inputData.retypedPassword)
-            const errors = passwordValidator(e.target.value, inputData.retypedPassword)
+            let inputs = (e.target.name == 'password' ? 
+                {password: e.target.value, retypedPassword: inputData.retypedPassword} :
+                {password: inputData.password, retypedPassword: e.target.value})
+            console.log(inputs)
+            const errors = passwordValidator(inputs)
             if (errors.length != 0) {
                 console.log('cool')
                 setPasswordValidationStatus({
@@ -186,7 +188,7 @@ function SignUp () {
                 </Collapse>
 
                 <Box width='80%'>
-                    <Button variant="contained" className='registerRoundButton' fullWidth onClick={handleSubmit}>Login</Button>
+                    <Button variant="contained" className='registerRoundButton' fullWidth onClick={handleSubmit}>SIGN UP</Button>
                 </Box>
             </Paper>
         </Box>
