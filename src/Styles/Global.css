@@ -41,6 +41,10 @@
   border: 2px solid #0284fe;
   transition: border 0.5s linear;
 }
+.EmailField.Mui-error {
+  border: 2px solid #ff0800;
+  transition: border 0.5s linear;
+}
 
 .PasswordField.MuiInputBase-root {
   border: 2px solid rgb(180, 178, 178);
@@ -63,9 +67,4 @@
   border: 2px solid #ff0800;
   transition: border 0.5s linear;
 }
-.PasswordField.Mui-su {
-  border: 2px solid #ff0800;
-  transition: border 0.5s linear;
-}
-
 

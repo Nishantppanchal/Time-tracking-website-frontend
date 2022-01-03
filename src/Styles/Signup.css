@@ -28,6 +28,10 @@
     border: 2px solid #0284fe;
     transition: border 0.5s linear;
   }
+.nameField.Mui-error {
+    border: 2px solid #ff0800;
+    transition: border 0.5s linear;
+  }
 
 .nameGrid {
     width: 80%;

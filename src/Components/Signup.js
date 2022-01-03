@@ -20,12 +20,15 @@ import Alert from '@mui/material/Alert'
 import { Link, useNavigate } from "react-router-dom";
 // Import Custom Components
 import passwordValidator from './PasswordValidator'
+import axios from 'axios';
 
 function SignUp () {
     let navigate = useNavigate()
     
     const [passwordVisibility, setPasswordVisibility] = useState(false)
     const [inputData, updateInputData] = useState({
+        firstName: '',
+        lastName: '',
         email: '',
         password: '',
         retypedPassword: '',
@@ -35,13 +38,17 @@ function SignUp () {
         hasError: false,
         errors: [],
     })
-    const [popOverStatus, setPopOverStatus] = useState(null)
+    const [formValidationStatus, setFormValidationStatus] = useState({
+        firstName: {hasError: false, errors: null},
+        lastName: {hasError: false, errors: null},
+        email: {hasError: false, errors: null},
+    })
 
     function handleShowPassword() {
         setPasswordVisibility(!passwordVisibility)
     }
 
-    function handleLoginChange(e) {
+    function handleRegisterChange(e) {
         updateInputData({
             ...inputData,
             [e.target.name]: e.target.value,
@@ -53,7 +60,7 @@ function SignUp () {
                 setRetypePasswordStatus(false);
             };
         };
-        if (e.target.name == 'password' || 'retypedPassword') {
+        if (e.target.name == 'password' || e.target.name == 'retypedPassword') {
             let inputs = (e.target.name == 'password' ? 
                 {password: e.target.value, retypedPassword: inputData.retypedPassword} :
                 {password: inputData.password, retypedPassword: e.target.value})
@@ -72,20 +79,70 @@ function SignUp () {
                     errors: [],
                 })
             }
-        };
+        } else if (e.target.value != '') {
+            setFormValidationStatus({
+                ...formValidationStatus,
+                [e.target.name]: { hasError: false, errors:null }
+            }).then(console.log(formValidationStatus));
+        }
     };
 
     function handleSubmit(e) {
         e.preventDefault();
-        // Send request here
-        navigate('/home')
-    }
+        var error = false
+        var data = formValidationStatus
+        if (passwordValidator({password: inputData.password, retypedPassword: inputData.retypedPassword}).lenght == 0) {error = true;} 
+        if (inputData.password == '') {
+            setPasswordValidationStatus({
+                hasError: true,
+                errors: [... new Set(['password field is empty', ...passwordValidationStatus.errors])],
+            });
+            error = true;
+        }  
+        if (inputData.firstName == '') {
+            data = {
+                ...data,
+                firstName: { hasError: true, errors: 'field is empty' },
+            }
+            error = true;
+        } 
+        if (inputData.lastName == '') {
+            data = {
+                ...data,
+                lastName: { hasError: true, errors: 'field is empty' },
+            };
+            error = true;
+        }
+        if (inputData.email == '') {
+            data = {
+                ...data,
+                email: { hasError: true, errors: 'field is empty' },
+            };
+            error = true;
+        }
+        setFormValidationStatus(data);
 
-    function handleAlertPopOverOpen(e) {
-        setPopOverStatus(e.currentTarget)
-    }
-    function handleAlertPopOverClose(e) {
-        setPopOverStatus(null)
+        if (error == false) {
+            axios.post('http://127.0.0.1:8000/api/user/register/', {
+                first_name: inputData.firstName,
+                last_name: inputData.lastName,
+                email: inputData.email,
+                password: inputData.password,
+            }).then((response) => {
+                if (response.status === 201) {
+                    navigate('/home')
+                }
+            }).catch((error) => {
+                console.log(error)
+                if (error.response.status === 400) {
+                    setFormValidationStatus({
+                        ...formValidationStatus,
+                        email: { hasError: true, errors: 'This email is already in use' },
+                    });
+                };
+            });
+
+        };
     }
 
     return(
@@ -101,35 +158,39 @@ function SignUp () {
                 <Box className='spacerRegister' />
                 <Grid container spacing={0} className='nameGrid'>
                     <Grid item xs={5.7}>
+                        {console.log(formValidationStatus.firstName.hasError)}
                         <InputBase 
-                            name='firstname'
-                            id='firstname'
+                            error={formValidationStatus.firstName.hasError}
+                            name='firstName'
+                            id='firstName'
                             label='firstname'
                             className='nameField' 
                             placeholder="first name" 
                             autoComplete='given-name'
-                            onChange={handleLoginChange}/>
+                            onChange={handleRegisterChange}/>
                     </Grid>
                     <Grid item xs/>
                     <Grid item xs={5.7}>
                         <InputBase 
-                            name='firstname'
-                            id='firstname'
-                            label='firstname'
+                            error={formValidationStatus.lastName.hasError}
+                            name='lastName'
+                            id='lastName'
+                            label='lastName'
                             className='nameField' 
                             placeholder="last name" 
                             autoComplete='family-name'
-                            onChange={handleLoginChange}/>
+                            onChange={handleRegisterChange}/>
                     </Grid>
                 </Grid>
                 <InputBase 
+                    error={formValidationStatus.email.hasError}
                     name='email'
                     id='email'
                     label='email'
                     className='EmailField' 
                     placeholder="jamesdoe@gmail.com" 
                     autoComplete='email'
-                    onChange={handleLoginChange}
+                    onChange={handleRegisterChange}
                     endAdornment={
                         <InputAdornment position="end"><EmailIcon color='visibilityOff' /></InputAdornment>
                     }/>
@@ -140,7 +201,7 @@ function SignUp () {
                     placeholder="password" 
                     type={passwordVisibility ? 'text' : 'password'}
                     autoComplete='new-password'
-                    onChange={handleLoginChange}
+                    onChange={handleRegisterChange}
                     error={passwordValidationStatus.hasError}
                     endAdornment={
                         <InputAdornment position="end">
@@ -162,7 +223,7 @@ function SignUp () {
                             placeholder="retype password" 
                             type={passwordVisibility ? 'text' : 'password'}
                             autoComplete='new-password'
-                            onChange={handleLoginChange}
+                            onChange={handleRegisterChange}
                             error={passwordValidationStatus.hasError}
                             endAdornment={
                                 <InputAdornment position="end">
