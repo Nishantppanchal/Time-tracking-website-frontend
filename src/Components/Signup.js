@@ -20,7 +20,9 @@ import Alert from '@mui/material/Alert'
 import { Link, useNavigate } from "react-router-dom";
 // Import Custom Components
 import passwordValidator from './PasswordValidator'
+// Import Axios
 import axios from 'axios';
+
 
 function SignUp () {
     let navigate = useNavigate()
@@ -133,7 +135,6 @@ function SignUp () {
                     navigate('/home')
                 }
             }).catch((error) => {
-                console.log(error)
                 if (error.response.status === 400) {
                     setFormValidationStatus({
                         ...formValidationStatus,

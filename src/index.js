@@ -14,7 +14,6 @@ import Home from './Components/Home';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { StyledEngineProvider } from '@mui/material/styles';
 
-
 // Create custom theme
 const theme = createTheme({
   palette: {
@@ -50,8 +49,8 @@ render(
             <Route path='/' > {/* Root directory */}
               <Route index element={<Entry />} /> {/* Assigns a component to the root directory */}
               <Route path='login' element={<Login />} /> {/* Login page */}
-              <Route path='Signup' element={<SignUp />} /> {/* Sign Up page */}
-              <Route path='Home' element={<Home />} /> {/* Home page */}
+              <Route path='signup' element={<SignUp />} /> {/* Sign Up page */}
+              <Route path='home' element={<Home />} /> {/* Home page */}
             </Route>
           </Routes>
         </ThemeProvider>
