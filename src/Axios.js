@@ -13,7 +13,6 @@ const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     function (response) {
-        console.log(response);
         return response;
     }
 )
@@ -22,7 +21,6 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
     function (response) {
-        console.log('cool');
         return response;
     },
     async function (error) {
@@ -35,14 +33,13 @@ axiosInstance.interceptors.response.use(
             } else {
                 refreshToken = sessionStorage.getItem('refresh_token')
             }
-            console.log(refreshToken)
             
             if (refreshToken == null) {
                 window.location.href = '/login/';
             }
             
             
-            axios.post(
+            const test = await axios.post(
                 'http://127.0.0.1:8000/api/auth/token/', {
                 refresh_token: refreshToken,
                 grant_type: 'refresh_token',
@@ -58,9 +55,9 @@ axiosInstance.interceptors.response.use(
 
                 axiosInstance.defaults.headers['Authorization'] = 'Bearer ' + response.data.access_token;
                 originalRequest.headers['Authorization'] = 'Bearer ' + response.data.access_token;
-            }).then(() => {
-                console.log(originalRequest)
-                return axiosInstance(originalRequest); // Gets original request to rerun
+            }).then(async () => {
+                const data = await axiosInstance(originalRequest)
+                return data; // Gets original request to rerun
             }).catch(((error) => {
                 if (error.response.detail == 'invalid_grant') {
                     if (localStorage.getItem('refresh_token')) {
@@ -74,6 +71,8 @@ axiosInstance.interceptors.response.use(
                 }
             }));
 
+            error.response.data.requestData = test
+            return Promise.reject(error);
         };
         return Promise.reject(error);
     }
