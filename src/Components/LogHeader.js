@@ -13,6 +13,9 @@ import Chip from '@mui/material/Chip';
 import Button from '@mui/material/Button';
 
 
+import DescriptionWithTagsInput from './DescriptionWithTags';
+
+
 import { useEffect, useState } from 'react';
 import axiosInstance from '../Axios';
 
@@ -26,6 +29,14 @@ function LogHeader() {
     const [date, setDate] = useState(DateTime.now())
     const [duration, setDuration] = useState()
 
+
+    const styleMap = {
+        'STRIKETHROUGH': {
+          textDecoration: 'line-through',
+        },
+    };
+
+    
 
     useEffect(() => {
         axiosInstance.get('clientProjectGet/').then(
@@ -89,7 +100,7 @@ function LogHeader() {
             setDuration(event.target.value);
         };
 
-        console.log(date)
+
 
         return (
             <Paper>
@@ -173,6 +184,7 @@ function LogHeader() {
                         />
                     </Stack>
                     <Button variant="text" onClick={handleLogButton}>Log It</Button>
+                    <DescriptionWithTagsInput tags={CPData} />
                 </Stack>
             </Paper>
         );

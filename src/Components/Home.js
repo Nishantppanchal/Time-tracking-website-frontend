@@ -6,6 +6,8 @@ import Paper from '@mui/material/Paper';
 import './../Styles/Home.css';
 import LogHeader from './LogHeader';
 
+
+
 function Home () {
 
     const [isLoading, setIsLoading] = useState({
@@ -65,7 +67,9 @@ function Home () {
     // }
     
     return (
-        <LogHeader />
+        <div>
+            <LogHeader />
+        </div>
     );
     
 };
