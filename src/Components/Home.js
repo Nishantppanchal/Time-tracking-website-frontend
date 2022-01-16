@@ -5,72 +5,118 @@ import Skeleton from '@mui/material/Skeleton';
 import Paper from '@mui/material/Paper';
 import './../Styles/Home.css';
 import LogHeader from './LogHeader';
+import { Typography } from '@mui/material';
+import { DataGrid } from '@mui/x-data-grid';
 
 
 
 function Home () {
+    const [CPData, setCPData] = useState([]);
+    const [tagsData, setTagsData] = useState([]);
+    const [logData, setLogData] = useState([])
 
-    const [isLoading, setIsLoading] = useState({
-        loading: true,
-        timer: null,
-    })
+    const [isCPDataLoading, setIsCPDataLoading] = useState(true)
+    const [isTagsDataLoading, setIsTagsDataLoading] = useState(true)
+    const [isLogDataLoading, setIsLogDataLoading] = useState(true)
 
+    const columns = [
+        { 
+            field: 'client/project', 
+            headerName: 'client/project', 
+            width: 90,  
+            valueGetter: (params) => 
+                (params.getValue(params.id, 'client') ? 
+                    CPData.filter((data) => data.id == params.getValue(params.id, 'client') && data.type == 'clients')[0].name : 
+                    CPData.filter((data) => data.id == params.getValue(params.id, 'project') && data.type == 'projects')[0].name
+                ),
+        },
+        {}
+    ]
 
-    // useEffect(async () => {
-    //     axiosInstance.get('timerCRUD/', {
-    //     }).then(
-    //         (response) => {
-    //             if (response.data.length == 1) {
-    //                 setIsLoading({
-    //                     loading: false,
-    //                     timer: response.data[0],
-    //                 });
-    //             } else {
-    //                 setIsLoading({
-    //                     loading: false,
-    //                     timer: null,
-    //                 });
-    //             };
-    //     }).catch((error) => {
-    //         if (error.response.data.detail == "Invalid token header. No credentials provided.") {
-    //             console.log(error)
-    //             if (error.response.data.requestData.data.length == 1) {
-    //                 setIsLoading({
-    //                     loading: false,
-    //                     timer: error.response.data.requestData.data[0],
-    //                 });
-    //             } else {
-    //                 setIsLoading({
-    //                     loading: false,
-    //                     timer: null,
-    //                 });
-    //             };
-    //         }
-    //     });
-    // }, [setIsLoading])
-    // axios.get('http://127.0.0.1:8000/api/timerCRUD/', {headers: {
-    //     Authorization: 'Bearer ' + localStorage.getItem('access_token'),
-    //     'Content-Type': 'application/json',
-    //     accept: 'application/json'
-    // }} )
+    useEffect(() => {
+        axiosInstance.get('CRUD/logs/').then(
+            (response) => {
+                console.log(response.data)
+                setLogData(response.data);
+                setIsLogDataLoading(false);
+            }
+        )
+    }, [setLogData])    
 
+    useEffect(() => {
+        axiosInstance.get('clientProjectGet/').then(
+            (response) => {
+                console.log(response)
+                setCPData([
+                    ...response.data,
+                ])
+                setIsCPDataLoading(false)
+            }
+        ).catch(
+            (error) => {
+                if (error.response.data.detail == "Invalid token header. No credentials provided.") {
+                    axiosInstance.get('clientProjectGet/').then(
+                        (response) => {
+                            console.log(response)
+                            setCPData([
+                                ...response.data,
+                            ])
+                            setIsCPDataLoading(false)
+                        }
+                    );
+                }
+            }
+        );
+    }, [setCPData]);
+
+    useEffect(() => {
+        axiosInstance.get('CRUD/tags/').then(
+            (response) => {
+                console.log(response)
+                setTagsData([
+                    ...response.data,
+                ])
+                setIsTagsDataLoading(false)
+            }
+        ).catch(
+            (error) => {
+                if (error.response.data.detail == "Invalid token header. No credentials provided.") {
+                    axiosInstance.get('CRUD/tags/').then(
+                        (response) => {
+                            console.log(response)
+                            setTagsData([
+                                ...response.data,
+                            ])
+                            setIsTagsDataLoading(false)
+                        }
+                    )
+                }
+            }
+        );
+    }, [setTagsData]);
     
-
-    // if (isLoading.loading) {
-    //     return (<Skeleton />)
-    // } else {
-    //     return (
-    //         <Paper sx={{ width: '100%' }}>
-
-    //         </Paper>
-    //     )
-    // }
-    
-    return (
-        <div>
-            <LogHeader />
-        </div>
-    );
+    if (!isCPDataLoading && !isTagsDataLoading && !isLogDataLoading) {
+        return (
+            <div>
+                <LogHeader CPData={CPData} tagsData={tagsData} />
+                <div style={{ height: 400, width: '100%' }}>
+                    <DataGrid 
+                        rows={logData}
+                        columns={columns}
+                        pageSize={5}
+                        rowsPerPageOptions={[5]}
+                    />
+                </div>
+            </div>
+        )
+    } else {
+        return (
+            <div>
+                <LogHeader CPData={CPData} tagsData={tagsData} />
+                <Skeleton />
+            </div>
+        )
+    }
     
 };
 

@@ -43,7 +43,7 @@ axiosInstance.interceptors.response.use(
                 'http://127.0.0.1:8000/api/auth/token/', {
                 refresh_token: refreshToken,
                 grant_type: 'refresh_token',
-                client_id: 'fD0DNP9dnmdUiVbqldbPEKIfXGXPhj3RXVDEBAeK',
+                client_id: 'BjvOUvBKvR6Vdgpt0NxkrDhdjbYlETEYyyKVQCJx',
             }).then((response) => {
                 if (localStorage.getItem('refresh_token')) {
                     localStorage.setItem('access_token', response.data.access_token);

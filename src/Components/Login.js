@@ -22,6 +22,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from 'react';
 // Import Axios
 import axios from 'axios';
+import axiosInstance from '../Axios';
 
 
 
@@ -52,12 +53,13 @@ function Login () {
         e.preventDefault();
         
         axios.post('http://127.0.0.1:8000/api/auth/token/', {
-            client_id: 'fD0DNP9dnmdUiVbqldbPEKIfXGXPhj3RXVDEBAeK', // process.env.REACT_APP_CLIENTID
+            client_id: 'BjvOUvBKvR6Vdgpt0NxkrDhdjbYlETEYyyKVQCJx', // process.env.REACT_APP_CLIENTID
             grant_type: 'password',
             username: inputData.email,
             password: inputData.password
         }).then((response) => {
             if (response.status === 200) {
+                console.log(response)
                 if (rememberMe) {
                     localStorage.setItem('access_token', response.data.access_token);
                     localStorage.setItem('refresh_token', response.data.refresh_token);
@@ -67,6 +69,17 @@ function Login () {
                 }
             };
         }).then(
+            () => {
+                axiosInstance.get('user/id/').then(
+                    (response) => {localStorage.setItem('user_id', response.data[0].id)}
+                ).catch((error) => {
+                    if (error.response.data.detail == "Invalid token header. No credentials provided.") {
+                            localStorage.setItem('user_id', error.response.data.requestData.data[0].id)
+                        }
+                    }
+                )
+            }
+        ).then(
             () => {navigate('/home')}
         ).catch((error) => {
             console.error(error)

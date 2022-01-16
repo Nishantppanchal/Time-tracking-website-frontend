@@ -20,60 +20,19 @@ import { useEffect, useState } from 'react';
 import axiosInstance from '../Axios';
 
 
-function LogHeader() {
+function LogHeader(props) {
     const { DateTime } = require("luxon");
     const filter = createFilterOptions();
 
-    const [CPData, setCPData] = useState([]);
+    
     const [currentTab, setCurrentTab] = useState(2)
     const [date, setDate] = useState(DateTime.now())
+    const [CPSelected, setCPSelected] = useState(null)
     const [duration, setDuration] = useState()
+    const [description, setDescription] = useState()
+    const [tagsSelected, setTagsSelected] = useState()
+    const [userId, setUserId] = useState()
 
-
-    const styleMap = {
-        'STRIKETHROUGH': {
-          textDecoration: 'line-through',
-        },
-    };
-
-    
-
-    useEffect(() => {
-        axiosInstance.get('clientProjectGet/').then(
-            (response) => {
-                console.log(response)
-                setCPData([
-                    ...response.data,
-                ])
-                
-            }
-        );
-    }, [setCPData]);
-
-
-    // useEffect(async () => {
-    //     axiosInstance.get('timerCRUD/').then(
-    //         (response) => {
-    //             setCPData([
-    //                 ...CPData,
-    //                 response.data,
-    //             ]);
-    //     }).catch((error) => {
-    //         if (error.response.data.detail == "Invalid token header. No credentials provided.") {
-    //             console.log(error)
-    //             if (error.response.data.requestData.data.length == 1) {
-    //                 setIsLoading({
-    //                     loading: false,
-    //                     timer: error.response.data.requestData.data[0],
-    //                 });
-    //             } else {
-    //                 setIsLoading({
-    //                     loading: false,
-    //                     timer: null,
-    //                 });
-    //             };
-    //         }
-    //     });
 
         function handleTabChange(event, newTab) {
             setCurrentTab(newTab)
@@ -86,9 +45,6 @@ function LogHeader() {
             };
         };
 
-        function handleLogButton(event) {
-            return null
-        };
 
         function handleDateChange(newDate) {
             if (newDate != date) {
@@ -99,7 +55,85 @@ function LogHeader() {
         function handleDurationChange(event) {
             setDuration(event.target.value);
         };
+        
+        async function handleDescriptionWithTagsData(data) {
+            setDescription(JSON.stringify(data.raw));
+            var tags = []
+            for (let tag of data.tags) {
+                console.log(tag.newValue)
+                if (tag.newValue) {
+                    axiosInstance.post('CRUD/tags/', {
+                        name: tag.name.slice(9),
+                        billable: tag.billable,
+                        user: localStorage.getItem('user_id'),
+                    }).then(() => {
+                        axiosInstance.get('/getID/', { params:{
+                            type: 'tag',
+                            name: tag.name.slice(9),
+                        }, }).then((response) => {
+                            tags.push(response.data.id)
+                        }).catch((error) => {
+                            if (error.response.data.detail == "Invalid token header. No credentials provided.") {
+                                tags.push(error.response.data.requestData.data.id)
+                            } 
+                        });
+                    }).catch((error) => {
+                        if (error.response.data.detail == "Invalid token header. No credentials provided.") {
+                            axiosInstance.get('/getID/', { params:{
+                                type: 'tag',
+                                name: tag.name.slice(9),
+                            }, }).then((response) => {
+                                tags.push(response.data.id)
+                            }).catch((error) => {
+                                if (error.response.data.detail == "Invalid token header. No credentials provided.") {
+                                    tags.push(error.response.data.requestData.data.id)
+                                } 
+                            });
+                        }
+                    });
+                    // console.log({
+                    //     name: tag.name.slice(9),
+                    //     billable: tag.billable,
+                    //     user: localStorage.getItem('user_id'),
+                    // })
+                } else {
+                    tags.push(tag.id);
+                };
+                setTagsSelected(tags)
+            };         
+        };
 
+        function handleLogButton(event) {
+            console.log({
+                time: duration,
+                date: date.toFormat('yyyy-LL-dd'),
+                description: description,
+                tags: tagsSelected,
+                client: CPSelected.id,
+                user: localStorage.getItem('user_id'),
+            });
+            if (CPSelected.type == 'client') {
+                axiosInstance.post('CRUD/logs/', {
+                    time: duration,
+                    date: date.toFormat('yyyy-LL-dd'),
+                    description: description,
+                    tags: tagsSelected,
+                    client: CPSelected.id,
+                    user: localStorage.getItem('user_id'),
+                }).catch((error) => {
+                    console.log(error.response)
+                })
+            } else {
+                axiosInstance.post('CRUD/logs/', {
+                    time: duration,
+                    date: date.toFormat('yyyy-LL-dd'),
+                    description: description,
+                    tags: tagsSelected,
+                    project: CPSelected.id,
+                    user: localStorage.getItem('user_id'),
+                })
+            };
+        };
 
 
         return (
@@ -126,7 +160,7 @@ function LogHeader() {
                     <TextField id="duration" label="DURATION" variant="filled" sx={{ width: '15%' }} onChange={handleDurationChange} />
                     <Autocomplete
                         id="CP"
-                        options={CPData}
+                        options={props.CPData}
                         getOptionLabel={(option) => option.name}
                         groupBy={(option) => option.type}
                         sx={{ width: '30%' }}
@@ -139,52 +173,19 @@ function LogHeader() {
                               filtered.push({
                                 inputValue,
                                 name: `Add "${inputValue}"`,
+                                newValue: true,
                               });
                             }
                     
                             return filtered;
                         }}
                         renderInput={(params) => <TextField {...params} label="CLIENT OR PROJECT" variant="filled" />}
+                        onChange={(event, newValue) => {
+                            setCPSelected(newValue)
+                        }}
                     />
-                    <Stack direction="column" spacing={2} sx={{ width: '40%' }}>
-                        <TextField multiline id='description' label='DESCRIPTION' variant='filled' minRows={4} />
-                        <Autocomplete
-                            multiple
-                            id="tags-filled"
-                            options={CPData.map((option) => option.name)}
-                            getOptionLabel={(option) => option.name}
-                            freeSolo
-                            filterOptions={(options, params) => {
-                                const filtered = filter(options, params);
-                        
-                                const { inputValue } = params;
-                                const isExisting = options.some((option) => inputValue === option.title);
-                                if (inputValue !== '' && !isExisting) {
-                                  filtered.push({
-                                    inputValue,
-                                    name: `Add "${inputValue}"`,
-                                  });
-                                }
-                        
-                                return filtered;
-                            }}
-                            renderTags={(value, getTagProps) =>
-                                value.map((option, index) => (
-                                    <Chip variant="outlined" label={option} {...getTagProps({ index })} />
-                                ))
-                            }
-                            renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    variant="filled"
-                                    label="freeSolo"
-                                    placeholder="Favorites"
-                                />
-                            )}
-                        />
-                    </Stack>
+                    <DescriptionWithTagsInput tags={props.tagsData} data={handleDescriptionWithTagsData}/>
                     <Button variant="text" onClick={handleLogButton}>Log It</Button>
-                    <DescriptionWithTagsInput tags={CPData} />
                 </Stack>
             </Paper>
         );

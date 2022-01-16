@@ -3,98 +3,121 @@ import { EditorState, convertToRaw } from 'draft-js';
 import Editor from '@draft-js-plugins/editor';
 import createMentionPlugin, { defaultSuggestionsFilter } from '@draft-js-plugins/mention'
 import editorStyles from './../Styles/EditorStyles.module.css';
-import mentions from './mentions(temp)';
 import '@draft-js-plugins/mention/lib/plugin.css';
 
 
 class DescriptionWithTagsInput extends React.Component {
     constructor(props) {
         super(props);
-        this.mentionPlugin = createMentionPlugin({
-          entityMutability: 'IMMUTABLE',
-          mentionPrefix: '#',
-          mentionTrigger: '#',
-          supportWhitespace: true,
-          mentionComponent(mentionProps) {
-            return (
-              <span
-                className={mentionProps.className}
-                onClick={() => alert('Clicked on the Mention!')}
-              >
-                {mentionProps.children}
-              </span>
-            );
-          },
-        });
-      }
-    
+      };
+
       state = {
         editorState: EditorState.createEmpty(),
         suggestions: this.props.tags,
         open: false,
       };
     
+      mentionPlugin = createMentionPlugin({
+        entityMutability: 'IMMUTABLE',
+        mentionPrefix: '#',
+        mentionTrigger: '#',
+        supportWhitespace: true,
+        mentionComponent(mentionProps) {
+          if (mentionProps.children[0].props.text.startsWith('#ADD TAG: ')) {
+            const editedMentionPropsChildern = [Object.assign({}, mentionProps.children[0], { 
+              props: { 
+                ...mentionProps.children[0].props, 
+                text: ('#' + mentionProps.children[0].props.text.slice(9)), 
+              }, 
+            })]
+
+            return (
+              <span
+                className={mentionProps.className}
+              >
+                {editedMentionPropsChildern}
+              </span>
+            );
+          } else {
+            return (
+              <span
+                className={mentionProps.className}
+              >
+                {mentionProps.children}
+              </span>
+            );
+          }
+        },
+      });
+
       onChange = editorState => {
         this.setState({ editorState });
+        const contentState = this.state.editorState.getCurrentContent();
+        const raw = convertToRaw(contentState);
+        let tags = [];
+        for (let key in raw.entityMap) {
+          const entity = raw.entityMap[key];
+          if (entity.type === '#mention') {
+            tags.push(entity.data.mention);
+          }
+        }
+        this.props.data({
+          raw: raw,
+          tags: tags,
+        })
       };
     
       onSearchChange = ({ value }) => {
-        this.setState({
+        if (defaultSuggestionsFilter(value, this.props.tags).length != 0) {
+          this.setState({
+              ...this.state,
+              suggestions: defaultSuggestionsFilter(value, this.props.tags),
+          });
+        } else if (value.charAt(value.length - 1) == '*') {
+          this.setState({
             ...this.state,
-            suggestions: defaultSuggestionsFilter(value, this.props.tags),
-        });
+            suggestions: defaultSuggestionsFilter(value, [{
+              billable: true,
+              name: 'ADD TAG: ' + (value),
+              newValue: true,
+            }]),
+          });
+        } else {
+          this.setState({
+            ...this.state,
+            suggestions: defaultSuggestionsFilter(value, [{
+              billable: false,
+              name: 'ADD TAG: ' + (value),
+              newValue: true,
+            }]),
+          });
+        }
       };
     
       onOpenChange = (isOpen) => {
           this.setState({
               ...this.state,
               open: isOpen,
-          })
+          });
       }
-
-      onExtractData = () => {
-        const contentState = this.state.editorState.getCurrentContent();
-        const raw = convertToRaw(contentState);
-        console.log(raw);
-      }
-
-      onExtractMentions = () => {
-        const contentState = this.state.editorState.getCurrentContent();
-        const raw = convertToRaw(contentState);
-        let tags = [];
-        for (let key in raw.entityMap) {
-          const ent = raw.entityMap[key];
-          if (ent.type === 'mention') {
-            tags.push(ent.data.mention);
-          }
-        }
-        console.log(tags);
-      };
 
       render() {        
         const { MentionSuggestions } = this.mentionPlugin;
         const plugins = [this.mentionPlugin];
-        console.log(this.props.tags)
 
         return (
-            <div>
-                <div className={editorStyles.editor}>
-                    <Editor
-                    editorState={this.state.editorState}
-                        onChange={this.onChange}
-                        plugins={plugins}
-                    />
-                    <MentionSuggestions
-                        open={this.state.open}
-                        onOpenChange={this.onOpenChange}
-                        onSearchChange={this.onSearchChange}
-                        suggestions={this.state.suggestions}
-                    />
-                </div>
-                <div>
-                    <button onClick={() => this.onExtractData()}>Extract Data</button>
-                    <button onClick={() => this.onExtractMentions()}>Extract mentions</button>
-                </div>
+          <div className={editorStyles.editor}>
+              <Editor
+              editorState={this.state.editorState}
+                  onChange={this.onChange}
+                  plugins={plugins}
+              />
+              <MentionSuggestions
+                  open={this.state.open}
+                  onOpenChange={this.onOpenChange}
+                  onSearchChange={this.onSearchChange}
+                  suggestions={this.state.suggestions}
+              />
           </div>
         );
       }
