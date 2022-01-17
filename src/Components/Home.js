@@ -6,8 +6,9 @@ import Paper from '@mui/material/Paper';
 import './../Styles/Home.css';
 import LogHeader from './LogHeader';
 import { Typography } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
-
+import { DataGrid, GridActionsCellItem  } from '@mui/x-data-grid';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 
 function Home () {
@@ -25,12 +26,34 @@ function Home () {
             headerName: 'client/project', 
             width: 90,  
             valueGetter: (params) => 
-                (params.getValue(params.id, 'client') ? 
-                    CPData.filter((data) => data.id == params.getValue(params.id, 'client') && data.type == 'clients')[0].name : 
-                    CPData.filter((data) => data.id == params.getValue(params.id, 'project') && data.type == 'projects')[0].name
+                (params.row.client ? 
+                    CPData.filter((data) => data.id == params.row.client && data.type == 'clients')[0].name : 
+                    CPData.filter((data) => data.id == params.row.project && data.type == 'projects')[0].name
                 ),
         },
-        {}
+        {field: 'time', headerName: 'duration', width: 90, type: 'number'},
+        {field: 'description', headerName: 'description', width: 180},
+        {
+            field: 'tags',
+            headerName: 'tags',
+            width: 90,
+            valueGetter: (params) => {
+                var tags = []
+                for (const tag of params.row.tags) {
+                    tags.push(tagsData.filter((data) => data.id == tag)[0].name.toString());
+                };
+                return tags.join(', ')
+            }
+        },
+        {
+            field: 'edit',
+            type: 'actions',
+            width: 80,
+            getActions: (params) => [
+                <GridActionsCellItem icon={<DeleteIcon />} label='Delete' />,
+                <GridActionsCellItem icon={<EditIcon />} label='Edit' />,
+            ]
+        },
     ]
 
     useEffect(() => {
