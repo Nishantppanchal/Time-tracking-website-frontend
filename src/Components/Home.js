@@ -112,15 +112,10 @@ function Home () {
             (error) => {
                 console.log(error)
                 if (error.response.data.detail == "Invalid token header. No credentials provided.") {
-                    axiosInstance.get('clientProjectGet/').then(
-                        (response) => {
-                            console.log(response)
-                            setCPData([
-                                ...response.data,
-                            ])
-                            setIsCPDataLoading(false)
-                        }
-                    );
+                    setCPData([
+                        ...error.response.data.requestData.data,
+                    ])
+                    setIsCPDataLoading(false)
                 }
             }
         );
@@ -139,15 +134,10 @@ function Home () {
             (error) => {
                 console.log(error)
                 if (error.response.data.detail == "Invalid token header. No credentials provided.") {
-                    axiosInstance.get('CRUD/tags/').then(
-                        (response) => {
-                            console.log(response)
-                            setTagsData([
-                                ...response.data,
-                            ])
-                            setIsTagsDataLoading(false)
-                        }
-                    )
+                    setTagsData([
+                        ...error.response.data.requestData.data,
+                    ])
+                    setIsTagsDataLoading(false)
                 }
             }
         );
