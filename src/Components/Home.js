@@ -2,7 +2,7 @@ import axiosInstance from './../Axios.js';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Skeleton from '@mui/material/Skeleton';
-import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
 import './../Styles/Home.css';
 import LogHeader from './LogHeader';
 import { Typography } from '@mui/material';
@@ -12,20 +12,31 @@ import EditIcon from '@mui/icons-material/Edit';
 
 
 function Home () {
+    const { DateTime } = require("luxon");
+
     const [CPData, setCPData] = useState([]);
     const [tagsData, setTagsData] = useState([]);
-    const [logData, setLogData] = useState([])
-
+    const [allLogsLoaded, setAllLogsLoaded] = useState(false);
+    const [logData, setLogData] = useState([]);
+    const [loadedLogsNumber, setLoadedLogsNumber] = useState(0);
     const [isCPDataLoading, setIsCPDataLoading] = useState(true)
     const [isTagsDataLoading, setIsTagsDataLoading] = useState(true)
     const [isLogDataLoading, setIsLogDataLoading] = useState(true)
+    
 
     const columns = [
+        {
+            field: 'date',
+            headerName: 'date',
+            width: 90,
+            type: 'date',
+            valueGetter: (params) => DateTime.fromFormat(params.row.date, 'yyyy-LL-dd').toFormat('dd/LL/yyyy')
+        },
         { 
             field: 'client/project', 
             headerName: 'client/project', 
             width: 90,  
-            valueGetter: (params) => 
+            valueGetter: (params) =>
                 (params.row.client ? 
                     CPData.filter((data) => data.id == params.row.client && data.type == 'clients')[0].name : 
                     CPData.filter((data) => data.id == params.row.project && data.type == 'projects')[0].name
@@ -57,14 +68,36 @@ function Home () {
     ]
 
     useEffect(() => {
-        axiosInstance.get('CRUD/logs/').then(
+        axiosInstance.get('CRUD/logs/', { params: {number: loadedLogsNumber} }).then(
             (response) => {
-                console.log(response.data)
-                setLogData(response.data);
+                console.log(response.data);
+                if (response.data.length > 0) {
+                    setLogData([...new Set([
+                        ...logData,
+                        ...response.data,
+                    ])]);
+                }
+                else {
+                    setAllLogsLoaded(true)
+                }
                 setIsLogDataLoading(false);
             }
-        )
-    }, [setLogData])    
+        ).catch((error) => {
+            if (error.response.data.detail == "Invalid token header. No credentials provided.") {
+                if (error.response.data.requestData.data.length > 0) {
+                    setLogData([...new Set([
+                        ...logData,
+                        ...error.response.data.requestData.data,
+                    ])]);
+                }
+                else {
+                    setAllLogsLoaded(true)
+                }
+                setIsLogDataLoading(false);
+            }
+        })
+    }, [setLogData, loadedLogsNumber])    
+
 
     useEffect(() => {
         axiosInstance.get('clientProjectGet/').then(
@@ -77,6 +110,7 @@ function Home () {
             }
         ).catch(
             (error) => {
+                console.log(error)
                 if (error.response.data.detail == "Invalid token header. No credentials provided.") {
                     axiosInstance.get('clientProjectGet/').then(
                         (response) => {
@@ -103,6 +137,7 @@ function Home () {
             }
         ).catch(
             (error) => {
+                console.log(error)
                 if (error.response.data.detail == "Invalid token header. No credentials provided.") {
                     axiosInstance.get('CRUD/tags/').then(
                         (response) => {
@@ -117,25 +152,61 @@ function Home () {
             }
         );
     }, [setTagsData]);
+
+    function loadMore(event) {
+        event.preventDefault()
+
+        setLoadedLogsNumber(loadedLogsNumber + 50)
+    }
+
+    function handleNewLog(data) {
+        setLogData([
+            data,
+            ...logData,
+        ])
+    }
+
+    function handleAddCP(data) {
+        setCPData([
+            data,
+            ...CPData,
+        ])
+    }
+
+    async function handleAddTag(data) {
+        console.log(tagsData)
+        console.log(data)
+        await setTagsData([
+            ...data,
+            ...tagsData,
+        ])
+    }
+
+    console.log(tagsData)
     
     if (!isCPDataLoading && !isTagsDataLoading && !isLogDataLoading) {
         return (
             <div>
-                <LogHeader CPData={CPData} tagsData={tagsData} />
+                <LogHeader CPData={CPData} tagsData={tagsData} addLog={handleNewLog} addCP={handleAddCP} addTag={handleAddTag} />
                 <div style={{ height: 400, width: '100%' }}>
                     <DataGrid 
                         rows={logData}
                         columns={columns}
-                        pageSize={5}
-                        rowsPerPageOptions={[5]}
+                        sortModel={[{
+                            field: 'date',
+                            sort: 'desc',
+                        }]}
+                        pageSize={100}
+                        rowsPerPageOptions={[100]}
                     />
                 </div>
+                <Button variant="outlined" onClick={loadMore} disabled={allLogsLoaded}>Load More</Button>
             </div>
         )
     } else {
         return (
             <div>
-                <LogHeader CPData={CPData} tagsData={tagsData} />
+                <LogHeader CPData={CPData} tagsData={tagsData} addLog={handleNewLog} addCP={handleAddCP} addTag={() => {return null}} />
                 <Skeleton />
             </div>
         )

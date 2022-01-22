@@ -50,6 +50,7 @@ class DescriptionWithTagsInput extends React.Component {
         },
       });
 
+
       onChange = editorState => {
         this.setState({ editorState });
         const contentState = this.state.editorState.getCurrentContent();
@@ -68,28 +69,34 @@ class DescriptionWithTagsInput extends React.Component {
       };
     
       onSearchChange = ({ value }) => {
-        if (defaultSuggestionsFilter(value, this.props.tags).length != 0) {
-          this.setState({
-              ...this.state,
-              suggestions: defaultSuggestionsFilter(value, this.props.tags),
-          });
-        } else if (value.charAt(value.length - 1) == '*') {
+        const trimmedValue = value.trim()
+        const tags = this.props.tags.slice()
+        if(tags.some(tag => tag.name == trimmedValue)) {
           this.setState({
             ...this.state,
-            suggestions: defaultSuggestionsFilter(value, [{
-              billable: true,
-              name: 'ADD TAG: ' + (value),
-              newValue: true,
-            }]),
+            suggestions: defaultSuggestionsFilter(trimmedValue,  tags),
+          });
+        } else if (trimmedValue.charAt(trimmedValue.length - 1) == '*') {
+          const newTag = {
+            billable: true,
+            name: 'ADD TAG: ' + (trimmedValue),
+            newValue: true,
+          }
+          tags.unshift(newTag)
+          this.setState({
+            ...this.state,
+            suggestions: defaultSuggestionsFilter(trimmedValue,  tags),
           });
         } else {
+          const newTag = {
+            billable: false,
+            name: 'ADD TAG: ' + (trimmedValue),
+            newValue: true,
+          }
+          tags.unshift(newTag)
           this.setState({
             ...this.state,
-            suggestions: defaultSuggestionsFilter(value, [{
-              billable: false,
-              name: 'ADD TAG: ' + (value),
-              newValue: true,
-            }]),
+            suggestions: defaultSuggestionsFilter(trimmedValue, tags),
           });
         }
       };
@@ -101,6 +108,19 @@ class DescriptionWithTagsInput extends React.Component {
           });
       }
 
+      clearField = () => {
+        this.setState({
+          ...this.state,
+          editorState: EditorState.createEmpty(),
+        })
+      }
+
+      componentDidUpdate(prevProps) {
+        if (prevProps.clear !== this.props.clear) {
+          this.clearField()
+        }
+      }
+
       render() {        
         const { MentionSuggestions } = this.mentionPlugin;
         const plugins = [this.mentionPlugin];
@@ -108,15 +128,15 @@ class DescriptionWithTagsInput extends React.Component {
         return (
           <div className={editorStyles.editor}>
               <Editor
-              editorState={this.state.editorState}
-                  onChange={this.onChange}
-                  plugins={plugins}
+                editorState={this.state.editorState}
+                onChange={this.onChange}
+                plugins={plugins}
               />
               <MentionSuggestions
-                  open={this.state.open}
-                  onOpenChange={this.onOpenChange}
-                  onSearchChange={this.onSearchChange}
-                  suggestions={this.state.suggestions}
+                open={this.state.open}
+                onOpenChange={this.onOpenChange}
+                onSearchChange={this.onSearchChange}
+                suggestions={this.state.suggestions}
               />
           </div>
         );
