@@ -61,8 +61,8 @@ function Home () {
             type: 'actions',
             width: 80,
             getActions: (params) => [
-                <GridActionsCellItem icon={<DeleteIcon />} label='Delete' />,
-                <GridActionsCellItem icon={<EditIcon />} label='Edit' />,
+                <GridActionsCellItem icon={<DeleteIcon />} onClick={() => {handleLogDelete(params.row.id)}} label='Delete' />,
+                <GridActionsCellItem icon={<EditIcon />} onClick={handleLogEdit(params.id)} label='Edit' />,
             ]
         },
     ]
@@ -89,8 +89,7 @@ function Home () {
                         ...logData,
                         ...error.response.data.requestData.data,
                     ])]);
-                }
-                else {
+                } else {
                     setAllLogsLoaded(true)
                 }
                 setIsLogDataLoading(false);
@@ -170,6 +169,16 @@ function Home () {
             ...data,
             ...tagsData,
         ])
+    }
+
+    function handleLogDelete(id) {
+        const url = '/CRUD/logs/' + id + '/'
+        axiosInstance.delete(url);
+        setLogData(logData.filter((log) => {return (log.id != id)}));
+    };
+
+    function handleLogEdit(id) {
+        return null
     }
 
     console.log(tagsData)
