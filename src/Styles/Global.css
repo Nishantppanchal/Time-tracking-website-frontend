@@ -11,7 +11,7 @@
 
 .roundButton {
   border-radius: 100px;
-  font-family: 'Roboto';
+  font-family: "Roboto";
   background-color: #eef7ff;
   color: #0284fe;
   box-shadow: none;
@@ -27,12 +27,12 @@
 .EmailField.MuiInputBase-root {
   border: 2px solid rgb(180, 178, 178);
   border-radius: 90px;
-  padding-left: 20px; 
+  padding-left: 20px;
   padding-right: 20px;
   width: 80%;
   transition: border 0.5s linear;
   height: 50px;
-  font-family: 'Roboto';
+  font-family: "Roboto";
   margin-bottom: 2%;
   margin-top: 2%;
   font-weight: 900;
@@ -49,12 +49,12 @@
 .PasswordField.MuiInputBase-root {
   border: 2px solid rgb(180, 178, 178);
   border-radius: 90px;
-  padding-left: 20px; 
+  padding-left: 20px;
   padding-right: 23px;
   width: 80%;
   transition: border 0.5s linear;
   height: 50px;
-  font-family: 'Roboto';
+  font-family: "Roboto";
   margin-top: 2%;
   margin-bottom: 2%;
   font-weight: 900;

@@ -1,43 +1,37 @@
 // Import React Components
-import React from 'react';
-import { render }from 'react-dom';
-import {
-  BrowserRouter,  Routes,
-  Route
-} from "react-router-dom";
-// Import Apps 
-import Entry from './Components/Entry';
-import Login from './Components/Login';
-import SignUp from './Components/Signup'
-import Home from './Components/Home';
-import EditPage from './Components/Edit';
+import React from "react";
+import { render } from "react-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+// Import Apps
+import Entry from "./Components/Entry";
+import Login from "./Components/Login";
+import SignUp from "./Components/Signup";
+import Home from "./Components/Home";
+import EditPage from "./Components/Edit";
 // Import Material UI components
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { StyledEngineProvider } from '@mui/material/styles';
-
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { StyledEngineProvider } from "@mui/material/styles";
 
 // Create custom theme
 const theme = createTheme({
   palette: {
-    type: 'light', //Dark or light theme
+    type: "light", //Dark or light theme
     primary: {
-      main: '#3f51b5', // Primary color
+      main: "#3f51b5", // Primary color
     },
     secondary: {
-      main: '#f50057', // Seconday color
+      main: "#f50057", // Seconday color
     },
-    divider: '#929292', // Divider color
+    divider: "#929292", // Divider color
     visiblity: {
-      main: '#81c784',
+      main: "#81c784",
     },
     visibilityOff: {
-      main: '#b4b2b2',
+      main: "#b4b2b2",
     },
   },
   typography: {
-    fontFamily: [
-      'Roboto',
-    ],
+    fontFamily: ["Roboto"],
   },
 });
 
@@ -47,7 +41,7 @@ render(
     <BrowserRouter>
       <StyledEngineProvider injectFirst>
         <ThemeProvider theme={theme}> {/* Assign custom theme */}
-          <Routes> 
+          <Routes>
             <Route path='/'> {/* Root directory */}
               <Route index element={<Entry />} /> {/* Assigns a component to the root directory */}
               <Route path='login' element={<Login />} /> {/* Login page */}
@@ -60,5 +54,5 @@ render(
       </StyledEngineProvider>
     </BrowserRouter>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
