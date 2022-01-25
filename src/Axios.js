@@ -24,6 +24,7 @@ axiosInstance.interceptors.response.use(
         return response;
     },
     async function (error) {
+        console.log(error.response)
         if (error.response.data.detail == "Invalid token header. No credentials provided.") {
             var refreshToken = null
             const originalRequest = error.config // Get original request to rerun
@@ -31,7 +32,7 @@ axiosInstance.interceptors.response.use(
             if (localStorage.getItem('refresh_token')) {
                 refreshToken =  localStorage.getItem('refresh_token');
             } else {
-                refreshToken = sessionStorage.getItem('refresh_token')
+                refreshToken = sessionStorage.getItem('refresh_token');
             }
             
             if (refreshToken == null) {

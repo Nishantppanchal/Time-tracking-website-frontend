@@ -5,7 +5,7 @@ import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Box from '@mui/material/Box';
-import AdapterMoment from '@mui/lab/AdapterLuxon';
+import AdapterLuxon from '@mui/lab/AdapterLuxon';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 import Collapse from '@mui/material/Collapse';
@@ -23,6 +23,7 @@ import { gridColumnsTotalWidthSelector } from '@mui/x-data-grid';
 
 function LogHeader(props) {
     const { DateTime } = require("luxon");
+
     const filter = createFilterOptions();
     
     const [currentTab, setCurrentTab] = useState(2)
@@ -106,6 +107,8 @@ function LogHeader(props) {
     };
 
     function handleLogButton(event) {
+        event.preventDefault()
+
         if (CPSelected.newValue == true) {
             if (CPSelected.type == 'client') {
                 axiosInstance.post('CRUD/clients/', {
@@ -193,7 +196,7 @@ function LogHeader(props) {
                 </Tabs>
             </Box>
             <Collapse orientation="vertical" in={(currentTab == 3 ? true : false)} sx={{ width: '40%' }} >
-                <LocalizationProvider dateAdapter={AdapterMoment}>
+                <LocalizationProvider dateAdapter={AdapterLuxon}>
                     <DatePicker
                         label="Basic example"
                         value={date}
@@ -215,18 +218,18 @@ function LogHeader(props) {
                 
                         const { inputValue } = params;
                         if (inputValue !== '') {
-                        filtered.push({
-                            inputValue,
-                            name: `ADD CLIENT: ${inputValue}`,
-                            newValue: true,
-                            type: 'client'
-                        });
-                        filtered.push({
-                            inputValue,
-                            name: `ADD PROJECT: ${inputValue}`,
-                            newValue: true,
-                            type: 'project'
-                        });
+                            filtered.push({
+                                inputValue,
+                                name: `ADD CLIENT: ${inputValue}`,
+                                newValue: true,
+                                type: 'client'
+                            });
+                            filtered.push({
+                                inputValue,
+                                name: `ADD PROJECT: ${inputValue}`,
+                                newValue: true,
+                                type: 'project'
+                            });
                         }
                 
                         return filtered;
@@ -241,8 +244,8 @@ function LogHeader(props) {
                     }}
                     inputValue={inputValue}
                 />
-                <DescriptionWithTagsInput tags={props.tagsData} data={handleDescriptionWithTagsData} clear={clearField} />
-                <Button variant="text" onClick={handleLogButton}>Log It</Button>
+                <DescriptionWithTagsInput empty={true} tags={props.tagsData} data={handleDescriptionWithTagsData} clear={clearField} />
+                <Button variant="text" onClick={handleLogButton}>LOG</Button>
             </Stack>
         </Paper>
     );

@@ -1,6 +1,7 @@
 import axiosInstance from './../Axios.js';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import Skeleton from '@mui/material/Skeleton';
 import Button from '@mui/material/Button';
 import './../Styles/Home.css';
@@ -12,6 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 
 function Home () {
+    const navigate = useNavigate();
     const { DateTime } = require("luxon");
 
     const [CPData, setCPData] = useState([]);
@@ -62,7 +64,7 @@ function Home () {
             width: 80,
             getActions: (params) => [
                 <GridActionsCellItem icon={<DeleteIcon />} onClick={() => {handleLogDelete(params.row.id)}} label='Delete' />,
-                <GridActionsCellItem icon={<EditIcon />} onClick={handleLogEdit(params.id)} label='Edit' />,
+                <GridActionsCellItem icon={<EditIcon />} onClick={() => {handleLogEdit(params.row.id)}} label='Edit' />,
             ]
         },
     ]
@@ -76,9 +78,8 @@ function Home () {
                         ...logData,
                         ...response.data,
                     ])]);
-                }
-                else {
-                    setAllLogsLoaded(true)
+                } else {
+                    setAllLogsLoaded(true) //To disable the load more button
                 }
                 setIsLogDataLoading(false);
             }
@@ -178,7 +179,7 @@ function Home () {
     };
 
     function handleLogEdit(id) {
-        return null
+        navigate('/edit/' + id)
     }
 
     console.log(tagsData)

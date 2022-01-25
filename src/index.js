@@ -10,6 +10,7 @@ import Entry from './Components/Entry';
 import Login from './Components/Login';
 import SignUp from './Components/Signup'
 import Home from './Components/Home';
+import EditPage from './Components/Edit';
 // Import Material UI components
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { StyledEngineProvider } from '@mui/material/styles';
@@ -45,13 +46,14 @@ render(
   <React.StrictMode> {/* Remove after development */}
     <BrowserRouter>
       <StyledEngineProvider injectFirst>
-        <ThemeProvider theme={theme} > {/* Assign custom theme */}
+        <ThemeProvider theme={theme}> {/* Assign custom theme */}
           <Routes> 
-            <Route path='/' > {/* Root directory */}
+            <Route path='/'> {/* Root directory */}
               <Route index element={<Entry />} /> {/* Assigns a component to the root directory */}
               <Route path='login' element={<Login />} /> {/* Login page */}
               <Route path='signup' element={<SignUp />} /> {/* Sign Up page */}
               <Route path='home' element={<Home />} /> {/* Home page */}
+              <Route path='edit/:id' element={<EditPage />} />
             </Route>
           </Routes>
         </ThemeProvider>

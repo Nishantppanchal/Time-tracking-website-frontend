@@ -1,5 +1,5 @@
 import React from 'react';
-import { EditorState, convertToRaw } from 'draft-js';
+import { EditorState, convertToRaw, convertFromRaw, createWithContent } from 'draft-js';
 import Editor from '@draft-js-plugins/editor';
 import createMentionPlugin, { defaultSuggestionsFilter } from '@draft-js-plugins/mention'
 import editorStyles from './../Styles/EditorStyles.module.css';
@@ -12,7 +12,7 @@ class DescriptionWithTagsInput extends React.Component {
       };
 
       state = {
-        editorState: EditorState.createEmpty(),
+        editorState: (this.props.empty ? EditorState.createEmpty() : EditorState.createWithContent(convertFromRaw(JSON.parse(this.props.intialField)))),
         suggestions: this.props.tags,
         open: false,
       };
