@@ -1,19 +1,19 @@
-import axiosInstance from "./../Axios.js";
-import axios from "axios";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Skeleton from "@mui/material/Skeleton";
-import Button from "@mui/material/Button";
-import "./../Styles/Home.css";
-import LogHeader from "./LogHeader";
-import { Typography } from "@mui/material";
-import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
+import axiosInstance from './../Axios.js';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Skeleton from '@mui/material/Skeleton';
+import Button from '@mui/material/Button';
+import './../Styles/Home.css';
+import LogHeader from './LogHeader';
+import { Typography } from '@mui/material';
+import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 
 function Home() {
   const navigate = useNavigate();
-  const { DateTime } = require("luxon");
+  const { DateTime } = require('luxon');
 
   const [CPData, setCPData] = useState([]);
   const [tagsData, setTagsData] = useState([]);
@@ -26,33 +26,33 @@ function Home() {
 
   const columns = [
     {
-      field: "date",
-      headerName: "date",
+      field: 'date',
+      headerName: 'date',
       width: 90,
-      type: "date",
+      type: 'date',
       valueGetter: (params) =>
-        DateTime.fromFormat(params.row.date, "yyyy-LL-dd").toFormat(
-          "dd/LL/yyyy"
+        DateTime.fromFormat(params.row.date, 'yyyy-LL-dd').toFormat(
+          'dd/LL/yyyy'
         ),
     },
     {
-      field: "client/project",
-      headerName: "client/project",
+      field: 'client/project',
+      headerName: 'client/project',
       width: 90,
       valueGetter: (params) =>
         params.row.client
           ? CPData.filter(
-              (data) => data.id == params.row.client && data.type == "clients"
+              (data) => data.id == params.row.client && data.type == 'clients'
             )[0].name
           : CPData.filter(
-              (data) => data.id == params.row.project && data.type == "projects"
+              (data) => data.id == params.row.project && data.type == 'projects'
             )[0].name,
     },
-    { field: "time", headerName: "duration", width: 90, type: "number" },
-    { field: "description", headerName: "description", width: 180 },
+    { field: 'time', headerName: 'duration', width: 90, type: 'number' },
+    { field: 'description', headerName: 'description', width: 180 },
     {
-      field: "tags",
-      headerName: "tags",
+      field: 'tags',
+      headerName: 'tags',
       width: 90,
       valueGetter: (params) => {
         var tags = [];
@@ -61,12 +61,12 @@ function Home() {
             tagsData.filter((data) => data.id == tag)[0].name.toString()
           );
         }
-        return tags.join(", ");
+        return tags.join(', ');
       },
     },
     {
-      field: "edit",
-      type: "actions",
+      field: 'edit',
+      type: 'actions',
       width: 80,
       getActions: (params) => [
         <GridActionsCellItem
@@ -89,7 +89,7 @@ function Home() {
 
   useEffect(() => {
     axiosInstance
-      .get("CRUD/logs/", { params: { number: loadedLogsNumber } })
+      .get('CRUD/logs/', { params: { number: loadedLogsNumber } })
       .then((response) => {
         console.log(response.data);
         if (response.data.length > 0) {
@@ -100,9 +100,10 @@ function Home() {
         setIsLogDataLoading(false);
       })
       .catch((error) => {
+        console.log(error.response);
         if (
           error.response.data.detail ==
-          "Invalid token header. No credentials provided."
+          'Invalid token header. No credentials provided.'
         ) {
           if (error.response.data.requestData.data.length > 0) {
             setLogData([
@@ -118,9 +119,8 @@ function Home() {
 
   useEffect(() => {
     axiosInstance
-      .get("clientProjectGet/")
+      .get('clientProjectGet/')
       .then((response) => {
-        console.log(response);
         setCPData([...response.data]);
         setIsCPDataLoading(false);
       })
@@ -128,7 +128,7 @@ function Home() {
         console.log(error);
         if (
           error.response.data.detail ==
-          "Invalid token header. No credentials provided."
+          'Invalid token header. No credentials provided.'
         ) {
           setCPData([...error.response.data.requestData.data]);
           setIsCPDataLoading(false);
@@ -138,9 +138,9 @@ function Home() {
 
   useEffect(() => {
     axiosInstance
-      .get("CRUD/tags/")
+      .get('CRUD/tags/')
       .then((response) => {
-        console.log(response);
+        console.log(process.env.REACT_APP_CLIENTID);
         setTagsData([...response.data]);
         setIsTagsDataLoading(false);
       })
@@ -148,7 +148,7 @@ function Home() {
         console.log(error);
         if (
           error.response.data.detail ==
-          "Invalid token header. No credentials provided."
+          'Invalid token header. No credentials provided.'
         ) {
           setTagsData([...error.response.data.requestData.data]);
           setIsTagsDataLoading(false);
@@ -177,7 +177,7 @@ function Home() {
   }
 
   function handleLogDelete(id) {
-    const url = "/CRUD/logs/" + id + "/";
+    const url = '/CRUD/logs/' + id + '/';
     axiosInstance.delete(url);
     setLogData(
       logData.filter((log) => {
@@ -187,7 +187,7 @@ function Home() {
   }
 
   function handleLogEdit(id) {
-    navigate("/edit/" + id);
+    navigate('/edit/' + id);
   }
 
   console.log(tagsData);
@@ -202,14 +202,14 @@ function Home() {
           addCP={handleAddCP}
           addTag={handleAddTag}
         />
-        <div style={{ height: 400, width: "100%" }}>
+        <div style={{ height: 400, width: '100%' }}>
           <DataGrid
             rows={logData}
             columns={columns}
             sortModel={[
               {
-                field: "date",
-                sort: "desc",
+                field: 'date',
+                sort: 'desc',
               },
             ]}
             pageSize={100}
