@@ -191,7 +191,7 @@ class DescriptionWithTagsInput extends React.Component {
     // Creates a array of plugins (Just followed documentation)
     const plugins = [this.mentionPlugin];
 
-    // This is what is rendered by this component
+    // This is what the JSX rendered by this component
     return (
       // Div styled with CSS
       <div className={editorStyles.editor}>
