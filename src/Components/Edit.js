@@ -1,8 +1,9 @@
+// Import React components
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+// Import the axios instance
 import axiosInstance from "../Axios";
-import { useNavigate } from "react-router-dom";
-
+// Import MUI components
 import Skeleton from "@mui/material/Skeleton";
 import TextField from "@mui/material/TextField";
 import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
@@ -11,52 +12,90 @@ import LocalizationProvider from "@mui/lab/LocalizationProvider";
 import DatePicker from "@mui/lab/DatePicker";
 import Button from "@mui/material/Button";
 import Alert from "@mui/material/Alert";
-
+import Collapse from "@mui/material/Collapse";
+// Import custom component
 import DescriptionWithTagsInput from "./DescriptionWithTags";
-import { Collapse } from "@mui/material";
 
 function EditPage() {
+  // Gets the id from the URL 
   const { id } = useParams();
+  // Creates the function DateTime
   const { DateTime } = require("luxon");
-
+  // Create a filter function
   const filter = createFilterOptions();
+  // Creates a navigate function
   const navigate = useNavigate();
 
+  // Defines all the states
+  // The states are kept seperates as state are not update instantly
+  // Hence seperation prevent update overides
+    // Stores data from server
+      // Stores log data
   const [logData, setLogData] = useState(null);
-  const [isLogLoading, setIsLogLoading] = useState(true);
-  const [isCPDataLoading, setIsCPDataLoading] = useState(true);
-  const [isTagsDataLoading, setIsTagsDataLoading] = useState(true);
+      // Stores clients and projects data
   const [CPData, setCPData] = useState([]);
+      // Stores tags data
   const [tagsData, setTagsData] = useState([]);
+    // Stores whether data has loaded or not
+      // Stores whether logs have loaded
+  const [isLogLoading, setIsLogLoading] = useState(true);
+      // Stores whether the client and projects have loaded
+  const [isCPDataLoading, setIsCPDataLoading] = useState(true);
+      // Stores whether the tags have loaded
+  const [isTagsDataLoading, setIsTagsDataLoading] = useState(true);
+    // Stores values of component edited by the user in the browser
+      // Stores the description in user readable format
   const [description, setDescription] = useState();
+      // Stores the description as stringified JS code
   const [descriptionRaw, setDescriptionRaw] = useState();
+      // Stores the tags the user has used in the description
   const [tagsSelected, setTagsSelected] = useState([]);
+      // Stores the duration
   const [duration, setDuration] = useState();
+      // Stores the client of project selected
   const [CPSelected, setCPSelected] = useState(null);
+      // Stores input values of the client and project textfield
   const [inputValue, setInputValue] = useState();
+      // Stores the date selected by the user
   const [date, setDate] = useState();
+    // Stores whether there is a error
+      // Stores where no fields have changed
   const [noFieldsChangedError, setNoFieldsChangedError] = useState(false);
 
+  // Runs this code on every render/update after the DOM has updated if setLogData has changed
   useEffect(() => {
+    // Creates the url with the ID of log
     const url = "CRUD/logs/" + id + "/";
+    // Sends a get request to get the log
     axiosInstance
       .get(url)
+      // Handles the response to the get request
       .then((response) => {
-        console.log(response.data);
+        // Add the log data to the logData state
         setLogData(response.data);
+        // Set the isLogLoading state to false
         setIsLogLoading(false);
+        // Sets the duration state to the duration in the log data
         setDuration(response.data.time);
+        // Sets the date state to the date in the log data
+        // The date is convert from string to a DateTime instance
         setDate(DateTime.fromFormat(response.data.date, "yyyy-LL-dd"));
       })
+      // Handles errors
       .catch((error) => {
-        console.log(error);
+        // If the access token is invalid
         if (
           error.response.data.detail ==
           "Invalid token header. No credentials provided."
         ) {
+          // Set the logData state to the log data passed through the error data by axios intercept
           setLogData(error.response.data.requestData.data);
+          // Set the isLogLoading state to false
           setIsLogLoading(false);
+          // Sets the duration state to the duration in the log data passed through the error data by axios intercept
           setDuration(error.response.data.requestData.data.time);
+          // Sets the date state to the date in the log data passed through the error data by axio intercept
+          // The date is convert from string to a DateTime instance
           setDate(
             DateTime.fromFormat(
               error.response.data.requestData.data.date,
@@ -67,148 +106,221 @@ function EditPage() {
       });
   }, [setLogData]);
 
+  // Runs this code on every render/update after the DOM has updated if setCPData has changed
   useEffect(() => {
+    // Sends a get request to get the clients and projects
     axiosInstance
       .get("clientProjectGet/")
+      // Handles the response to the request
       .then((response) => {
-        console.log(response);
-        setCPData([...response.data]);
+        // Set the CPData state to the response data
+        setCPData(response.data);
+        // Sets isCPDataLoading state to false
         setIsCPDataLoading(false);
       })
+      // Handles error
       .catch((error) => {
-        console.log(error);
+        // If the access token is invalid
         if (
           error.response.data.detail ==
           "Invalid token header. No credentials provided."
         ) {
-          setCPData([...error.response.data.requestData.data]);
+          // Sets the CPData state to the response data passed through the error data by axios intercept
+          setCPData(error.response.data.requestData.data);
+          // Sets isCPDataLoading state to false
           setIsCPDataLoading(false);
         }
       });
   }, [setCPData]);
 
+  // Runs this code on every render/update after the DOM has updated if setTagsData has changed
   useEffect(() => {
+    // Sends a get request to get the tags
     axiosInstance
       .get("CRUD/tags/")
+      // Handles the response to the request
       .then((response) => {
-        console.log(response);
-        setTagsData([...response.data]);
+        // Set the tagsData state to the response data
+        setTagsData(response.data);
+        // Set isTagDataLoading to false
         setIsTagsDataLoading(false);
       })
+      // Handle error
       .catch((error) => {
-        console.log(error);
+        // If the access token is invalid
         if (
           error.response.data.detail ==
           "Invalid token header. No credentials provided."
         ) {
+          // Set the tagsData state to the response data passed through the the error data by axios intercept 
           setTagsData([...error.response.data.requestData.data]);
+          // Set isTagDataLoading to false
           setIsTagsDataLoading(false);
         }
       });
   }, [setTagsData]);
 
+  // Runs this code on every render/update after the DOM has updated if CPData and logData has changed
   useEffect(() => {
+    // If CPData is not empty and logData is not null and the client or project selected is not null
     if (CPData.length > 0 && logData != null && CPSelected == null) {
+      // If the log is assigned to a client
       if (logData.client) {
-        const client = CPData.filter(
+        // Find the client data with it's ID
+        const client = CPData.find(
           (data) => data.id == logData.client && data.type == "clients"
-        )[0];
+        );
+        // Set the CPSelected state to the client data found
         setCPSelected(client);
+      // If the log is assigned to a project
       } else {
-        const project = CPData.filter(
+        // Find the project data with it's ID
+        const project = CPData.find(
           (data) => data.id == logData.project && data.type == "projects"
-        )[0];
+        );
+        // Set the CPSelected state to the project data found
         setCPSelected(project);
       }
     }
   }, [CPData, logData]);
 
-  async function handleDescriptionWithTagsData(data) {
-    console.log(data);
+  // Handle change in the content within DescriptionWithTagsInput textfield
+  function handleDescriptionWithTagsData(data) {
+    // Set the description state to the raw text
     setDescription(
       data.raw.blocks
+        // Joins all the lines together into one line of text
         .map((line) => {
           return line.text;
         })
         .join(" ")
     );
+    // Set the descriptionRaw state to stringified JS code 
     setDescriptionRaw(JSON.stringify(data.raw));
+    
+    // Creates a variable that stores a array with all the newTags
     var newTags = [];
+    // Creates a variable that stores a array with selected tags
     var tags = [];
+
+    // loops for each tag in the tags in the textfield
     for (let tag of data.tags) {
+      // If the tag has the key newValue set to true
       if (tag.newValue) {
+        // Get a get request to determine if the tag exists
         var doesTagExist = await axiosInstance
           .get("doesTagExist/", {
+            // Add the parameter name to the url
+            // Name would be the name of the tag with ADD TAG: 
             params: { name: tag.name.slice(9) },
           })
+          // Handle response to the get request
           .then((response) => {
+            // Return the response data
+            // This would be stored in doesTagExist
             return response.data;
           })
+          // Handles errors
           .catch((error) => {
+            // If access token is invalid
             if (
               error.response.data.detail ==
               "Invalid token header. No credentials provided."
             ) {
+              // Return the response data passed through by axios intercept
+              // This would be stored in doesTagExist
               return error.response.data.requestData.data;
             }
           });
+
+        // If the tag doesn't exist
         if (!doesTagExist.exists) {
+          // Create a new tag with a post request
           var data = await axiosInstance
             .post("CRUD/tags/", {
+              // Defines the body content of the post request
+              // Sets the name to the tag name with ADD TAG:
               name: tag.name.slice(9),
               billable: tag.billable,
+              // Get the user id from the local storage
               user: localStorage.getItem("user_id"),
             })
+            // Handles the response
             .then((response) => {
+              // Return the response data
+              // This would be stored in the variable data
               return response.data;
             })
+            // Handles errors
             .catch((error) => {
+              // If the access token is invalid
               if (
                 error.response.data.detail ==
                 "Invalid token header. No credentials provided."
               ) {
+                // Return the response data passed through by axios intercept
+                // This would be stored in the variable data
                 return error.response.data.requestData.data;
               }
             });
+          
+          // Add the new tag's ID to the tags array
           tags.push(data.id);
+          // Add the new tag's data to the newTags array
           newTags.push(data);
-          console.log(newTags);
+        // Otherwise, if the new tag has already been created
         } else {
+          // Add the new tag's ID to the tags array
           tags.push(data.id);
         }
+      // Otherwise, if the tag is not a new tag
       } else {
+        // Add the tag's ID to the tags array
         tags.push(tag.id);
       }
     }
-    console.log(tags);
-    await setTagsSelected(tags);
 
-    console.log(newTags);
+    // Sets the tagsSelected state to the tags array
+    setTagsSelected(tags);
+    // If the newTags array is not empty
     if (newTags.length != 0) {
-      await setTagsData([...newTags, ...tagsData]);
+      // Sets the tagsData state to a array combining the newTags array and the current tagsData array
+      setTagsData([...newTags, ...tagsData]);
     }
   }
 
+  // Handles duration change
   function handleDurationChange(event) {
+    // Sets the duration state to the new duration value entered by the user
     setDuration(event.target.value);
   }
 
+  // Handles date change
   function handleDateChange(newDate) {
+    // If the date has changed
     if (newDate != date) {
+      // Set the date state to the new date selected by the user
       setDate(newDate);
     }
   }
 
+  // Handles when the update button is clicked
   function handleUpdateButton(event) {
+    // Prevents the default actions
     event.preventDefault();
 
+    // If the client or project is new
     if (CPSelected.newValue == true) {
+      // If it is a client
       if (CPSelected.type == "client") {
+        // Creates a new client with a post request
         axiosInstance
           .post("CRUD/clients/", {
+            // Defines the body content
+            // Sets name to the client name without ADD CLIENT:
             name: CPSelected.name.slice(12),
+            // Gets the 
             user: localStorage.getItem("user_id"),
-            colour: "red",
           })
           .then(async (response) => {
             await setCPSelected(response.data);
@@ -228,7 +340,6 @@ function EditPage() {
           .post("CRUD/projects/", {
             name: CPSelected.name.slice(13),
             user: localStorage.getItem("user_id"),
-            colour: "red",
           })
           .then(async (response) => {
             await setCPSelected(response.data);

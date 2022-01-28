@@ -41,12 +41,12 @@ function Home() {
       width: 90,
       valueGetter: (params) =>
         params.row.client
-          ? CPData.filter(
+          ? CPData.find(
               (data) => data.id == params.row.client && data.type == 'clients'
-            )[0].name
-          : CPData.filter(
+            ).name
+          : CPData.find(
               (data) => data.id == params.row.project && data.type == 'projects'
-            )[0].name,
+            ).name,
     },
     { field: 'time', headerName: 'duration', width: 90, type: 'number' },
     { field: 'description', headerName: 'description', width: 180 },
@@ -58,7 +58,7 @@ function Home() {
         var tags = [];
         for (const tag of params.row.tags) {
           tags.push(
-            tagsData.filter((data) => data.id == tag)[0].name.toString()
+            tagsData.find((data) => data.id == tag).name.toString()
           );
         }
         return tags.join(', ');

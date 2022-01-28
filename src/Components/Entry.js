@@ -1,8 +1,8 @@
-// Import CSS Components
+// Import CSS styles
 import "./../Styles/Global.css";
-// Import React Components
+// Import React components
 import { useNavigate } from "react-router-dom";
-// Import Material UI Components
+// Import Material UI components
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
