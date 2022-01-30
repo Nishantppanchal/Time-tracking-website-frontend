@@ -1,39 +1,39 @@
-import Paper from "@mui/material/Paper";
-import Stack from "@mui/material/Stack";
-import TextField from "@mui/material/TextField";
-import Autocomplete, { createFilterOptions } from "@mui/material/Autocomplete";
-import Tab from "@mui/material/Tab";
-import Tabs from "@mui/material/Tabs";
-import Box from "@mui/material/Box";
-import AdapterLuxon from "@mui/lab/AdapterLuxon";
-import LocalizationProvider from "@mui/lab/LocalizationProvider";
-import DatePicker from "@mui/lab/DatePicker";
-import Collapse from "@mui/material/Collapse";
-import Chip from "@mui/material/Chip";
-import Button from "@mui/material/Button";
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import Box from '@mui/material/Box';
+import AdapterLuxon from '@mui/lab/AdapterLuxon';
+import LocalizationProvider from '@mui/lab/LocalizationProvider';
+import DatePicker from '@mui/lab/DatePicker';
+import Collapse from '@mui/material/Collapse';
+import Chip from '@mui/material/Chip';
+import Button from '@mui/material/Button';
 
-import DescriptionWithTagsInput from "./DescriptionWithTags";
+import DescriptionWithTagsInput from './DescriptionWithTags';
 
-import { useEffect, useState } from "react";
-import axiosInstance from "../Axios";
-import { gridColumnsTotalWidthSelector } from "@mui/x-data-grid";
+import { useEffect, useState } from 'react';
+import axiosInstance from '../Axios';
+import { gridColumnsTotalWidthSelector } from '@mui/x-data-grid';
 
 function LogHeader(props) {
-  const { DateTime } = require("luxon");
+  const { DateTime } = require('luxon');
 
   const filter = createFilterOptions();
 
   const [currentTab, setCurrentTab] = useState(2);
   const [date, setDate] = useState(DateTime.now());
   const [CPSelected, setCPSelected] = useState(null);
-  const [duration, setDuration] = useState("");
+  const [duration, setDuration] = useState('');
   const [descriptionRaw, setDescriptionRaw] = useState();
   const [description, setDescription] = useState();
   const [tagsSelected, setTagsSelected] = useState([]);
   const [newTags, setNewTags] = useState([]);
   const [tagsData, setTagsData] = useState(props.tagsData);
   const [clearField, setClearField] = useState(true);
-  const [inputValue, setInputValue] = useState("");
+  const [inputValue, setInputValue] = useState('');
 
   function handleTabChange(event, newTab) {
     setCurrentTab(newTab);
@@ -62,7 +62,7 @@ function LogHeader(props) {
         .map((line) => {
           return line.text;
         })
-        .join(" ")
+        .join(' ')
     );
     setDescriptionRaw(JSON.stringify(data.raw));
     var newTags = [];
@@ -70,7 +70,7 @@ function LogHeader(props) {
     for (let tag of data.tags) {
       if (tag.newValue) {
         var doesTagExist = await axiosInstance
-          .get("doesTagExist/", {
+          .get('doesTagExist/', {
             params: { name: tag.name.slice(9) },
           })
           .then((response) => {
@@ -79,17 +79,19 @@ function LogHeader(props) {
           .catch((error) => {
             if (
               error.response.data.detail ==
-              "Invalid token header. No credentials provided."
+              'Invalid token header. No credentials provided.'
             ) {
               return error.response.data.requestData.data;
             }
           });
         if (!doesTagExist.exists) {
           var data = await axiosInstance
-            .post("CRUD/tags/", {
+            .post('CRUD/tags/', {
               name: tag.name.slice(9),
               billable: tag.billable,
-              user: localStorage.getItem("user_id"),
+              user: localStorage.getItem('user_id')
+                ? localStorage.getItem('user_id')
+                : sessionStorage.getItem('user_id'),
             })
             .then((response) => {
               return response.data;
@@ -97,7 +99,7 @@ function LogHeader(props) {
             .catch((error) => {
               if (
                 error.response.data.detail ==
-                "Invalid token header. No credentials provided."
+                'Invalid token header. No credentials provided.'
               ) {
                 return error.response.data.requestData.data;
               }
@@ -124,12 +126,13 @@ function LogHeader(props) {
     event.preventDefault();
 
     if (CPSelected.newValue == true) {
-      if (CPSelected.type == "client") {
+      if (CPSelected.type == 'client') {
         axiosInstance
-          .post("CRUD/clients/", {
+          .post('CRUD/clients/', {
             name: CPSelected.name.slice(12),
-            user: localStorage.getItem("user_id"),
-            colour: "red",
+            user: localStorage.getItem('user_id')
+              ? localStorage.getItem('user_id')
+              : sessionStorage.getItem('user_id'),
           })
           .then(async (response) => {
             await setCPSelected(response.data);
@@ -138,7 +141,7 @@ function LogHeader(props) {
           .catch(async (error) => {
             if (
               error.response.data.detail ==
-              "Invalid token header. No credentials provided."
+              'Invalid token header. No credentials provided.'
             ) {
               await setCPSelected(error.response.data.requestData.data);
               props.addCP(error.response.data.requestData.data);
@@ -146,10 +149,11 @@ function LogHeader(props) {
           });
       } else {
         axiosInstance
-          .post("CRUD/projects/", {
+          .post('CRUD/projects/', {
             name: CPSelected.name.slice(13),
-            user: localStorage.getItem("user_id"),
-            colour: "red",
+            user: localStorage.getItem('user_id')
+              ? localStorage.getItem('user_id')
+              : sessionStorage.getItem('user_id'),
           })
           .then(async (response) => {
             await setCPSelected(response.data);
@@ -158,7 +162,7 @@ function LogHeader(props) {
           .catch(async (error) => {
             if (
               error.response.data.detail ==
-              "Invalid token header. No credentials provided."
+              'Invalid token header. No credentials provided.'
             ) {
               await setCPSelected(error.response.data.requestData.data);
               props.addCP(error.response.data.requestData.data);
@@ -167,17 +171,19 @@ function LogHeader(props) {
       }
     }
 
-    if (CPSelected.type == "clients") {
-      console.log("done");
+    if (CPSelected.type == 'clients') {
+      console.log('done');
       axiosInstance
-        .post("CRUD/logs/", {
+        .post('CRUD/logs/', {
           time: duration,
-          date: date.toFormat("yyyy-LL-dd"),
+          date: date.toFormat('yyyy-LL-dd'),
           description: description,
           descriptionRaw: descriptionRaw,
           tags: tagsSelected,
           client: CPSelected.id,
-          user: localStorage.getItem("user_id"),
+          user: localStorage.getItem('user_id')
+            ? localStorage.getItem('user_id')
+            : sessionStorage.getItem('user_id'),
         })
         .then((response) => {
           console.log(response.data);
@@ -186,21 +192,23 @@ function LogHeader(props) {
         .catch((error) => {
           if (
             error.response.data.detail ==
-            "Invalid token header. No credentials provided."
+            'Invalid token header. No credentials provided.'
           ) {
             props.addLog(error.response.data.requestData.data);
           }
         });
     } else {
       axiosInstance
-        .post("CRUD/logs/", {
+        .post('CRUD/logs/', {
           time: duration,
-          date: date.toFormat("yyyy-LL-dd"),
+          date: date.toFormat('yyyy-LL-dd'),
           description: description,
           descriptionRaw: descriptionRaw,
           tags: tagsSelected,
           project: CPSelected.id,
-          user: localStorage.getItem("user_id"),
+          user: localStorage.getItem('user_id')
+            ? localStorage.getItem('user_id')
+            : sessionStorage.getItem('user_id'),
         })
         .then((response) => {
           console.log(response.data);
@@ -209,22 +217,22 @@ function LogHeader(props) {
         .catch((error) => {
           if (
             error.response.data.detail ==
-            "Invalid token header. No credentials provided."
+            'Invalid token header. No credentials provided.'
           ) {
             props.addLog(error.response.data.requestData.data);
           }
         });
     }
 
-    setDuration("");
+    setDuration('');
     setCPSelected(null);
-    setInputValue("");
+    setInputValue('');
     setClearField(!clearField);
   }
 
   return (
     <Paper>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
         <Tabs
           value={currentTab}
           onChange={handleTabChange}
@@ -233,14 +241,14 @@ function LogHeader(props) {
           <Tab
             label={
               DateTime.now().plus({ days: -2 }).monthShort +
-              " " +
+              ' ' +
               DateTime.now().plus({ days: -2 }).day
             }
           />
           <Tab
             label={
               DateTime.now().plus({ days: -1 }).monthShort +
-              " " +
+              ' ' +
               DateTime.now().plus({ days: -1 }).day
             }
           />
@@ -251,7 +259,7 @@ function LogHeader(props) {
       <Collapse
         orientation='vertical'
         in={currentTab == 3 ? true : false}
-        sx={{ width: "40%" }}
+        sx={{ width: '40%' }}
       >
         <LocalizationProvider dateAdapter={AdapterLuxon}>
           <DatePicker
@@ -267,7 +275,7 @@ function LogHeader(props) {
           id='duration'
           label='DURATION'
           variant='filled'
-          sx={{ width: "15%" }}
+          sx={{ width: '15%' }}
           onChange={handleDurationChange}
           value={duration}
         />
@@ -276,23 +284,23 @@ function LogHeader(props) {
           options={props.CPData}
           getOptionLabel={(option) => option.name}
           groupBy={(option) => option.type}
-          sx={{ width: "30%" }}
+          sx={{ width: '30%' }}
           filterOptions={(options, params) => {
             const filtered = filter(options, params);
 
             const { inputValue } = params;
-            if (inputValue !== "") {
+            if (inputValue !== '') {
               filtered.push({
                 inputValue,
                 name: `ADD CLIENT: ${inputValue}`,
                 newValue: true,
-                type: "client",
+                type: 'client',
               });
               filtered.push({
                 inputValue,
                 name: `ADD PROJECT: ${inputValue}`,
                 newValue: true,
-                type: "project",
+                type: 'project',
               });
             }
 

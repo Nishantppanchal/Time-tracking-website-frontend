@@ -93,10 +93,17 @@ function Login() {
               error.response.data.detail ==
               'Invalid token header. No credentials provided.'
             ) {
-              localStorage.setItem(
-                'user_id',
-                error.response.data.requestData.data[0].id
-              );
+              if (rememberMe) {
+                localStorage.setItem(
+                  'user_id',
+                  error.response.data.requestData.data[0].id
+                );
+              } else {
+                sessionStorage.setItem(
+                  'user_id',
+                  error.response.data.requestData.data[0].id
+                );
+              }
             }
           });
       })

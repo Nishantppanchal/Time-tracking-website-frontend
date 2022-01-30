@@ -243,7 +243,9 @@ function EditPage() {
               name: tag.name.slice(9),
               billable: tag.billable,
               // Get the user id from the local storage
-              user: localStorage.getItem("user_id"),
+              user: localStorage.getItem('user_id')
+                ? localStorage.getItem('user_id')
+                : sessionStorage.getItem('user_id'),
             })
             // Handles the response
             .then((response) => {
@@ -320,7 +322,9 @@ function EditPage() {
             // Sets name to the client name without ADD CLIENT:
             name: CPSelected.name.slice(12),
             // Gets the user id from local storage
-            user: localStorage.getItem("user_id"),
+            user: localStorage.getItem('user_id')
+              ? localStorage.getItem('user_id')
+              : sessionStorage.getItem('user_id'),
           })
           // Handles response
           .then((response) => {
@@ -351,7 +355,9 @@ function EditPage() {
             // Sets name to the project name without ADD PROJECT:
             name: CPSelected.name.slice(13),
             // Gets the user id from local storage
-            user: localStorage.getItem("user_id"),
+            user: localStorage.getItem('user_id')
+              ? localStorage.getItem('user_id')
+              : sessionStorage.getItem('user_id'),
           })
           // Handles response
           .then((response) => {
