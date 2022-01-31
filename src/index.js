@@ -11,12 +11,15 @@ import EditPage from "./Components/Edit";
 // Import material UI components
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { StyledEngineProvider } from "@mui/material/styles";
+// Import redux components
+import { Provider } from 'react-redux';
+import store from './Store';
 
 // Create custom theme
 const theme = createTheme({
   palette: {
     //Dark or light theme
-    type: "light", 
+    mode: "light", 
     // Primary color
     primary: {
       main: "#3f51b5", 
@@ -49,21 +52,24 @@ render(
       <StyledEngineProvider injectFirst>
         {/* Assign custom theme */}
         <ThemeProvider theme={theme}> 
-          <Routes>
-            {/* Root directory */}
-            <Route path='/'>
-              {/* Assigns a component to the root directory */}
-              <Route index element={<Entry />} /> 
-              {/* Login page */}
-              <Route path='login' element={<Login />} />
-              {/* Sign Up page */}
-              <Route path='signup' element={<SignUp />} />
-              {/* Home page */} 
-              <Route path='home' element={<Home />} /> 
-              {/* Edit page */}
-              <Route path='edit/:id' element={<EditPage />} />
-            </Route>
-          </Routes>
+          {/* Provides redux global state to all components */}
+          <Provider store={store}>
+            <Routes>
+              {/* Root directory */}
+              <Route path='/'>
+                {/* Assigns a component to the root directory */}
+                <Route index element={<Entry />} /> 
+                {/* Login page */}
+                <Route path='login' element={<Login />} />
+                {/* Sign Up page */}
+                <Route path='signup' element={<SignUp />} />
+                {/* Home page */} 
+                <Route path='home' element={<Home />} /> 
+                {/* Edit page */}
+                <Route path='edit/:id' element={<EditPage />} />
+              </Route>
+            </Routes>
+          </Provider>
         </ThemeProvider>
       </StyledEngineProvider>
     </BrowserRouter>

@@ -11,12 +11,19 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 
+import fetchTagsData from './LoadData/LoadTags';
+import fetchLoadLogs from './LoadData/LoadLogs';
+import fetchCPData from './LoadData/LoadCPData';
+
+import { useSelector } from 'react-redux';
+
 function Home() {
   const navigate = useNavigate();
   const { DateTime } = require('luxon');
 
-  const [CPData, setCPData] = useState([]);
-  const [tagsData, setTagsData] = useState([]);
+  const tagsData = useSelector((state) => state.tags.value);
+  const CPData = useSelector((state) => state.CPData.value);
+
   const [allLogsLoaded, setAllLogsLoaded] = useState(false);
   const [logData, setLogData] = useState([]);
   const [loadedLogsNumber, setLoadedLogsNumber] = useState(0);
@@ -57,9 +64,7 @@ function Home() {
       valueGetter: (params) => {
         var tags = [];
         for (const tag of params.row.tags) {
-          tags.push(
-            tagsData.find((data) => data.id == tag).name.toString()
-          );
+          tags.push(tagsData.find((data) => data.id == tag).name.toString());
         }
         return tags.join(', ');
       },
@@ -88,92 +93,38 @@ function Home() {
   ];
 
   useEffect(() => {
-    axiosInstance
-      .get('CRUD/logs/', { params: { number: loadedLogsNumber } })
-      .then((response) => {
-        console.log(response.data);
-        if (response.data.length > 0) {
-          setLogData([...new Set([...logData, ...response.data])]);
-        } else {
-          setAllLogsLoaded(true); //To disable the load more button
-        }
-        setIsLogDataLoading(false);
-      })
-      .catch((error) => {
-        console.log(error.response);
-        if (
-          error.response.data.detail ==
-          'Invalid token header. No credentials provided.'
-        ) {
-          if (error.response.data.requestData.data.length > 0) {
-            setLogData([
-              ...new Set([...logData, ...error.response.data.requestData.data]),
-            ]);
-          } else {
-            setAllLogsLoaded(true);
-          }
-          setIsLogDataLoading(false);
-        }
-      });
+    fetchLoadLogs(
+      loadedLogsNumber,
+      setLogData,
+      logData,
+      setAllLogsLoaded,
+      setIsLogDataLoading
+    );
   }, [setLogData, loadedLogsNumber]);
 
   useEffect(() => {
-    axiosInstance
-      .get('clientProjectGet/')
-      .then((response) => {
-        setCPData([...response.data]);
-        setIsCPDataLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        if (
-          error.response.data.detail ==
-          'Invalid token header. No credentials provided.'
-        ) {
-          setCPData([...error.response.data.requestData.data]);
-          setIsCPDataLoading(false);
-        }
-      });
-  }, [setCPData]);
+    if (CPData.length == 0) {
+      fetchCPData(setIsCPDataLoading);
+    } else {
+      setIsCPDataLoading(false);
+    };
+  }, []);
 
   useEffect(() => {
-    axiosInstance
-      .get('CRUD/tags/')
-      .then((response) => {
-        console.log(process.env.REACT_APP_CLIENTID);
-        setTagsData([...response.data]);
-        setIsTagsDataLoading(false);
-      })
-      .catch((error) => {
-        console.log(error);
-        if (
-          error.response.data.detail ==
-          'Invalid token header. No credentials provided.'
-        ) {
-          setTagsData([...error.response.data.requestData.data]);
-          setIsTagsDataLoading(false);
-        }
-      });
-  }, [setTagsData]);
+    if (tagsData.length == 0) {
+      fetchTagsData(setIsTagsDataLoading);
+    } else {
+      setIsTagsDataLoading(false);
+    };
+  }, []);
 
   function loadMore(event) {
     event.preventDefault();
-
     setLoadedLogsNumber(loadedLogsNumber + 50);
   }
 
   function handleNewLog(data) {
     setLogData([data, ...logData]);
-  }
-
-  function handleAddCP(data) {
-    setCPData([data, ...CPData]);
-  }
-
-  async function handleAddTag(data) {
-    console.log(tagsData);
-    console.log(data);
-    await setTagsData([...data, ...tagsData]);
   }
 
   function handleLogDelete(id) {
@@ -195,13 +146,7 @@ function Home() {
   if (!isCPDataLoading && !isTagsDataLoading && !isLogDataLoading) {
     return (
       <div>
-        <LogHeader
-          CPData={CPData}
-          tagsData={tagsData}
-          addLog={handleNewLog}
-          addCP={handleAddCP}
-          addTag={handleAddTag}
-        />
+        <LogHeader addLog={handleNewLog} />
         <div style={{ height: 400, width: '100%' }}>
           <DataGrid
             rows={logData}
@@ -222,20 +167,7 @@ function Home() {
       </div>
     );
   } else {
-    return (
-      <div>
-        <LogHeader
-          CPData={CPData}
-          tagsData={tagsData}
-          addLog={handleNewLog}
-          addCP={handleAddCP}
-          addTag={() => {
-            return null;
-          }}
-        />
-        <Skeleton />
-      </div>
-    );
+    return <Skeleton />;
   }
 }
 

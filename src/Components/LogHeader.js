@@ -18,10 +18,17 @@ import { useEffect, useState } from 'react';
 import axiosInstance from '../Axios';
 import { gridColumnsTotalWidthSelector } from '@mui/x-data-grid';
 
+import { useDispatch } from 'react-redux';
+import { addTag } from '../Features/Tags';
+import { addCP } from '../Features/CPData';
+
+import { useSelector } from 'react-redux';
+
 function LogHeader(props) {
   const { DateTime } = require('luxon');
 
   const filter = createFilterOptions();
+  const dispatch = useDispatch();
 
   const [currentTab, setCurrentTab] = useState(2);
   const [date, setDate] = useState(DateTime.now());
@@ -30,10 +37,11 @@ function LogHeader(props) {
   const [descriptionRaw, setDescriptionRaw] = useState();
   const [description, setDescription] = useState();
   const [tagsSelected, setTagsSelected] = useState([]);
-  const [newTags, setNewTags] = useState([]);
-  const [tagsData, setTagsData] = useState(props.tagsData);
   const [clearField, setClearField] = useState(true);
   const [inputValue, setInputValue] = useState('');
+
+  const tagsData = useSelector((state) => state.tags.value);
+  const CPData = useSelector((state) => state.CPData.value);
 
   function handleTabChange(event, newTab) {
     setCurrentTab(newTab);
@@ -118,7 +126,7 @@ function LogHeader(props) {
 
     console.log(newTags);
     if (newTags.length != 0) {
-      await props.addTag(newTags);
+      dispatch(addTag(newTags));
     }
   }
 
@@ -134,17 +142,17 @@ function LogHeader(props) {
               ? localStorage.getItem('user_id')
               : sessionStorage.getItem('user_id'),
           })
-          .then(async (response) => {
-            await setCPSelected(response.data);
-            props.addCP(response.data);
+          .then((response) => {
+            setCPSelected(response.data);
+            dispatch(addCP(response.data));
           })
-          .catch(async (error) => {
+          .catch((error) => {
             if (
               error.response.data.detail ==
               'Invalid token header. No credentials provided.'
             ) {
-              await setCPSelected(error.response.data.requestData.data);
-              props.addCP(error.response.data.requestData.data);
+              setCPSelected(error.response.data.requestData.data);
+              dispatch(addCP(error.response.data.requestData.data));
             }
           });
       } else {
@@ -155,17 +163,17 @@ function LogHeader(props) {
               ? localStorage.getItem('user_id')
               : sessionStorage.getItem('user_id'),
           })
-          .then(async (response) => {
-            await setCPSelected(response.data);
-            props.addCP(response.data);
+          .then((response) => {
+            setCPSelected(response.data);
+            dispatch(addCP(response.data));
           })
           .catch(async (error) => {
             if (
               error.response.data.detail ==
               'Invalid token header. No credentials provided.'
             ) {
-              await setCPSelected(error.response.data.requestData.data);
-              props.addCP(error.response.data.requestData.data);
+              setCPSelected(error.response.data.requestData.data);
+              dispatch(addCP(error.response.data.requestData.data));
             }
           });
       }
@@ -281,7 +289,7 @@ function LogHeader(props) {
         />
         <Autocomplete
           id='CP'
-          options={props.CPData}
+          options={CPData}
           getOptionLabel={(option) => option.name}
           groupBy={(option) => option.type}
           sx={{ width: '30%' }}
@@ -320,7 +328,7 @@ function LogHeader(props) {
         />
         <DescriptionWithTagsInput
           empty={true}
-          tags={props.tagsData}
+          tags={tagsData}
           data={handleDescriptionWithTagsData}
           clear={clearField}
         />
