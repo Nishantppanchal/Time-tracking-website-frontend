@@ -16,21 +16,20 @@ import Collapse from '@mui/material/Collapse';
 // Import custom component
 import DescriptionWithTagsInput from './DescriptionWithTags';
 import handleDescriptionsAndTagsExtraction from './DescriptionsAndTagsExtraction';
+import handleNewCP from './NewCP';
+import CPFilter from './CPFilter';
 // Import fetch components
 import fetchCPData from './LoadData/LoadCPData';
 import fetchTagsData from './LoadData/LoadTags';
 // Import redux components
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
-import { addCP } from '../Features/CPData';
 
 function EditPage() {
   // Gets the id from the URL
   const { id } = useParams();
   // Creates the function DateTime
   const { DateTime } = require('luxon');
-  // Create a filter function
-  const filter = createFilterOptions();
   // Creates a navigate function
   const navigate = useNavigate();
   // Creates a dispatch function to edit redux states
@@ -160,7 +159,8 @@ function EditPage() {
 
   // Handle change in the content within DescriptionWithTagsInput textfield
   function handleDescriptionWithTagsData(data) {
-    // Handle the extraction
+    // Handles the description and tags extraction
+    // The required values and functions are pass through
     handleDescriptionsAndTagsExtraction(
       data,
       setTagsSelected,
@@ -192,76 +192,9 @@ function EditPage() {
     // Prevents the default actions
     event.preventDefault();
 
-    // If the client or project is new
-    if (CPSelected.newValue == true) {
-      // If it is a client
-      if (CPSelected.type == 'client') {
-        // Creates a new client with a post request
-        axiosInstance
-          .post('CRUD/clients/', {
-            // Defines the body content
-            // Sets name to the client name without ADD CLIENT:
-            name: CPSelected.name.slice(12),
-            // Gets the user id from local storage
-            user: localStorage.getItem('user_id')
-              ? localStorage.getItem('user_id')
-              : sessionStorage.getItem('user_id'),
-          })
-          // Handles response
-          .then((response) => {
-            // Sets the CPSelected states the new client's information
-            setCPSelected(response.data);
-            // Adds the new client to CPData redux state
-            dispatch(addCP(response.data));
-          })
-          // Handles errors
-          .catch((error) => {
-            // If the access token is invalid
-            if (
-              error.response.data.detail ==
-              'Invalid token header. No credentials provided.'
-            ) {
-              // Sets the CPSelected states the new client's information passed through by axios intercept
-              setCPSelected(error.response.data.requestData.data);
-              // Adds the new client passed through by axios intercept to CPData redux state
-              dispatch(addCP(error.response.data.requestData.data));
-            }
-          });
-        // If it is a project
-      } else {
-        // Creates a new project with a post request
-        axiosInstance
-          .post('CRUD/projects/', {
-            // Defines the body content
-            // Sets name to the project name without ADD PROJECT:
-            name: CPSelected.name.slice(13),
-            // Gets the user id from local storage
-            user: localStorage.getItem('user_id')
-              ? localStorage.getItem('user_id')
-              : sessionStorage.getItem('user_id'),
-          })
-          // Handles response
-          .then((response) => {
-            // Sets the CPSelected states the new project's information
-            setCPSelected(response.data);
-            // Adds the new project to CPData redux state
-            dispatch(addCP(response.data));
-          })
-          // Handles errors
-          .catch((error) => {
-            // If the access token is invalid
-            if (
-              error.response.data.detail ==
-              'Invalid token header. No credentials provided.'
-            ) {
-              // Sets the CPSelected states the new project's information passed through by axios intercept
-              setCPSelected(error.response.data.requestData.data);
-              // Adds the new project passed through by axios intercept to CPData redux state
-              dispatch(addCP(error.response.data.requestData.data));
-            }
-          });
-      }
-    }
+    // Runs function that handles creation of new clients and projects
+    // The required states and setState functions are passed through
+    handleNewCP(CPSelected, setCPSelected);
 
     // Creates the url with the ID of log
     const url = 'CRUD/logs/' + id + '/';
@@ -318,39 +251,6 @@ function EditPage() {
       // This causes a error alert to appear
       setNoFieldsChangedError(true);
     }
-  }
-
-  // Handles filtering the client and project based on the input
-  function filterOptions(options, params) {
-    // Creates a array of filtered options based on the input
-    const filtered = filter(options, params);
-
-    // Extracts the string input value from params
-    const { inputValue } = params;
-    // If the input value is not empty
-    if (inputValue !== '') {
-      // Add a create new client option
-      filtered.push({
-        // Sets the name key to the 'ADD CLIENT: ' + input value
-        name: `ADD ClIENT: ${inputValue}`,
-        // Sets the newValue key's value to true
-        newValue: true,
-        // Sets the type to clients for grouping
-        type: 'clients',
-      });
-      // Add a create new project option
-      filtered.push({
-        // Sets the name key to the 'ADD PROJECT: ' + input value
-        name: `ADD PROJECT: ${inputValue}`,
-        // Sets the newValue key's value to true
-        newValue: true,
-        // Sets the type to projects for grouping
-        type: 'projects',
-      });
-    }
-
-    // Returns the filtered options array
-    return filtered;
   }
 
   // Handles value (what is output after client/project selected) change
@@ -422,8 +322,8 @@ function EditPage() {
           groupBy={(option) => option.type}
           // Sets the width to 30%
           sx={{ width: '30%' }}
-          // Assigns filterOptions to filter the client and project based on the input
-          filterOptions={filterOptions}
+          // Assigns filterOptions to a function that filter the client and project based on the input
+          filterOptions={CPFilter}
           // Defines what is render as the input field
           renderInput={(params) => (
             <TextField {...params} label='CLIENT OR PROJECT' variant='filled' />
@@ -489,5 +389,5 @@ function EditPage() {
   }
 }
 
-// Exports editPage
+// Exports EditPage
 export default EditPage;
