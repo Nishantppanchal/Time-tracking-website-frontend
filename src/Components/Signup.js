@@ -61,16 +61,16 @@ function SignUp() {
   }
 
   // Handles the login in field changing
-  function handleRegisterChange() {
+  function handleRegisterChange(event) {
     // Updates the inputData state with the latest value for the field that is changed
     updateInputData({
       // Inserts the old data
       ...inputData,
       // Updates the value for whatever field is changed
-      [e.target.name]: e.target.value,
+      [event.target.name]: event.target.value,
     });
-    if (e.target.name == 'password') {
-      if (e.target.value != '') {
+    if (event.target.name == 'password') {
+      if (event.target.value != '') {
         setRetypePasswordStatus(true);
       } else {
         setRetypePasswordStatus(false);
@@ -78,13 +78,13 @@ function SignUp() {
     }
 
     // If the field changed is the password or retyped password field
-    if (e.target.name == 'password' || e.target.name == 'retypedPassword') {
+    if (event.target.name == 'password' || event.target.name == 'retypedPassword') {
       const inputs =
         // If the changed field is the password field
-        e.target.name == 'password'
+        event.target.name == 'password'
           ? {
               // Sets the password to the event value
-              password: e.target.value,
+              password: event.target.value,
               // Sets the retypedPassword to the retypedPassword value in the inputData state
               retypedPassword: inputData.retypedPassword,
             }
@@ -92,7 +92,7 @@ function SignUp() {
               // Sets the password to the password value in the inputData state
               password: inputData.password,
               // Sets the retypedPassword to the event value
-              retypedPassword: e.target.value,
+              retypedPassword: event.target.value,
             };
 
       // Run the password and retypedPassword through password validation
@@ -119,11 +119,11 @@ function SignUp() {
         });
       }
       // If the field changed is empty
-    } else if (e.target.value != '') {
+    } else if (event.target.value != '') {
       // Resets the formValidationStatus state for the field to no errors
       setFormValidationStatus({
         ...formValidationStatus,
-        [e.target.name]: { hasError: false, errors: null },
+        [event.target.name]: { hasError: false, errors: null },
       });
     }
   }

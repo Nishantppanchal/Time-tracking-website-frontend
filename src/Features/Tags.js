@@ -17,7 +17,7 @@ export const tagsSlice = createSlice({
         // Defines reducer to add one log
         addTag: (state, action) => {
             // Add the payload to the the state array
-            state.value = [...state.value, action.payload];
+            state.value = [...state.value, ...action.payload];
         },
     }
 });

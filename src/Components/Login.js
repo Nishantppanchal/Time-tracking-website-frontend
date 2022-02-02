@@ -19,7 +19,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 // Import React Components
 import { Link, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 // Import Axios
 import axios from 'axios';
 import axiosInstance from '../Axios';
