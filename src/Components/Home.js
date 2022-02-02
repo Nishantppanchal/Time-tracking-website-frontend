@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // Import MUI components
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -70,11 +71,11 @@ function Home() {
         params.row.client
           ? // Finds the client with the same id as the one recorded in the log and gets it's name
             CPData.find(
-              (data) => data.id == params.row.client && data.type == 'clients'
+              (data) => data.id === params.row.client && data.type === 'clients'
             ).name
           : // Finds the project with the same id as the one recorded in the log and gets it's name
             CPData.find(
-              (data) => data.id == params.row.project && data.type == 'projects'
+              (data) => data.id === params.row.project && data.type === 'projects'
             ).name,
     },
     // Sets the time column
@@ -93,7 +94,7 @@ function Home() {
         // For all the tags in the log
         for (const tag of params.row.tags) {
           // Find the tag name from it id in the log and adds it the tags array
-          tags.push(tagsData.find((data) => data.id == tag).name.toString());
+          tags.push(tagsData.find((data) => data.id === tag).name.toString());
         }
         // Join the array of tags with , inbetween them
         return tags.join(', ');
@@ -146,7 +147,7 @@ function Home() {
   // Runs this code on every render/update after the DOM has updated
   useEffect(() => {
     // If the CPData redux state is empty
-    if (CPData.length == 0) {
+    if (CPData.length === 0) {
       // Runs the function that fetches the CPData
       fetchCPData(setIsCPDataLoading);
       // Otherwise, if the CPData has already been loaded
@@ -159,7 +160,7 @@ function Home() {
   // Runs this code on every render/update after the DOM has updated
   useEffect(() => {
     // If the tags redux state is empty
-    if (tagsData.length == 0) {
+    if (tagsData.length === 0) {
       // Runs the function that fetches the tags
       fetchTagsData(setIsTagsDataLoading);
       // Otherwise, if the tags have not already been loaded
@@ -195,7 +196,7 @@ function Home() {
     setLogData(
       // Filters out the log that was deleted
       logData.filter((log) => {
-        return log.id != id;
+        return log.id !== id;
       })
     );
   }

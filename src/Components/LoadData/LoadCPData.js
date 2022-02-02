@@ -20,7 +20,7 @@ function fetchCPData(setIsCPDataLoading) {
     .catch((error) => {
       // If the access token is invalid
       if (
-        error.response.data.detail ==
+        error.response.data.detail ===
         'Invalid token header. No credentials provided.'
       ) {
         // Sets the CPData state to the response data passed through the error data by axios intercept

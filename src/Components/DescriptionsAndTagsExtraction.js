@@ -32,13 +32,12 @@ async function handleDescriptionsAndTagsExtraction(
   for (let tag of data.tags) {
     // If the tag has the key newValue set to true
     if (tag.newValue) {
-      console.log(tag)
       // Get a get request to determine if the tag exists
       var doesTagExist = await axiosInstance
         .get('doesTagExist/', {
           // Add the parameter name to the url
-          // Name would be the name of the tag with ADD TAG:
-          params: { name: tag.name.slice(9) },
+          // Name would be the name of the tag
+          params: { name: tag.name },
         })
         // Handle response to the get request
         .then((response) => {
@@ -50,7 +49,7 @@ async function handleDescriptionsAndTagsExtraction(
         .catch((error) => {
           // If access token is invalid
           if (
-            error.response.data.detail ==
+            error.response.data.detail ===
             'Invalid token header. No credentials provided.'
           ) {
             // Return the response data passed through by axios intercept
@@ -62,11 +61,11 @@ async function handleDescriptionsAndTagsExtraction(
       // If the tag doesn't exist
       if (!doesTagExist.exists) {
         // Create a new tag with a post request
-        var data = await axiosInstance
+        var tagData = await axiosInstance
           .post('CRUD/tags/', {
             // Defines the body content of the post request
-            // Sets the name to the tag name with ADD TAG:
-            name: tag.name.slice(9),
+            // Sets the name to the tag name
+            name: tag.name,
             billable: tag.billable,
             // Get the user id from the local storage
             user: localStorage.getItem('user_id')
@@ -83,7 +82,7 @@ async function handleDescriptionsAndTagsExtraction(
           .catch((error) => {
             // If the access token is invalid
             if (
-              error.response.data.detail ==
+              error.response.data.detail ===
               'Invalid token header. No credentials provided.'
             ) {
               // Return the response data passed through by axios intercept
@@ -93,13 +92,13 @@ async function handleDescriptionsAndTagsExtraction(
           });
 
         // Add the new tag's ID to the tags array
-        tags.push(data.id);
+        tags.push(tagData.id);
         // Add the new tag's data to the newTags array
-        newTags.push(data);
+        newTags.push(tagData);
         // Otherwise, if the new tag has already been created
       } else {
         // Add the new tag's ID to the tags array
-        tags.push(data.id);
+        tags.push(doesTagExist.id);
       }
       // Otherwise, if the tag is not a new tag
     } else {
@@ -111,7 +110,7 @@ async function handleDescriptionsAndTagsExtraction(
   // Sets the tagsSelected state to the tags array
   setTagsSelected(tags);
   // If the newTags array is not empty
-  if (newTags.length != 0) {
+  if (newTags.length !== 0) {
     // Add new tags to the tags redux state
     store.dispatch(addTag(newTags));
   }

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // Import React components
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
@@ -6,7 +7,7 @@ import axiosInstance from '../Axios';
 // Import MUI components
 import Skeleton from '@mui/material/Skeleton';
 import TextField from '@mui/material/TextField';
-import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
+import Autocomplete from '@mui/material/Autocomplete';
 import AdapterLuxon from '@mui/lab/AdapterLuxon';
 import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
@@ -23,7 +24,6 @@ import fetchCPData from './LoadData/LoadCPData';
 import fetchTagsData from './LoadData/LoadTags';
 // Import redux components
 import { useSelector } from 'react-redux';
-import { useDispatch } from 'react-redux';
 
 function EditPage() {
   // Gets the id from the URL
@@ -32,8 +32,6 @@ function EditPage() {
   const { DateTime } = require('luxon');
   // Creates a navigate function
   const navigate = useNavigate();
-  // Creates a dispatch function to edit redux states
-  const dispatch = useDispatch();
 
   // Defines all the states
   // The states are kept seperates as state are not update instantly
@@ -94,7 +92,7 @@ function EditPage() {
       .catch((error) => {
         // If the access token is invalid
         if (
-          error.response.data.detail ==
+          error.response.data.detail ===
           'Invalid token header. No credentials provided.'
         ) {
           // Set the logData state to the log data passed through the error data by axios intercept
@@ -117,7 +115,7 @@ function EditPage() {
 
   // Runs this code on every render/update after the DOM has updated
   useEffect(() => {
-    if (CPData.length == 0) {
+    if (CPData.length === 0) {
       fetchCPData(setIsCPDataLoading);
     } else {
       setIsCPDataLoading(false)
@@ -126,7 +124,7 @@ function EditPage() {
 
   // Runs this code on every render/update after the DOM has updated
   useEffect(() => {
-    if (tagsData.length == 0) {
+    if (tagsData.length === 0) {
       fetchTagsData(setIsTagsDataLoading);
     } else {
       setIsTagsDataLoading(false)
@@ -141,7 +139,7 @@ function EditPage() {
       if (logData.client) {
         // Find the client data with it's ID
         const client = CPData.find(
-          (data) => data.id == logData.client && data.type == 'clients'
+          (data) => data.id === logData.client && data.type === 'clients'
         );
         // Set the CPSelected state to the client data found
         setCPSelected(client);
@@ -149,7 +147,7 @@ function EditPage() {
       } else {
         // Find the project data with it's ID
         const project = CPData.find(
-          (data) => data.id == logData.project && data.type == 'projects'
+          (data) => data.id === logData.project && data.type === 'projects'
         );
         // Set the CPSelected state to the project data found
         setCPSelected(project);
@@ -172,7 +170,7 @@ function EditPage() {
   // Handles duration change
   function handleDurationChange(event) {
     // If the duration has changed
-    if (event.target.value != duration) {
+    if (event.target.value !== duration) {
       // Sets the duration state to the new duration value entered by the user
       setDuration(event.target.value);
     }
@@ -181,7 +179,7 @@ function EditPage() {
   // Handles date change
   function handleDateChange(newDate) {
     // If the date has changed
-    if (newDate != date) {
+    if (newDate !== date) {
       // Set the date state to the new date selected by the user
       setDate(newDate);
     }
@@ -194,7 +192,8 @@ function EditPage() {
 
     // Runs function that handles creation of new clients and projects
     // The required states and setState functions are passed through
-    handleNewCP(CPSelected, setCPSelected);
+    // The response client or project data is stored in createdCPData
+    const CPSelectedData = handleNewCP(CPSelected);
 
     // Creates the url with the ID of log
     const url = 'CRUD/logs/' + id + '/';
@@ -202,17 +201,17 @@ function EditPage() {
     var updatedData = {};
 
     // If the duration has changed
-    if (duration != logData.time) {
+    if (duration !== logData.time) {
       // Set the new duration as the value for the key time in updatedData
       updatedData.time = duration;
     }
     // If the date has changed
-    if (date.toFormat('yyyy-LL-dd') != logData.date) {
+    if (date.toFormat('yyyy-LL-dd') !== logData.date) {
       // Set the new date as the value for the key date in updatedData
       updatedData.date = date.toFormat('yyyy-LL-dd');
     }
     // If the description has changed
-    if (descriptionRaw != logData.descriptionRaw) {
+    if (descriptionRaw !== logData.descriptionRaw) {
       // All threes are changed as they are all linked
       // Set the new description as the value for the key description in updatedData
       updatedData.description = description;
@@ -223,16 +222,16 @@ function EditPage() {
     }
 
     // If the CPSelected is a client and it has changed
-    if (CPSelected.type == 'clients' && CPSelected.id != logData.client) {
+    if (CPSelectedData.type === 'clients' && CPSelectedData.id !== logData.client) {
       // Set the new client selected as the value for the key client in updatedData
-      updatedData.client = CPSelected.id;
+      updatedData.client = CPSelectedData.id;
       // Otherwise, if the CPSelected is a project and it has changed
     } else if (
-      CPSelected.type == 'projects' &&
-      CPSelected.id != logData.project
+      CPSelectedData.type === 'projects' &&
+      CPSelectedData.id !== logData.project
     ) {
       // Set the new project selected as the value for the key project in updatedData
-      updatedData.project = CPSelected.id;
+      updatedData.project = CPSelectedData.id;
     }
 
     // If there is atleast 1 key-value pair in the updatedData dictionary

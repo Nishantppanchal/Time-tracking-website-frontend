@@ -19,7 +19,6 @@ import handleDescriptionsAndTagsExtraction from './DescriptionsAndTagsExtraction
 // Import axios instance
 import axiosInstance from '../Axios';
 // Import redux components
-import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 // Import React components
 import { useState } from 'react';
@@ -27,8 +26,6 @@ import { useState } from 'react';
 function LogHeader(props) {
   // Creates the DateTime function
   const { DateTime } = require('luxon');
-  // Creates a function that allow state editing
-  const dispatch = useDispatch();
 
   // Defines all the states
   // Stores data from server
@@ -62,15 +59,15 @@ function LogHeader(props) {
     // Sets the currentTab state to the new tab
     setCurrentTab(newTab);
     // If the newTab is the first tab
-    if (newTab == 0) {
+    if (newTab === 0) {
       // Sets the date state to 2 days minus the date today
       setDate(DateTime.now().plus({ days: -2 }));
       // If the newTab is the second tab
-    } else if (newTab == 1) {
+    } else if (newTab === 1) {
       // Sets the date state to 1 days minus the date today
       setDate(DateTime.now().plus({ days: -1 }));
       // If the newTab is the third tab
-    } else if (newTab == 2) {
+    } else if (newTab === 2) {
       // Sets the date state to today's date
       setDate(DateTime.now());
     }
@@ -79,7 +76,7 @@ function LogHeader(props) {
   // Handles the date change using the date picker
   function handleDateChange(newDate) {
     // If the date has changed
-    if (newDate != date) {
+    if (newDate !== date) {
       // Set the date state to the nee date
       setDate(newDate);
     }
@@ -104,16 +101,17 @@ function LogHeader(props) {
   }
 
   // Handles log button click
-  function handleLogButton(event) {
+  async function handleLogButton(event) {
     // Prevents default action on click of button
     event.preventDefault();
 
     // Runs function that handles creation of new clients and projects
     // The required states and setState functions are passed through
-    handleNewCP(CPSelected, setCPSelected);
+    // The response client or project data is stored in createdCPData
+    const CPSelectedData = await handleNewCP(CPSelected);
 
     // If the client or project selected is a client
-    if (CPSelected.type == 'clients') {
+    if (CPSelectedData.type === 'clients') {
       // Sends a post request to create a new log
       axiosInstance
         .post('CRUD/logs/', {
@@ -129,7 +127,7 @@ function LogHeader(props) {
           // Sets the selected tags
           tags: tagsSelected,
           // Sets the client selected
-          client: CPSelected.id,
+          client: CPSelectedData.id,
           // Sets the user ID from it appropriate location
           user: localStorage.getItem('user_id')
             ? localStorage.getItem('user_id')
@@ -142,9 +140,10 @@ function LogHeader(props) {
         })
         // Handles errors
         .catch((error) => {
+          console.log(error.response)
           // If the access token is invalid
           if (
-            error.response.data.detail ==
+            error.response.data.detail ===
             'Invalid token header. No credentials provided.'
           ) {
             // The response data passed through by axios intercept is pushed to the props addLog
@@ -167,7 +166,7 @@ function LogHeader(props) {
           // Sets the selected tags
           tags: tagsSelected,
           // Sets the client selected
-          project: CPSelected.id,
+          project: CPSelectedData.id,
           // Sets the user ID from it appropriate location
           user: localStorage.getItem('user_id')
             ? localStorage.getItem('user_id')
@@ -182,7 +181,7 @@ function LogHeader(props) {
         .catch((error) => {
           // If the access token is invalid
           if (
-            error.response.data.detail ==
+            error.response.data.detail ===
             'Invalid token header. No credentials provided.'
           ) {
             // The response data passed through by axios intercept is pushed to the props addLog
@@ -256,7 +255,7 @@ function LogHeader(props) {
         // Sets the the collapse animation direction to vertical
         orientation='vertical'
         // Date picker only visible if currentTab is the fourth tab
-        in={currentTab == 3 ? true : false}
+        in={currentTab === 3 ? true : false}
         sx={{ width: '40%' }}
       >
         {/* Sets the library to be used for date picker */}

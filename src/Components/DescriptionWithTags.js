@@ -5,7 +5,6 @@ import {
   EditorState,
   convertToRaw,
   convertFromRaw,
-  createWithContent,
 } from 'draft-js';
 // Import draftJS Plugins components
 import Editor from '@draft-js-plugins/editor';
@@ -51,38 +50,13 @@ class DescriptionWithTagsInput extends React.Component {
     supportWhitespace: true,
     // Defines the mention component
     mentionComponent(mentionProps) {
-      // If the component starts with #ADD TAG:, which it would if it were a new tag
-      if (mentionProps.children[0].props.text.startsWith('#ADD TAG: ')) {
-        // Creates a edited mention
-        const editedMentionPropsChildern = [
-          // Creates a new object that combine the original mentionProps with edit props
-          Object.assign({}, mentionProps.children[0], {
-            props: {
-              // The original props are inserted
-              ...mentionProps.children[0].props,
-              // The text key-value pair is edited to remove the #ADD TAG:
-              text: '#' + mentionProps.children[0].props.text.slice(9),
-            },
-          }),
-        ];
-        
-        // The JSX what will be rendered
-        return (
-          // A styled span containing the tag value is returned
-          <span className={mentionProps.className}>
-            {editedMentionPropsChildern}
-          </span>
-        );
-      // Otherwise if the tag already exists
-      } else {
-        // The JSX what will be rendered
-        return (
-          // A styled span containing the tag value is returned
-          <span className={mentionProps.className}>
-            {mentionProps.children}
-          </span>
-        );
-      }
+      // The JSX what will be rendered
+      return (
+        // A styled span containing the tag value is returned
+        <span className={mentionProps.className}>
+          {mentionProps.children}
+        </span>
+      );
     },
   });
 
@@ -115,6 +89,38 @@ class DescriptionWithTagsInput extends React.Component {
     });
   };
 
+  // Function that defines how suggestions are rendered
+  Entry = (props) => {
+    // Extracts info from props
+    const {
+      mention,
+      theme,
+      searchValue,
+      isFocused,
+      ...parentProps
+    } = props;
+  
+    // If the mention is a newValue
+    if (mention.newValue) {
+      // This is the JSX rendered
+      return (
+        // Div with parent props pass through
+        <div {...parentProps}>
+          {/* Mention name with ADD TAG: at the start */}
+          {'ADD TAG: ' + mention.name}
+        </div>
+      )
+    }
+    // Otherwise, if the mention is not new
+    // This is the JSX rendered
+    return (
+      // Div with parent props pass through
+      <div {...parentProps}>
+        {mention.name}
+      </div>
+    )
+  }
+
   // Handles updating the tags suggestion menu
   onSearchChange = ({ value }) => {
     // Removes whitespaces from both ends of the string
@@ -123,12 +129,12 @@ class DescriptionWithTagsInput extends React.Component {
     const tags = this.props.tags.slice();
 
     // If there is not a value that exactly matches the input
-    if (!tags.some((tag) => tag.name == trimmedValue)) {
-      if (!trimmedValue.charAt(trimmedValue.length - 1) == '*') {
+    if (!tags.some((tag) => tag.name === trimmedValue)) {
+      if (!trimmedValue.charAt(trimmedValue.length - 1) === '*') {
         // Creates a dictionary for the new tag with billable as true
         const newTag = {
           billable: true,
-          name: 'ADD TAG: ' + trimmedValue,
+          name: trimmedValue,
           // newValue is a extra key-value pair used to create the new tags
           newValue: true,
         };
@@ -139,7 +145,7 @@ class DescriptionWithTagsInput extends React.Component {
         // Creates a dictionary for the new tag with billable as false
         const newTag = {
           billable: false,
-          name: 'ADD TAG: ' + trimmedValue,
+          name: trimmedValue,
           // newValue is a extra key-value pair used to create the new tags
           newValue: true,
         };
@@ -214,6 +220,10 @@ class DescriptionWithTagsInput extends React.Component {
           onSearchChange={this.onSearchChange}
           // Sets the suggestions to the suggestions array in state
           suggestions={this.state.suggestions}
+          // Defines how the suggestions are displayed
+          entryComponent={this.Entry}
+          // Only show 5 at bottom of editor
+          // popoverContainer={({ children }) => <div>children.slice(0, 5)</div>}
         />
       </div>
     );

@@ -10,11 +10,11 @@ function CPFilter(options, params) {
   // Extracts the string input value from params
   const { inputValue } = params;
   // If the input value is not empty
-  if (inputValue !== '' && !filtered.some((CP) => CP.name == inputValue)) {
+  if (inputValue !== '' && !filtered.some((CP) => CP.name === inputValue)) {
     // Add a create new client option
     filtered.push({
       // Sets the name key to the 'ADD CLIENT: ' + input value
-      name: `ADD ClIENT: ${inputValue}`,
+      name: `ADD CLIENT: ${inputValue}`,
       // Sets the newValue key's value to true
       newValue: true,
       // Sets the type to clients for grouping

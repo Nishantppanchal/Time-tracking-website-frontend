@@ -36,7 +36,7 @@ function fetchLogs(
     .catch((error) => {
       // If the access token is invalid
       if (
-        error.response.data.detail ==
+        error.response.data.detail ===
         'Invalid token header. No credentials provided.'
       ) {
         // If there are one or more logs in the response data passed through by axios intercept
