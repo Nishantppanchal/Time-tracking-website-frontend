@@ -8,7 +8,7 @@ function fetchLogs(
   setLogData,
   logData,
   setAllLogsLoaded,
-  setIsLogDataLoading
+  setIsLogDataLoading,
 ) {
   // Send the a get request to get the logs
   // loadedLogNumber allows the logs to be progressively loaded
@@ -55,6 +55,8 @@ function fetchLogs(
         setIsLogDataLoading(false);
       }
     });
+
+
 }
 
 // Export fetchLogs function

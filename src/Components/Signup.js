@@ -167,7 +167,7 @@ function SignUp() {
       error = true;
     }
     // If the first name field is empty
-    if (inputData.firstName == '') {
+    if (inputData.firstName === '') {
       // Changes the firstName field in data to have the field is empty error
       data = {
         ...data,
@@ -178,7 +178,7 @@ function SignUp() {
       error = true;
     }
     // If the last name field is empty
-    if (inputData.lastName == '') {
+    if (inputData.lastName === '') {
       // Changes the lastName field in data to have the field is empty error
       data = {
         ...data,
@@ -189,7 +189,7 @@ function SignUp() {
       error = true;
     }
     // If the email field is empty
-    if (inputData.email == '') {
+    if (inputData.email === '') {
       // Changes the email field in data to have the field is empty error
       data = {
         ...data,
@@ -204,7 +204,7 @@ function SignUp() {
     setFormValidationStatus(data);
 
     // If the error variable is false
-    if (error == false) {
+    if (error === false) {
       // Send a post request to create the user
       axios
         .post('http://127.0.0.1:8000/api/user/register/', {
@@ -219,7 +219,7 @@ function SignUp() {
           // If the user was created
           if (response.status === 201) {
             // Pushes the user to the home page
-            navigate('/home');
+            navigate('/login', { replace: true });
           }
         })
         // Handles errors

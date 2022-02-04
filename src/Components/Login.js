@@ -131,7 +131,7 @@ function Login() {
           .catch((error) => {
             // If the access token was invalid
             if (
-              error.response.data.detail ==
+              error.response.data.detail ===
               'In1valid token header. No credentials provided.'
             ) {
               // If the user has checked remember me
