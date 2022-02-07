@@ -81,6 +81,12 @@ function Login() {
       })
       // Handles the response
       .then((response) => {
+        // Clears all the local storage and session storage values if there are any
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('refresh_token');
+        sessionStorage.removeItem('access_token');
+        sessionStorage.removeItem('refresh_token');
+
         // If the user checked remember me
         if (rememberMe) {
           // Set the access token in localStorage
@@ -105,6 +111,10 @@ function Login() {
       })
       // After the tokens are stored
       .then(() => {
+        // Clears the local storage and session storage values if there are any
+        localStorage.removeItem('user_id');
+        sessionStorage.removeItem('user_id');
+
         // Gets the user ID
         axiosInstance
           .get('user/id/')

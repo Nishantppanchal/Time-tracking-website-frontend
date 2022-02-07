@@ -8,6 +8,7 @@ import Login from "./Components/Login";
 import SignUp from "./Components/Signup";
 import Dashboard from "./Components/Dashboard";
 import EditPage from "./Components/Edit";
+import RequireAuth from "./Components/RequireAuth";
 // Import material UI components
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { StyledEngineProvider } from "@mui/material/styles";
@@ -39,7 +40,9 @@ const theme = createTheme({
       main: "#b4b2b2",
     },
   },
+  // Edits the typography component styles
   typography: {
+    // Sets the font family to Roboto
     fontFamily: ["Roboto"],
   },
 });
@@ -64,9 +67,21 @@ render(
                 {/* Sign Up page */}
                 <Route path='signup' element={<SignUp />} />
                 {/* Home page */} 
-                <Route path='dashboard' element={<Dashboard />} /> 
+                <Route path='dashboard' element={
+                    // Requires user to be authenicated to visit
+                    <RequireAuth>
+                      <Dashboard />
+                    </RequireAuth>
+                  } 
+                /> 
                 {/* Edit page */}
-                <Route path='edit/:id' element={<EditPage />} />
+                <Route path='edit/:id' element={
+                    // Requires user to be authenicated to visit
+                    <RequireAuth>
+                      <EditPage />
+                    </RequireAuth>
+                  } 
+                />
               </Route>
             </Routes>
           </Provider>
