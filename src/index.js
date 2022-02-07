@@ -2,11 +2,11 @@
 import React from "react";
 import { render } from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// Import apps
+// Import custom components
 import Entry from "./Components/Entry";
 import Login from "./Components/Login";
 import SignUp from "./Components/Signup";
-import Home from "./Components/Home";
+import Dashboard from "./Components/Dashboard";
 import EditPage from "./Components/Edit";
 // Import material UI components
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -64,7 +64,7 @@ render(
                 {/* Sign Up page */}
                 <Route path='signup' element={<SignUp />} />
                 {/* Home page */} 
-                <Route path='home' element={<Home />} /> 
+                <Route path='dashboard' element={<Dashboard />} /> 
                 {/* Edit page */}
                 <Route path='edit/:id' element={<EditPage />} />
               </Route>

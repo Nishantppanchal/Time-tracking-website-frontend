@@ -99,9 +99,9 @@ function Login() {
           sessionStorage.setItem('refresh_token', response.data.refresh_token);
         }
 
-        // Pushs the user to the home page
+        // Pushs the user to the dashboard page
         // Replace prevent the user from going back to the login page
-        navigate('/home', { replace: true });
+        navigate('/dashboard', { replace: true });
       })
       // After the tokens are stored
       .then(() => {
@@ -299,6 +299,9 @@ function Login() {
           <Box width='80%'>
             {/* Login button */}
             <Button
+              // Sets the type to submit 
+              // This allows the enter to submit the form
+              type='submit'
               // Set variant to contained
               variant='contained'
               // Set the CSS class to loginRoundButton

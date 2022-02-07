@@ -19,6 +19,7 @@ import DescriptionWithTagsInput from './DescriptionWithTags';
 import handleDescriptionsAndTagsExtraction from './DescriptionsAndTagsExtraction';
 import handleNewCP from './NewCP';
 import CPFilter from './CPFilter';
+import Header from './Header';
 // Import fetch components
 import fetchCPData from './LoadData/LoadCPData';
 import fetchTagsData from './LoadData/LoadTags';
@@ -268,8 +269,8 @@ function EditPage() {
   function handleBackButton(event) {
     // Prevents the default actions
     event.preventDefault();
-    // Sends the url to the home page
-    navigate('/home');
+    // Sends the url to the dashboard page
+    navigate('/dashboard');
   }
 
   // If all the date loading states are false
@@ -279,6 +280,8 @@ function EditPage() {
     return (
       // Wrapper div
       <div>
+        {/* App bar */}
+        <Header />
         {/* Header with tag id */}
         <h1>Tag ID: {id}</h1>
         {/* Date picker */}

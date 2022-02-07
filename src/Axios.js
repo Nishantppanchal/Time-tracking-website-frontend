@@ -34,7 +34,7 @@ axiosInstance.interceptors.response.use(
   async function (error) {
     // If the access token is expired
     if (
-      error.response.data.detail ==
+      error.response.data.detail ===
       'Invalid token header. No credentials provided.'
     ) {
       // Creates a variable to store refresh token
@@ -88,7 +88,7 @@ axiosInstance.interceptors.response.use(
         // Handles errors
         .catch((error) => {
           // If the refresh token is expired
-          if (error.response.data.error == 'invalid_grant') {
+          if (error.response.data.error === 'invalid_grant') {
             // Removes the access and refresh token from the appropriate location
             if (localStorage.getItem('refresh_token')) {
               // Remove access and refresh token from local storage

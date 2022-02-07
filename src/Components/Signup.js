@@ -218,7 +218,7 @@ function SignUp() {
         .then((response) => {
           // If the user was created
           if (response.status === 201) {
-            // Pushes the user to the home page
+            // Pushes the user to the login page
             navigate('/login', { replace: true });
           }
         })
@@ -453,6 +453,9 @@ function SignUp() {
           <Box width='80%'>
             {/* Sign up button */}
             <Button
+              // Sets the type to submit 
+              // This allows the enter to submit the form
+              type='submit'
               // Sets the style to contained
               variant='contained'
               // Sets the CSS class to registerRoundButton

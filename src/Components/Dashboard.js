@@ -5,20 +5,22 @@ import { useNavigate } from 'react-router-dom';
 import Skeleton from '@mui/material/Skeleton';
 import Button from '@mui/material/Button';
 import './../Styles/Home.css';
-import LogHeader from './LogHeader';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 // Import axios instance
-import axiosInstance from './../Axios.js';
+import axiosInstance from '../Axios.js';
 // Import fetching components
 import fetchTagsData from './LoadData/LoadTags';
 import fetchLogs from './LoadData/LoadLogs';
 import fetchCPData from './LoadData/LoadCPData';
 // Import redux components
 import { useSelector } from 'react-redux';
+// Import custom components
+import LogHeader from './LogHeader';
+import Header from './Header';
 
-function Home() {
+function Dashboard() {
   // Create navigate function
   const navigate = useNavigate();
   // Creates the function DateTime
@@ -213,6 +215,8 @@ function Home() {
     return (
       // Wrapper div
       <div>
+        {/* App bar */}
+        <Header />
         {/* LogHeader custom conponent */}
         <LogHeader addLog={handleNewLog} />
         {/* Styled wrapper div */}
@@ -257,4 +261,4 @@ function Home() {
   }
 }
 
-export default Home;
+export default Dashboard;
