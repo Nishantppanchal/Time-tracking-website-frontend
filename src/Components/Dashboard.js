@@ -88,7 +88,7 @@ function Dashboard() {
     {
       field: 'descriptionRaw',
       headerName: 'description',
-      width: 180,
+      width: 500,
       renderCell: (params) => (
         // Custom field for description with tags
         <DescriptionWithTagsInput

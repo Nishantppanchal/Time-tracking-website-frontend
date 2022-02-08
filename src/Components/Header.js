@@ -65,7 +65,9 @@ function Header() {
     // Sends a POST request to revoke the refresh token
     AxiosInstance.post('auth/revoke-token/', {
       // Sets the refresh token to be revoked
-      token: localStorage.getItem('refresh_token'),
+      token: localStorage.getItem('refresh_token')
+        ? localStorage.getItem('refresh_token')
+        : sessionStorage.getItem('refresh_token'),
       // Sets the token type to refresh token
       token_type_hint: 'refresh_token',
       // Get the client id from the .env file
@@ -75,18 +77,30 @@ function Header() {
     // Sends a POST request to revoke the access token
     AxiosInstance.post('auth/revoke-token/', {
       // Sets the access token to be revoked
-      token: localStorage.getItem('access_token'),
+      token: localStorage.getItem('access_token')
+        ? localStorage.getItem('access_token')
+        : sessionStorage.getItem('access_token'),
       // Sets the token type to access token
       token_type_hint: 'access_token',
       // Get the client id from the .env file
       client_id: process.env.REACT_APP_CLIENT_ID,
     });
 
-    // Removes the access token from localstorage
-    localStorage.removeItem('access_token');
-    // Removes the refresh token from localstorage
-    localStorage.removeItem('refresh_token');
-
+    if (localStorage.getItem('access_token')) {
+      // Removes the access token from localstorage
+      localStorage.removeItem('access_token');
+      // Removes the refresh token from localstorage
+      localStorage.removeItem('refresh_token');
+      // Removes user id from localstorage
+      localStorage.removeItem('user_id');
+    } else {
+      // Removes the access token from sessionstorage
+      sessionStorage.removeItem('access_token');
+      // Removes the refresh token from sessionstorage
+      sessionStorage.removeItem('refresh_token');
+      // Removes user id from sessionstorage
+      sessionStorage.removeItem('user_id');
+    }
     // Redirects to the login page
     navigate('/login');
   }
