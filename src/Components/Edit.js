@@ -351,6 +351,8 @@ function EditPage() {
           clear={null}
           // Provides the initial state to the component
           intialField={logData.descriptionRaw}
+          // Sets readOnly to false so user can edit the description
+          readOnly={false}
         />
         {/* Update button */}
         <Button

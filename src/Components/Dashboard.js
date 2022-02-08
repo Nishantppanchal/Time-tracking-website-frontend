@@ -19,6 +19,7 @@ import { useSelector } from 'react-redux';
 // Import custom components
 import LogHeader from './LogHeader';
 import Header from './Header';
+import DescriptionWithTagsInput from './DescriptionWithTags';
 
 function Dashboard() {
   // Create navigate function
@@ -77,13 +78,35 @@ function Dashboard() {
             ).name
           : // Finds the project with the same id as the one recorded in the log and gets it's name
             CPData.find(
-              (data) => data.id === params.row.project && data.type === 'projects'
+              (data) =>
+                data.id === params.row.project && data.type === 'projects'
             ).name,
     },
     // Sets the time column
     { field: 'time', headerName: 'duration', width: 90, type: 'number' },
     // Sets the description column
-    { field: 'description', headerName: 'description', width: 180 },
+    {
+      field: 'descriptionRaw',
+      headerName: 'description',
+      width: 180,
+      renderCell: (params) => (
+        // Custom field for description with tags
+        <DescriptionWithTagsInput
+          // Set initial of this component not to be empty
+          empty={false}
+          // Pass through all the tags
+          tags={null}
+          // Assign handleDescriptionWithTagsData to be run to process the content in this component
+          data={() => {return null}}
+          // Assign clear to null as field clearing is not required here
+          clear={null}
+          // Provides the initial state to the component
+          intialField={params.value}
+          // Sets readOnly to false so user can edit the description
+          readOnly={true}
+        />
+      ),
+    },
     // Sets the tags column
     {
       field: 'tags',
@@ -242,11 +265,11 @@ function Dashboard() {
           />
         </div>
         {/* Button that loads more logs */}
-        <Button 
+        <Button
           // Sets the variant of the button to outlined
-          variant='outlined' 
+          variant='outlined'
           // Runs the function loadMore on click causing more logs to load in
-          onClick={loadMore} 
+          onClick={loadMore}
           // If there are no more logs to load, then the button is disabled
           disabled={allLogsLoaded}
         >

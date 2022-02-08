@@ -1,11 +1,7 @@
 // Import React components
 import React from 'react';
 // Import draft.js components
-import {
-  EditorState,
-  convertToRaw,
-  convertFromRaw,
-} from 'draft-js';
+import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
 // Import draftJS Plugins components
 import Editor from '@draft-js-plugins/editor';
 import createMentionPlugin, {
@@ -33,7 +29,7 @@ class DescriptionWithTagsInput extends React.Component {
           ),
       // Sets the suggestions to all the tags
       suggestions: this.props.tags,
-      // Sets the suggestions menu to closed by default 
+      // Sets the suggestions menu to closed by default
       open: false,
     };
   }
@@ -53,9 +49,7 @@ class DescriptionWithTagsInput extends React.Component {
       // The JSX what will be rendered
       return (
         // A styled span containing the tag value is returned
-        <span className={mentionProps.className}>
-          {mentionProps.children}
-        </span>
+        <span className={mentionProps.className}>{mentionProps.children}</span>
       );
     },
   });
@@ -69,7 +63,7 @@ class DescriptionWithTagsInput extends React.Component {
     // Converts the contentState to raw javascript
     const raw = convertToRaw(contentState);
 
-    // Defines a empty array to the variable tags 
+    // Defines a empty array to the variable tags
     var tags = [];
     // For all the tags in the textfield
     for (let key in raw.entityMap) {
@@ -92,14 +86,8 @@ class DescriptionWithTagsInput extends React.Component {
   // Function that defines how suggestions are rendered
   Entry = (props) => {
     // Extracts info from props
-    const {
-      mention,
-      theme,
-      searchValue,
-      isFocused,
-      ...parentProps
-    } = props;
-  
+    const { mention, ...parentProps } = props;
+
     // If the mention is a newValue
     if (mention.newValue) {
       // This is the JSX rendered
@@ -109,23 +97,21 @@ class DescriptionWithTagsInput extends React.Component {
           {/* Mention name with ADD TAG: at the start */}
           {'ADD TAG: ' + mention.name}
         </div>
-      )
+      );
     }
     // Otherwise, if the mention is not new
     // This is the JSX rendered
     return (
       // Div with parent props pass through
-      <div {...parentProps}>
-        {mention.name}
-      </div>
-    )
-  }
+      <div {...parentProps}>{mention.name}</div>
+    );
+  };
 
   // Handles updating the tags suggestion menu
   onSearchChange = ({ value }) => {
     // Removes whitespaces from both ends of the string
     const trimmedValue = value.trim();
-    // Creates a copy of the array of all the tags 
+    // Creates a copy of the array of all the tags
     const tags = this.props.tags.slice();
 
     // If there is not a value that exactly matches the input
@@ -140,7 +126,7 @@ class DescriptionWithTagsInput extends React.Component {
         };
         // Add the new tag to the front of the tags array
         tags.unshift(newTag);
-      // Otherwise, if the last character is not *
+        // Otherwise, if the last character is not *
       } else {
         // Creates a dictionary for the new tag with billable as false
         const newTag = {
@@ -200,9 +186,10 @@ class DescriptionWithTagsInput extends React.Component {
     // This is what the JSX rendered by this component
     return (
       // Div styled with CSS
-      <div className={editorStyles.editor}>
+      <div className={this.props.readOnly ? null : editorStyles.editor}>
         {/* The component that the user types into */}
         <Editor
+          readOnly={this.props.readOnly}
           // Sets editor state to the editorState value in state
           editorState={this.state.editorState}
           // Assign the onChange function to run when there is a change
