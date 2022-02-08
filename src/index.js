@@ -1,20 +1,22 @@
 // Import React components
-import React from "react";
+import React, { Suspense, lazy } from 'react';
 import { render } from "react-dom";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-// Import custom components
-import Entry from "./Components/Entry";
-import Login from "./Components/Login";
-import SignUp from "./Components/Signup";
-import Dashboard from "./Components/Dashboard";
-import EditPage from "./Components/Edit";
-import RequireAuth from "./Components/RequireAuth";
 // Import material UI components
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { StyledEngineProvider } from "@mui/material/styles";
+import Skeleton from '@mui/material/Skeleton';
 // Import redux components
 import { Provider } from 'react-redux';
 import store from './Store';
+// Import custom components
+import RequireAuth from "./Components/RequireAuth";
+import Entry from "./Components/Entry";
+import Login from "./Components/Login";
+import SignUp from "./Components/Signup";
+const Dashboard = lazy(() => import('./Components/Dashboard'));
+const EditPage = lazy(() => import('./Components/Edit'));
+const Reports = lazy(() => import('./Components/Reports.js'));
 
 // Create custom theme
 const theme = createTheme({
@@ -57,33 +59,43 @@ render(
         <ThemeProvider theme={theme}> 
           {/* Provides redux global state to all components */}
           <Provider store={store}>
-            <Routes>
-              {/* Root directory */}
-              <Route path='/'>
-                {/* Assigns a component to the root directory */}
-                <Route index element={<Entry />} /> 
-                {/* Login page */}
-                <Route path='login' element={<Login />} />
-                {/* Sign Up page */}
-                <Route path='signup' element={<SignUp />} />
-                {/* Home page */} 
-                <Route path='dashboard' element={
-                    // Requires user to be authenicated to visit
-                    <RequireAuth>
-                      <Dashboard />
-                    </RequireAuth>
-                  } 
-                /> 
-                {/* Edit page */}
-                <Route path='edit/:id' element={
-                    // Requires user to be authenicated to visit
-                    <RequireAuth>
-                      <EditPage />
-                    </RequireAuth>
-                  } 
-                />
-              </Route>
-            </Routes>
+            <Suspense fallback={<Skeleton />}>
+              <Routes>
+                {/* Root directory */}
+                <Route path='/'>
+                  {/* Assigns a component to the root directory */}
+                  <Route index element={<Entry />} /> 
+                  {/* Login page */}
+                  <Route path='login' element={<Login />} />
+                  {/* Sign Up page */}
+                  <Route path='signup' element={<SignUp />} />
+                  {/* Home page */} 
+                  <Route path='dashboard' element={
+                      // Requires user to be authenicated to visit
+                      <RequireAuth>
+                        <Dashboard />
+                      </RequireAuth>
+                    } 
+                  /> 
+                  {/* Edit page */}
+                  <Route path='edit/:id' element={
+                      // Requires user to be authenicated to visit
+                      <RequireAuth>
+                        <EditPage />
+                      </RequireAuth>
+                    } 
+                  />
+                  {/* Reports page */}
+                  <Route path='/reports' element={
+                      // Requires user to be authenicated to visit
+                      <RequireAuth>
+                        <Reports />
+                      </RequireAuth>
+                    }
+                  />
+                </Route>
+              </Routes>
+            </Suspense>
           </Provider>
         </ThemeProvider>
       </StyledEngineProvider>

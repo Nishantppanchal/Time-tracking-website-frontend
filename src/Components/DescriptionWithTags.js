@@ -133,7 +133,7 @@ class DescriptionWithTagsInput extends React.Component {
       if (!trimmedValue.charAt(trimmedValue.length - 1) === '*') {
         // Creates a dictionary for the new tag with billable as true
         const newTag = {
-          billable: true,
+          billable: false,
           name: trimmedValue,
           // newValue is a extra key-value pair used to create the new tags
           newValue: true,
@@ -144,7 +144,7 @@ class DescriptionWithTagsInput extends React.Component {
       } else {
         // Creates a dictionary for the new tag with billable as false
         const newTag = {
-          billable: false,
+          billable: true,
           name: trimmedValue,
           // newValue is a extra key-value pair used to create the new tags
           newValue: true,
