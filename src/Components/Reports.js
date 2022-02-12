@@ -3,7 +3,7 @@ import { PieChart, Pie, Tooltip } from 'recharts';
 
 import { useState, useEffect } from 'react';
 
-import { Paper, Skeleton, TextField } from '@mui/material';
+import { Paper, Skeleton, TextField, Typography } from '@mui/material';
 import Autocomplete from '@mui/material/Autocomplete';
 import { createFilterOptions } from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
@@ -11,6 +11,8 @@ import Collapse from '@mui/material/Collapse';
 import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CircularProgress from '@mui/material/CircularProgress';
+
+import { Duration } from 'luxon'
 
 import axiosInstance from '../Axios';
 
@@ -29,6 +31,7 @@ const data = [
 ];
 
 function Reports() {
+
   // Stores tags
   const tagsData = useSelector((state) => state.tags.value);
   // Stores clients and projects data
@@ -57,7 +60,7 @@ function Reports() {
   });
   // These two are seperated as one control the collapse and the other controls the loading animation
   const [reportGenerated, setReportGenerated] = useState(false);
-  const [reportLoading, setReportLoading] = useState(true);
+  const [reportLoading, setReportLoading] = useState(false);
 
   // Creates a filter function
   const CPFilter = createFilterOptions();
@@ -126,7 +129,7 @@ function Reports() {
       }
     }
 
-    setReportLoading(true)
+    setReportLoading(true);
 
     axiosInstance
       .post('generateReport/', {
@@ -204,7 +207,9 @@ function Reports() {
             <Button
               variant='contained'
               onClick={handleGenerateReport}
-              startIcon={(reportLoading ? <CircularProgress /> : <AddCircleIcon />)}
+              startIcon={
+                reportLoading ? <CircularProgress /> : <AddCircleIcon />
+              }
             >
               GENERATE
             </Button>
@@ -219,7 +224,11 @@ function Reports() {
             >
               PDF
             </Button>
-            <h1>Test</h1>
+            <Typography>
+              {Duration.fromObject({ minutes: report.totalTime }).toFormat(
+                "HH 'hours and' mm 'minutes'"
+              )}
+            </Typography>
             <Button
               variant='contained'
               startIcon={<AddCircleIcon />}

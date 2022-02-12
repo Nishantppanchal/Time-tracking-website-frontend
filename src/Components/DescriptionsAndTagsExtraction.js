@@ -8,18 +8,8 @@ import { addTag } from '../Features/Tags';
 async function handleDescriptionsAndTagsExtraction(
   data,
   setTagsSelected,
-  setDescription,
   setDescriptionRaw
 ) {
-  // Set the description state to the raw text
-  setDescription(
-    data.raw.blocks
-      // Joins all the lines together into one line of text
-      .map((line) => {
-        return line.text;
-      })
-      .join(' ')
-  );
   // Set the descriptionRaw state to stringified JS code
   setDescriptionRaw(JSON.stringify(data.raw));
 

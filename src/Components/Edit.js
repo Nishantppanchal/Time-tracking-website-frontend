@@ -26,15 +26,18 @@ import Header from './Header';
 import fetchCPData from './LoadData/LoadCPData';
 import fetchTagsData from './LoadData/LoadTags';
 // Import redux components
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { updateLog } from '../Features/Logs';
+// Import luxon component
+import { DateTime } from 'luxon';
 
 function EditPage() {
   // Gets the id from the URL
   const { id } = useParams();
-  // Creates the function DateTime
-  const { DateTime } = require('luxon');
   // Creates a navigate function
   const navigate = useNavigate();
+  // Creates a dispatch function to change the redux states
+  const dispatch = useDispatch();
 
   // Defines all the states
   // The states are kept seperates as state are not update instantly
@@ -60,8 +63,6 @@ function EditPage() {
     tagsData.length > 0 ? false : true
   );
   // Stores values of component edited by the user in the browser
-  // Stores the description in user readable format
-  const [description, setDescription] = useState();
   // Stores the description as stringified JS code
   const [descriptionRaw, setDescriptionRaw] = useState();
   // Stores the tags the user has used in the description
@@ -173,7 +174,6 @@ function EditPage() {
     handleDescriptionsAndTagsExtraction(
       data,
       setTagsSelected,
-      setDescription,
       setDescriptionRaw
     );
   }
@@ -206,8 +206,6 @@ function EditPage() {
     // The response client or project data is stored in createdCPData
     const CPSelectedData = await handleNewCP(CPSelected);
 
-    // Creates the url with the ID of log
-    const url = 'CRUD/logs/' + id + '/';
     // Creates a variable updatedData that store a empty dictionary
     var updatedData = {};
 
@@ -223,9 +221,7 @@ function EditPage() {
     }
     // If the description has changed
     if (descriptionRaw !== logData.descriptionRaw) {
-      // All threes are changed as they are all linked
-      // Set the new description as the value for the key description in updatedData
-      updatedData.description = description;
+      // All two are changed as they are all linked
       // Set the new descriptionRaw as the value for the key descriptionRaw in updatedData
       updatedData.descriptionRaw = descriptionRaw;
       // Set the new tags selected as the value for the key tags in updatedData
@@ -250,13 +246,30 @@ function EditPage() {
 
     // If there is atleast 1 key-value pair in the updatedData dictionary
     if (Object.keys(updatedData).length > 0) {
+      // Creates the url with the ID of log
+      const url = 'CRUD/logs/' + id + '/';
+
       // Partial update the log
       axiosInstance
         .patch(url, updatedData)
         // Handles response
-        .then(() => {
+        .then((response) => {
+          // Updates the logs redux state
+          dispatch(updateLog(response.data));
           // Navigates the user back to the dashboard page
           navigate('/dashboard');
+        })
+        .catch((error) => {
+          // If the access token is invalid
+          if (
+            error.response.data.detail ===
+            'Invalid token header. No credentials provided.'
+          ) {
+            // Updates the logs redux state
+            dispatch(updateLog(error.response.data.requestData.data));
+            // Navigates the user back to the dashboard page
+            navigate('/dashboard');
+          }
         });
       // Otherwise, if not changes have been made
     } else {

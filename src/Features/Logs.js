@@ -37,6 +37,23 @@ export const logsSlice = createSlice({
         }),
       };
     },
+    // Defines reducter to update log
+    updateLog: (state, action) => {
+      // Findes the index of the log changed
+      const index = state.value.logs.findIndex(
+        (log) => log.id === action.payload.id
+      );
+      // Copies the logs in the state
+      var logs = state.value.logs.slice();
+      // Updates the log in the array
+      logs[index] = action.payload;
+
+      // Updates the state with the new logs array
+      state.value = {
+        ...state.value,
+        logs: logs,
+      };
+    },
     // Defines reducer to set allLogsLoaded
     setAllLogsLoaded: (state, action) => {
       // Sets allLogsLoaded value to action.payload
@@ -57,7 +74,12 @@ export const logsSlice = createSlice({
 });
 
 // Exports actions
-export const { addLog, setAllLogsLoaded, addToLoadedLogsNumber, deleteLog } =
-  logsSlice.actions;
+export const {
+  addLog,
+  deleteLog,
+  updateLog,
+  setAllLogsLoaded,
+  addToLoadedLogsNumber,
+} = logsSlice.actions;
 // Export reducer
 export default logsSlice.reducer;

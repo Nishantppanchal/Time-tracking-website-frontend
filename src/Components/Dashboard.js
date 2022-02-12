@@ -22,14 +22,14 @@ import { addToLoadedLogsNumber, deleteLog } from '../Features/Logs';
 import LogHeader from './LogHeader';
 import Header from './Header';
 import DescriptionWithTagsInput from './DescriptionWithTags';
+// Import luxon component
+import { DateTime } from 'luxon'
 
 function Dashboard() {
   // Creates dispatch function to update redux state
   const dispatch = useDispatch();
   // Create navigate function
   const navigate = useNavigate();
-  // Creates the function DateTime
-  const { DateTime } = require('luxon');
 
   // Defines all the states
   // Stores data from server
@@ -249,7 +249,7 @@ function Dashboard() {
         {/* If loading, loading animation will be played */}
         <Button
           // Sets the variant of the button to outlined
-          variant='outlined'
+          variant='contained'
           // Runs the function loadMore on click causing more logs to load in
           onClick={loadMore}
           // If there are no more logs to load, then the button is disabled

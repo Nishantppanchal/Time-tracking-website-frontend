@@ -24,10 +24,10 @@ import { useSelector, useDispatch } from 'react-redux';
 import { addLog } from '../Features/Logs';
 // Import React components
 import { useState } from 'react';
+// Import luxon component
+import { DateTime } from 'luxon'
 
 function LogHeader(props) {
-  // Creates the DateTime function
-  const { DateTime } = require('luxon');
   // Creates dispatch function to update redux state
   const dispatch = useDispatch();
 
@@ -124,8 +124,6 @@ function LogHeader(props) {
           time: duration,
           // Sets the date field after formatting the date
           date: date.toFormat('yyyy-LL-dd'),
-          // Sets the readable description field
-          description: description,
           // Sets descriptionRaw which stores the raw js code for the description field
           descriptionRaw: descriptionRaw,
           // Sets the selected tags
@@ -336,7 +334,7 @@ function LogHeader(props) {
         {/* Log button */}
         <Button
           // Sets the button variant to text
-          variant='text'
+          variant='contained'
           // Assign handleUpdateButton to be run on click of the button
           onClick={handleLogButton}
           // Adds a icon to the start of the button
