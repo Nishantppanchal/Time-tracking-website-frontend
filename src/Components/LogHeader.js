@@ -11,6 +11,7 @@ import LocalizationProvider from '@mui/lab/LocalizationProvider';
 import DatePicker from '@mui/lab/DatePicker';
 import Collapse from '@mui/material/Collapse';
 import Button from '@mui/material/Button';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 // Import custom component
 import DescriptionWithTagsInput from './DescriptionWithTags';
 import handleNewCP from './NewCP';
@@ -19,13 +20,16 @@ import handleDescriptionsAndTagsExtraction from './DescriptionsAndTagsExtraction
 // Import axios instance
 import axiosInstance from '../Axios';
 // Import redux components
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { addLog } from '../Features/Logs';
 // Import React components
 import { useState } from 'react';
 
 function LogHeader(props) {
   // Creates the DateTime function
   const { DateTime } = require('luxon');
+  // Creates dispatch function to update redux state
+  const dispatch = useDispatch();
 
   // Defines all the states
   // Stores data from server
@@ -135,12 +139,12 @@ function LogHeader(props) {
         })
         // Handles the response
         .then((response) => {
-          // The response data is pushed to the props addLog
-          props.addLog(response.data);
+          // Adds the new log to logData
+          dispatch(addLog([response.data]));
         })
         // Handles errors
         .catch((error) => {
-          console.log(error.response)
+          console.log(error.response);
           // If the access token is invalid
           if (
             error.response.data.detail ===
@@ -174,8 +178,8 @@ function LogHeader(props) {
         })
         // Handles the response
         .then((response) => {
-          // The response data is pushed to the props addLog
-          props.addLog(response.data);
+          // Adds the new log to logData
+          dispatch(addLog([response.data]));
         })
         // Handles errors
         .catch((error) => {
@@ -201,7 +205,7 @@ function LogHeader(props) {
   }
 
   // Handles value (what is output after client/project selected) change
-  function handleAutocompleteValueChange(event, newValue) {
+  function handleAutocompleteSelectedChange(event, newValue) {
     // Sets the CPSelected state to the new client or project selected
     setCPSelected(newValue);
   }
@@ -307,8 +311,8 @@ function LogHeader(props) {
           renderInput={(params) => (
             <TextField {...params} label='CLIENT OR PROJECT' variant='filled' />
           )}
-          // Assign handleAutocompleteValueChange to be run on change of client or project selected
-          onChange={handleAutocompleteValueChange}
+          // Assign handleAutocompleteSelectedChange to be run on change of client or project selected
+          onChange={handleAutocompleteSelectedChange}
           // Sets the value of the client or project selected to the CPSelected state
           value={CPSelected}
           // Assign handleAutocompleteInputValueChange to be run on change of input entered by the user
@@ -326,13 +330,17 @@ function LogHeader(props) {
           data={handleDescriptionWithTagsData}
           // Assign clear to null as field clearing is not required here
           clear={clearField}
+          // Sets readOnly to false so user can edit the description
+          readOnly={false}
         />
         {/* Log button */}
-        <Button 
+        <Button
           // Sets the button variant to text
-          variant='text' 
+          variant='text'
           // Assign handleUpdateButton to be run on click of the button
           onClick={handleLogButton}
+          // Adds a icon to the start of the button
+          startIcon={<AddCircleIcon />}
         >
           LOG
         </Button>

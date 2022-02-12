@@ -14,6 +14,8 @@ import DatePicker from '@mui/lab/DatePicker';
 import Button from '@mui/material/Button';
 import Alert from '@mui/material/Alert';
 import Collapse from '@mui/material/Collapse';
+import DoneIcon from '@mui/icons-material/Done';
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 // Import custom component
 import DescriptionWithTagsInput from './DescriptionWithTags';
 import handleDescriptionsAndTagsExtraction from './DescriptionsAndTagsExtraction';
@@ -47,10 +49,16 @@ function EditPage() {
   // Stores whether data has loaded or not
   // Stores whether logs have loaded
   const [isLogLoading, setIsLogLoading] = useState(true);
-  // Stores whether the client and projects have loaded
-  const [isCPDataLoading, setIsCPDataLoading] = useState(true);
-  // Stores whether the tags have loaded
-  const [isTagsDataLoading, setIsTagsDataLoading] = useState(true);
+  // Stores whether all the clients and projects have loaded
+  const [isCPDataLoading, setIsCPDataLoading] = useState(
+    // If CPData is not empty make it false, else make it true
+    CPData.length > 0 ? false : true
+  );
+  // Stores whether all the tags have loaded
+  const [isTagsDataLoading, setIsTagsDataLoading] = useState(
+    // If tagsData is not empty make it false, else make it true
+    tagsData.length > 0 ? false : true
+  );
   // Stores values of component edited by the user in the browser
   // Stores the description in user readable format
   const [description, setDescription] = useState();
@@ -112,24 +120,26 @@ function EditPage() {
           );
         }
       });
-  }, [setLogData]);
-
-  // Runs this code on every render/update after the DOM has updated
-  useEffect(() => {
-    if (CPData.length === 0) {
-      fetchCPData(setIsCPDataLoading);
-    } else {
-      setIsCPDataLoading(false)
-    };
   }, []);
 
   // Runs this code on every render/update after the DOM has updated
   useEffect(() => {
-    if (tagsData.length === 0) {
+    // If the CPData has not loaded yet
+    if (isCPDataLoading === true) {
+      // Runs the function that fetches the CPData
+      fetchCPData(setIsCPDataLoading);
+      // Otherwise, if the CPData has already been loaded
+    }
+  }, []);
+
+  // Runs this code on every render/update after the DOM has updated
+  useEffect(() => {
+    // If tags have not loaded yet
+    if (isTagsDataLoading) {
+      // Runs the function that fetches the tags
       fetchTagsData(setIsTagsDataLoading);
-    } else {
-      setIsTagsDataLoading(false)
-    };
+      // Otherwise, if the tags have not already been loaded
+    }
   }, []);
 
   // Runs this code on every render/update after the DOM has updated if CPData and logData has changed
@@ -187,14 +197,14 @@ function EditPage() {
   }
 
   // Handles when the update button is clicked
-  function handleUpdateButton(event) {
+  async function handleUpdateButton(event) {
     // Prevents the default actions
     event.preventDefault();
 
     // Runs function that handles creation of new clients and projects
     // The required states and setState functions are passed through
     // The response client or project data is stored in createdCPData
-    const CPSelectedData = handleNewCP(CPSelected);
+    const CPSelectedData = await handleNewCP(CPSelected);
 
     // Creates the url with the ID of log
     const url = 'CRUD/logs/' + id + '/';
@@ -223,7 +233,10 @@ function EditPage() {
     }
 
     // If the CPSelected is a client and it has changed
-    if (CPSelectedData.type === 'clients' && CPSelectedData.id !== logData.client) {
+    if (
+      CPSelectedData.type === 'clients' &&
+      CPSelectedData.id !== logData.client
+    ) {
       // Set the new client selected as the value for the key client in updatedData
       updatedData.client = CPSelectedData.id;
       // Otherwise, if the CPSelected is a project and it has changed
@@ -241,9 +254,9 @@ function EditPage() {
       axiosInstance
         .patch(url, updatedData)
         // Handles response
-        .then((response) => {
-          // Navigates the user back to the home page
-          navigate('/home');
+        .then(() => {
+          // Navigates the user back to the dashboard page
+          navigate('/dashboard');
         });
       // Otherwise, if not changes have been made
     } else {
@@ -254,7 +267,7 @@ function EditPage() {
   }
 
   // Handles value (what is output after client/project selected) change
-  function handleAutocompleteValueChange(event, newValue) {
+  function handleAutocompleteSelectedChange(event, newValue) {
     // Sets the CPSelected state to the new client or project selected
     setCPSelected(newValue);
   }
@@ -330,8 +343,8 @@ function EditPage() {
           renderInput={(params) => (
             <TextField {...params} label='CLIENT OR PROJECT' variant='filled' />
           )}
-          // Assign handleAutocompleteValueChange to be run on change of client or project selected
-          onChange={handleAutocompleteValueChange}
+          // Assign handleAutocompleteSelectedChange to be run on change of client or project selected
+          onChange={handleAutocompleteSelectedChange}
           // Sets the value of the client or project selected to the CPSelected state
           value={CPSelected}
           // Assign handleAutocompleteInputValueChange to be run on change of input entered by the user
@@ -357,18 +370,22 @@ function EditPage() {
         {/* Update button */}
         <Button
           // Sets the button variant to text
-          variant='text'
+          variant='contained'
           // Assign handleUpdateButton to be run on click of the button
           onClick={handleUpdateButton}
+          // Add a button to the start of the icon
+          startIcon={<DoneIcon />}
         >
           UPDATE
         </Button>
         {/* Back button */}
         <Button
           // Sets the button variant to text
-          variant='text'
+          variant='contained'
           // Assign handleBackButton to be run on click of the button
           onClick={handleBackButton}
+          // Add a button to the start of the icon
+          startIcon={<ArrowLeftIcon />}
         >
           BACK
         </Button>

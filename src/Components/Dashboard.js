@@ -8,6 +8,7 @@ import './../Styles/Home.css';
 import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import CircularProgress from '@mui/material/CircularProgress';
 // Import axios instance
 import axiosInstance from '../Axios.js';
 // Import fetching components
@@ -15,13 +16,16 @@ import fetchTagsData from './LoadData/LoadTags';
 import fetchLogs from './LoadData/LoadLogs';
 import fetchCPData from './LoadData/LoadCPData';
 // Import redux components
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { addToLoadedLogsNumber, deleteLog } from '../Features/Logs';
 // Import custom components
 import LogHeader from './LogHeader';
 import Header from './Header';
 import DescriptionWithTagsInput from './DescriptionWithTags';
 
 function Dashboard() {
+  // Creates dispatch function to update redux state
+  const dispatch = useDispatch();
   // Create navigate function
   const navigate = useNavigate();
   // Creates the function DateTime
@@ -29,24 +33,34 @@ function Dashboard() {
 
   // Defines all the states
   // Stores data from server
+
   // Stores data for a log
-  const [logData, setLogData] = useState([]);
-  // Stores tags
-  const tagsData = useSelector((state) => state.tags.value);
+  const logData = useSelector((state) => state.logs.value.logs);
   // Stores clients and projects
   const CPData = useSelector((state) => state.CPData.value);
+  // Store tags
+  const tagsData = useSelector((state) => state.tags.value);
   // Stores whether data has loaded or not
   // Stores whether all the clients and projects have loaded
-  const [isCPDataLoading, setIsCPDataLoading] = useState(true);
+  const [isCPDataLoading, setIsCPDataLoading] = useState(
+    // If CPData is not empty make it false, else make it true
+    CPData.length > 0 ? false : true
+  );
   // Stores whether all the tags have loaded
-  const [isTagsDataLoading, setIsTagsDataLoading] = useState(true);
+  const [isTagsDataLoading, setIsTagsDataLoading] = useState(
+    // If tagsData is not empty make it false, else make it true
+    tagsData.length > 0 ? false : true
+  );
   // Stores whether the logs have loaded
-  const [isLogDataLoading, setIsLogDataLoading] = useState(true);
+  const [isLogDataLoading, setIsLogDataLoading] = useState(
+    // If logData is not empty make it false, else make it true
+    logData.length > 0 ? false : true
+  );
+  // Stores whether more logs a currently loading in or not
+  const [isMoreLogsLoading, setIsMoreLogsLoading] = useState(false);
   // Other states
-  // Stores the number logs loaded to allow gradual loading
-  const [loadedLogsNumber, setLoadedLogsNumber] = useState(0);
   // Stores whether all the logs have been loaded
-  const [allLogsLoaded, setAllLogsLoaded] = useState(false);
+  const allLogsLoaded = useSelector((state) => state.logs.value.allLogsLoaded);
 
   // Creates the columns in the logs table
   const columns = [
@@ -97,7 +111,9 @@ function Dashboard() {
           // Pass through all the tags
           tags={null}
           // Assign handleDescriptionWithTagsData to be run to process the content in this component
-          data={() => {return null}}
+          data={() => {
+            return null;
+          }}
           // Assign clear to null as field clearing is not required here
           clear={null}
           // Provides the initial state to the component
@@ -106,24 +122,6 @@ function Dashboard() {
           readOnly={true}
         />
       ),
-    },
-    // Sets the tags column
-    {
-      field: 'tags',
-      headerName: 'tags',
-      width: 90,
-      // Defines how the value is retrieved
-      valueGetter: (params) => {
-        // Creates a variable that store a empty array
-        var tags = [];
-        // For all the tags in the log
-        for (const tag of params.row.tags) {
-          // Find the tag name from it id in the log and adds it the tags array
-          tags.push(tagsData.find((data) => data.id === tag).name.toString());
-        }
-        // Join the array of tags with , inbetween them
-        return tags.join(', ');
-      },
     },
     // Sets the edit and delete button
     {
@@ -158,40 +156,29 @@ function Dashboard() {
 
   // Runs this code on every render/update after the DOM has updated if setLogData or loadedLogsNumber have changed
   useEffect(() => {
-    // Runs the function that fetches the logs
-    // The required states and setState functions are passed in as well
-    fetchLogs(
-      loadedLogsNumber,
-      setLogData,
-      logData,
-      setAllLogsLoaded,
-      setIsLogDataLoading
-    );
-  }, [setLogData, loadedLogsNumber]);
-
-  // Runs this code on every render/update after the DOM has updated
-  useEffect(() => {
-    // If the CPData redux state is empty
-    if (CPData.length === 0) {
-      // Runs the function that fetches the CPData
-      fetchCPData(setIsCPDataLoading);
-      // Otherwise, if the CPData has already been loaded
-    } else {
-      // Set isCPDataLoading to false
-      setIsCPDataLoading(false);
+    // If the log data has not loaded yet
+    if (isLogDataLoading) {
+      // Runs the function that fetches the logs
+      // The required setState function are passed in as well
+      fetchLogs(setIsLogDataLoading);
     }
   }, []);
 
   // Runs this code on every render/update after the DOM has updated
   useEffect(() => {
-    // If the tags redux state is empty
-    if (tagsData.length === 0) {
+    // If the CPData has not loaded yet
+    if (isCPDataLoading) {
+      // Runs the function that fetches the CPData
+      fetchCPData(setIsCPDataLoading);
+    }
+  }, []);
+
+  // Runs this code on every render/update after the DOM has updated
+  useEffect(() => {
+    // If the tags has not loaded yet
+    if (isTagsDataLoading) {
       // Runs the function that fetches the tags
       fetchTagsData(setIsTagsDataLoading);
-      // Otherwise, if the tags have not already been loaded
-    } else {
-      // Set isTagsDataLoading to false
-      setIsTagsDataLoading(false);
     }
   }, []);
 
@@ -202,13 +189,12 @@ function Dashboard() {
 
     // Add 50 to the current loadedLogsNumber
     // This causes 50 more tags to be loaded
-    setLoadedLogsNumber(loadedLogsNumber + 50);
-  }
-
-  // Handles new log creation
-  function handleNewLog(data) {
-    // Adds the new log to logData
-    setLogData([data, ...logData]);
+    dispatch(addToLoadedLogsNumber(2));
+    // Set isMoreLogLoading to true to show loading animation
+    setIsMoreLogsLoading(true);
+    // Fetchs more logs
+    // setIsMoreLogsLoading is passthrough so that a loading icon can be displayed while data loads
+    fetchLogs(setIsMoreLogsLoading);
   }
 
   // Handles deleting log
@@ -218,12 +204,7 @@ function Dashboard() {
     // Sends a delete request to delete the log
     axiosInstance.delete(url);
     // Removes the deleted tag from logData
-    setLogData(
-      // Filters out the log that was deleted
-      logData.filter((log) => {
-        return log.id !== id;
-      })
-    );
+    dispatch(deleteLog(id));
   }
 
   // Handles editing log button click
@@ -241,7 +222,7 @@ function Dashboard() {
         {/* App bar */}
         <Header />
         {/* LogHeader custom conponent */}
-        <LogHeader addLog={handleNewLog} />
+        <LogHeader />
         {/* Styled wrapper div */}
         <div style={{ height: 400, width: '100%' }}>
           {/* Table for all the logs */}
@@ -265,6 +246,7 @@ function Dashboard() {
           />
         </div>
         {/* Button that loads more logs */}
+        {/* If loading, loading animation will be played */}
         <Button
           // Sets the variant of the button to outlined
           variant='outlined'
@@ -272,6 +254,11 @@ function Dashboard() {
           onClick={loadMore}
           // If there are no more logs to load, then the button is disabled
           disabled={allLogsLoaded}
+          // Add loading animation
+          // Disable shrink is used a otherwise the animation is glitchy
+          startIcon={
+            isMoreLogsLoading ? <CircularProgress disableShrink /> : null
+          }
         >
           Load More
         </Button>

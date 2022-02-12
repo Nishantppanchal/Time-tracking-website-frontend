@@ -13,21 +13,23 @@ function CPFilter(options, params) {
   if (inputValue !== '' && !filtered.some((CP) => CP.name === inputValue)) {
     // Add a create new client option
     filtered.push({
+      // Sets the type to new client or project for grouping
+      // Setting it to client still doesnt group it with clients for some reason
+      type: 'new client or project',
       // Sets the name key to the 'ADD CLIENT: ' + input value
       name: `ADD CLIENT: ${inputValue}`,
       // Sets the newValue key's value to true
       newValue: true,
-      // Sets the type to clients for grouping
-      type: 'clients',
     });
     // Add a create new project option
     filtered.push({
+      // Sets the type to new client or project for grouping
+      // Setting it to projects still doesnt group it with projects for some reason
+      type: 'new client or project',
       // Sets the name key to the 'ADD PROJECT: ' + input value
       name: `ADD PROJECT: ${inputValue}`,
       // Sets the newValue key's value to true
       newValue: true,
-      // Sets the type to projects for grouping
-      type: 'projects',
     });
   }
 

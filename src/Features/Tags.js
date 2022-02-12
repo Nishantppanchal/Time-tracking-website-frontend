@@ -9,14 +9,15 @@ export const tagsSlice = createSlice({
     initialState: { value: [] },
     // Defines reduces
     reducers: {
-        // Defines reducer to load all logs
+        // Defines reducer to load all tags
         loadTags: (state, action) => {
             // Setes state to action payload
             state.value = action.payload;
         },
-        // Defines reducer to add one log
+        // Defines reducer to add tags
         addTag: (state, action) => {
             // Add the payload to the the state array
+            // Spreader is used for the action.payload as it would a array of new tags
             state.value = [...state.value, ...action.payload];
         },
     }

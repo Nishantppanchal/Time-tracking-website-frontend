@@ -70,7 +70,10 @@ axiosInstance.interceptors.response.use(
           } else {
             // Stores the access and refresh token to session storage
             sessionStorage.setItem('access_token', response.data.access_token);
-            sessionStorage.setItem('refresh_token', response.data.refresh_token);
+            sessionStorage.setItem(
+              'refresh_token',
+              response.data.refresh_token
+            );
           }
 
           // Changes the access token in the header of the axiosInstance
@@ -86,28 +89,41 @@ axiosInstance.interceptors.response.use(
           return data;
         })
         // Handles errors
-        .catch((error) => {
+        .catch(async (error) => {
           // If the refresh token is expired
           if (error.response.data.error === 'invalid_grant') {
-            // Removes the access and refresh token from the appropriate location
-            if (localStorage.getItem('refresh_token')) {
-              // Remove access and refresh token from local storage
-              localStorage.removeItem('access_token');
-              localStorage.removeItem('refresh_token');
+            const request = JSON.parse(error.config.data);
+            if (
+              request.refresh_token === localStorage.getItem('refresh_token') ||
+              request.refresh_token === sessionStorage.getItem('refresh_token')
+            ) {
+              // Removes the access and refresh token from the appropriate location
+              if (localStorage.getItem('refresh_token')) {
+                // Remove access and refresh token from local storage
+                localStorage.removeItem('access_token');
+                localStorage.removeItem('refresh_token');
+              } else {
+                // Remove access and refresh token from session storage
+                sessionStorage.removeItem('access_token');
+                sessionStorage.removeItem('refresh_token');
+              }
+
+              // Redirects user to login in pages (cause reload but navigate can't be used)
+              window.location.href = '/login/';
             } else {
-              // Remove access and refresh token from session storage
-              sessionStorage.removeItem('access_token');
-              sessionStorage.removeItem('refresh_token');
+              // Changes the access token in the header of the original request
+              originalRequest.headers['Authorization'] =
+                'Bearer ' + localStorage.getItem('access_token');
+              // Resends orignial request and return the response to the const data
+              const data = await axiosInstance(originalRequest);
+              return data;
             }
-            
-            // Redirects user to login in pages (cause reload but navigate can't be used)
-            window.location.href = '/login/';
           }
         });
 
       // Adds the data returned by the original request to the error data
       error.response.data.requestData = data;
-      // Pass back the error to axiosInstance 
+      // Pass back the error to axiosInstance
       return Promise.reject(error);
     }
 

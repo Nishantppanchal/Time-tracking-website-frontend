@@ -95,7 +95,7 @@ function Login() {
           // Set the refresh token in localStorage
           // Under the name refresh_token
           localStorage.setItem('refresh_token', response.data.refresh_token);
-        // Otherwise, if the user has not checked remember me
+          // Otherwise, if the user has not checked remember me
         } else {
           // Set the access token in sessionStorage
           // Under the name access_token
@@ -105,9 +105,9 @@ function Login() {
           sessionStorage.setItem('refresh_token', response.data.refresh_token);
         }
 
-        // Pushs the user to the dashboard page
-        // Replace prevent the user from going back to the login page
-        navigate('/dashboard', { replace: true });
+        // Forces the access token in the header fo the axiosInstance to change
+        axiosInstance.defaults.headers['Authorization'] =
+          'Bearer ' + response.data.access_token;
       })
       // After the tokens are stored
       .then(() => {
@@ -124,19 +124,17 @@ function Login() {
             if (rememberMe) {
               // Stores the user ID in localStorage
               // Under the name user_id
-              localStorage.setItem(
-                'user_id',
-                response.data[0].id
-              );
-            // Otherwise, if the user has not checked remember me
+              localStorage.setItem('user_id', response.data[0].id);
+              // Otherwise, if the user has not checked remember me
             } else {
               // Stores the user ID in sessionStorage
               // Under the name user_id
-              sessionStorage.setItem(
-                'user_id',
-                response.data[0].id
-              );
+              sessionStorage.setItem('user_id', response.data[0].id);
             }
+
+            // Pushs the user to the dashboard page
+            // Replace prevent the user from going back to the login page
+            navigate('/dashboard', { replace: true });
           })
           .catch((error) => {
             // If the access token was invalid
@@ -161,6 +159,10 @@ function Login() {
                   error.response.data.requestData.data[0].id
                 );
               }
+
+              // Pushs the user to the dashboard page
+              // Replace prevent the user from going back to the login page
+              navigate('/dashboard', { replace: true });
             }
           });
       })
@@ -168,7 +170,7 @@ function Login() {
       .catch((error) => {
         // If the error's status code is 400
         if (error.response.status === 400) {
-          // Set the invalidEmailOrPassword to true 
+          // Set the invalidEmailOrPassword to true
           // This cause an error prompt
           setInvalidEmailOrPassword(true);
         }
@@ -216,7 +218,7 @@ function Login() {
             className='EmailField'
             // Text the is displayed before the user types in the field
             placeholder='jamesdoe@gmail.com'
-            // Sets the autocomplete type for the browser 
+            // Sets the autocomplete type for the browser
             autoComplete='email'
             // Run handleLoginChange when the field input changes
             onChange={handleLoginChange}
@@ -245,7 +247,7 @@ function Login() {
             // Sets the type to text of password based on between passwordVisiblity is true of false
             // If it is text, it is visible. Else if it is password, it is not visible
             type={passwordVisibility ? 'text' : 'password'}
-            // Sets the autocomplete type for the browser 
+            // Sets the autocomplete type for the browser
             autoComplete='current-password'
             // Run handleLoginChange when the field input changes
             onChange={handleLoginChange}
@@ -280,9 +282,9 @@ function Login() {
             {/* Container box */}
             <Box className='collapseBoxAlign'>
               {/* Error element */}
-              <Alert 
+              <Alert
                 // Sets style to error
-                severity='error' 
+                severity='error'
                 // Sets the CSS class to passwordAlert
                 className='passwordAlert'
               >
@@ -309,7 +311,7 @@ function Login() {
           <Box width='80%'>
             {/* Login button */}
             <Button
-              // Sets the type to submit 
+              // Sets the type to submit
               // This allows the enter to submit the form
               type='submit'
               // Set variant to contained

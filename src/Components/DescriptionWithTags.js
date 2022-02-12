@@ -44,6 +44,9 @@ class DescriptionWithTagsInput extends React.Component {
     mentionTrigger: '#',
     // Allow for tags to have whitespaces
     supportWhitespace: true,
+    // Customize the characters that can be used in tags
+    // This allow all the alphabet, numbers and astrick (*)
+    mentionRegExp: '[A-Za-z0-9*]',
     // Defines the mention component
     mentionComponent(mentionProps) {
       // The JSX what will be rendered

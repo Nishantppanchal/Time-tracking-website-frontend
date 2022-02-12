@@ -14,7 +14,7 @@ async function handleNewCP(CPSelected) {
   // If the client or project is new
   if (CPSelected.newValue === true) {
     // If it is a client
-    if (CPSelected.type === 'client') {
+    if (CPSelected.type === 'clients') {
       // Creates a new client with a post request
       // Data variable stores the new client data
       data = await axiosInstance
