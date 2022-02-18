@@ -1,5 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { PieChart, Pie, Tooltip } from 'recharts';
+import {
+  PieChart,
+  Pie,
+  Tooltip,
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  tickFormatDate,
+} from 'recharts';
 
 import { useState, useEffect } from 'react';
 
@@ -12,7 +21,8 @@ import CloudDownloadIcon from '@mui/icons-material/CloudDownload';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import CircularProgress from '@mui/material/CircularProgress';
 
-import { Duration } from 'luxon'
+import { Duration } from 'luxon';
+import { DateTime } from 'luxon';
 
 import axiosInstance from '../Axios';
 
@@ -31,7 +41,6 @@ const data = [
 ];
 
 function Reports() {
-
   // Stores tags
   const tagsData = useSelector((state) => state.tags.value);
   // Stores clients and projects data
@@ -61,6 +70,7 @@ function Reports() {
   // These two are seperated as one control the collapse and the other controls the loading animation
   const [reportGenerated, setReportGenerated] = useState(false);
   const [reportLoading, setReportLoading] = useState(false);
+  const [timeProgress, setTimeProgress] = useState([]);
 
   // Creates a filter function
   const CPFilter = createFilterOptions();
@@ -115,7 +125,7 @@ function Reports() {
     setTagsInputValue(newInputValue);
   }
 
-  function handleGenerateReport(event) {
+  async function handleGenerateReport(event) {
     event.preventDefault();
     const clients = [];
     const projects = [];
@@ -131,7 +141,7 @@ function Reports() {
 
     setReportLoading(true);
 
-    axiosInstance
+    const data = await axiosInstance
       .post('generateReport/', {
         clients: clients,
         projects: projects,
@@ -141,11 +151,40 @@ function Reports() {
         setReport(response.data);
         setReportLoading(false);
         setReportGenerated(true);
+
+        return response.data;
       });
+
+    var timeProgressArray = [];
+    if (data.logs.length > 0) {
+      const startDate = DateTime.fromFormat(data.logs[0].date, 'yyyy-LL-dd');
+      const endDate = DateTime.fromFormat(
+        data.logs[data.logs.length - 1].date,
+        'yyyy-LL-dd'
+      );
+      const duration = endDate.diff(startDate, ['days']).toObject().days;
+      for (let i = 0, j = 0; i <= duration; i++) {
+        const date = startDate.plus({ days: i }).toFormat('yyyy-LL-dd');
+        if (date === data.logs[j].date) {
+          timeProgressArray.push(data.logs[j]);
+          j = j + 1
+        } else {
+          timeProgressArray.push({
+            date: date,
+            time: 0,
+          });
+        }
+      }
+    }
+
+    setTimeProgress(timeProgressArray);
   }
 
   function handleNewReport(event) {
     event.preventDefault();
+
+    setCPSelected([]);
+    setTagsSelected([]);
 
     setReportGenerated(false);
   }
@@ -224,11 +263,20 @@ function Reports() {
             >
               PDF
             </Button>
+            <Typography>Clients and projects selected:</Typography>
+            {CPSelected.map((CP) => {
+              return <span>{CP.name}</span>;
+            })}
             <Typography>
               {Duration.fromObject({ minutes: report.totalTime }).toFormat(
-                "HH 'hours and' mm 'minutes'"
+                "hh 'hours and' mm 'minutes'"
               )}
             </Typography>
+            <LineChart width={600} height={300} data={timeProgress}>
+              <Line type='monotone' dataKey='time' stroke='#8884d8' />
+              <XAxis dataKey='date' />
+              <YAxis />
+            </LineChart>
             <Button
               variant='contained'
               startIcon={<AddCircleIcon />}

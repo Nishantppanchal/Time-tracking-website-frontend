@@ -25,7 +25,7 @@ import { addLog } from '../Features/Logs';
 // Import React components
 import { useState } from 'react';
 // Import luxon component
-import { DateTime } from 'luxon'
+import { DateTime } from 'luxon';
 
 function LogHeader(props) {
   // Creates dispatch function to update redux state
@@ -46,8 +46,6 @@ function LogHeader(props) {
   const [duration, setDuration] = useState('');
   // Stores the raw description data
   const [descriptionRaw, setDescriptionRaw] = useState();
-  // Stores the readable description
-  const [description, setDescription] = useState();
   // Stores the tags selected
   const [tagsSelected, setTagsSelected] = useState([]);
   // The value inputed by the user in the client and project selection field
@@ -99,7 +97,6 @@ function LogHeader(props) {
     handleDescriptionsAndTagsExtraction(
       data,
       setTagsSelected,
-      setDescription,
       setDescriptionRaw
     );
   }
@@ -142,14 +139,14 @@ function LogHeader(props) {
         })
         // Handles errors
         .catch((error) => {
-          console.log(error.response);
+          console.log(error.response.data);
           // If the access token is invalid
           if (
             error.response.data.detail ===
             'Invalid token header. No credentials provided.'
           ) {
-            // The response data passed through by axios intercept is pushed to the props addLog
-            props.addLog(error.response.data.requestData.data);
+            // The response data passed through by axios intercept is added to logData
+            dispatch(addLog([error.response.data.requestData.data]));
           }
         });
       // If the client or project selected is a project
@@ -160,9 +157,6 @@ function LogHeader(props) {
           // Sets the time field
           time: duration,
           // Sets the date field after formatting the date
-          date: date.toFormat('yyyy-LL-dd'),
-          // Sets the readable description field
-          description: description,
           // Sets descriptionRaw which stores the raw js code for the description field
           descriptionRaw: descriptionRaw,
           // Sets the selected tags
@@ -186,8 +180,8 @@ function LogHeader(props) {
             error.response.data.detail ===
             'Invalid token header. No credentials provided.'
           ) {
-            // The response data passed through by axios intercept is pushed to the props addLog
-            props.addLog(error.response.data.requestData.data);
+            // The response data passed through by axios intercept is added to logData
+            dispatch(addLog([error.response.data.requestData.data]));
           }
         });
     }
