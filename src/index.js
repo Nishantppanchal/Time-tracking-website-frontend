@@ -93,6 +93,14 @@ render(
                       </RequireAuth>
                     }
                   />
+                  {/* Reports page */}
+                  <Route path='/reports' element={
+                      // Requires user to be authenicated to visit
+                      <RequireAuth>
+                        <Reports />
+                      </RequireAuth>
+                    }
+                  />
                 </Route>
               </Routes>
             </Suspense>

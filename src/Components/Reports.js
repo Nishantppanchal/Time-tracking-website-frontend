@@ -10,6 +10,8 @@ import {
   tickFormatDate,
 } from 'recharts';
 
+import Header from './Header';
+
 import { useState, useEffect } from 'react';
 
 import { Paper, Skeleton, TextField, Typography } from '@mui/material';
@@ -196,6 +198,7 @@ function Reports() {
   if (!isCPDataLoading && !isTagsDataLoading) {
     return (
       <div>
+        <Header />
         {/* In is opposite to reportGenerated as when report is not generated (false), then in has to be true */}
         <Collapse in={!reportGenerated}>
           <Paper>
