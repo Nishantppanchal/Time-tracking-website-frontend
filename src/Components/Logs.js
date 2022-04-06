@@ -1,31 +1,33 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // Import MUI components
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Skeleton from '@mui/material/Skeleton';
-import Button from '@mui/material/Button';
-import './../Styles/Home.css';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import CircularProgress from '@mui/material/CircularProgress';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Skeleton from "@mui/material/Skeleton";
+import Button from "@mui/material/Button";
+import "./../Styles/Home.css";
+import { DataGrid, GridActionsCellItem } from "@mui/x-data-grid";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import CircularProgress from "@mui/material/CircularProgress";
 // Import axios instance
-import axiosInstance from '../Axios.js';
+import axiosInstance from "../Axios.js";
 // Import fetching components
-import fetchTagsData from './LoadData/LoadTags';
-import fetchLogs from './LoadData/LoadLogs';
-import fetchCPData from './LoadData/LoadCPData';
+import fetchTagsData from "./LoadData/LoadTags";
+import fetchLogs from "./LoadData/LoadLogs";
+import fetchCPData from "./LoadData/LoadCPData";
 // Import redux components
-import { useSelector, useDispatch } from 'react-redux';
-import { addToLoadedLogsNumber, deleteLog } from '../Features/Logs';
+import { useSelector, useDispatch } from "react-redux";
+import { addToLoadedLogsNumber, deleteLog } from "../Features/Logs";
 // Import custom components
-import LogHeader from './LogHeader';
-import Header from './Header';
-import DescriptionWithTagsInput from './DescriptionWithTags';
+import LogHeader from "./LogHeader";
+import Header from "./Header";
+import DescriptionWithTagsInput from "./DescriptionWithTags";
 // Import luxon component
-import { DateTime } from 'luxon'
+import { DateTime } from "luxon";
 
-function Dashboard() {
+import { addAllLogs, setAllLogsLoaded } from "../Features/Logs";
+
+function Logs() {
   // Creates dispatch function to update redux state
   const dispatch = useDispatch();
   // Create navigate function
@@ -55,8 +57,6 @@ function Dashboard() {
     // If logData is not empty make it false, else make it true
     logData.length > 0 ? false : true
   );
-  // Stores whether more logs a currently loading in or not
-  const [isMoreLogsLoading, setIsMoreLogsLoading] = useState(false);
   // Other states
   // Stores whether all the logs have been loaded
   const allLogsLoaded = useSelector((state) => state.logs.value.allLogsLoaded);
@@ -65,21 +65,21 @@ function Dashboard() {
   const columns = [
     // Sets the data column
     {
-      field: 'date',
-      headerName: 'date',
+      field: "date",
+      headerName: "date",
       width: 90,
-      type: 'date',
+      type: "date",
       // Defines how the value is retrieved
       valueGetter: (params) =>
         // Convert the date from one format to another
-        DateTime.fromFormat(params.row.date, 'yyyy-LL-dd').toFormat(
-          'dd/LL/yyyy'
+        DateTime.fromFormat(params.row.date, "yyyy-LL-dd").toFormat(
+          "dd/LL/yyyy"
         ),
     },
     // Sets the client and project column
     {
-      field: 'client/project',
-      headerName: 'client/project',
+      field: "client/project",
+      headerName: "client/project",
       width: 90,
       // Defines how the value is retrieved
       valueGetter: (params) =>
@@ -87,20 +87,20 @@ function Dashboard() {
         params.row.client
           ? // Finds the client with the same id as the one recorded in the log and gets it's name
             CPData.find(
-              (data) => data.id === params.row.client && data.type === 'clients'
+              (data) => data.id === params.row.client && data.type === "clients"
             ).name
           : // Finds the project with the same id as the one recorded in the log and gets it's name
             CPData.find(
               (data) =>
-                data.id === params.row.project && data.type === 'projects'
+                data.id === params.row.project && data.type === "projects"
             ).name,
     },
     // Sets the time column
-    { field: 'time', headerName: 'duration', width: 90, type: 'number' },
+    { field: "time", headerName: "duration", width: 90, type: "number" },
     // Sets the description column
     {
-      field: 'descriptionRaw',
-      headerName: 'description',
+      field: "descriptionRaw",
+      headerName: "description",
       width: 500,
       renderCell: (params) => (
         // Custom field for description with tags
@@ -124,8 +124,8 @@ function Dashboard() {
     },
     // Sets the edit and delete button
     {
-      field: 'edit',
-      type: 'actions',
+      field: "edit",
+      type: "actions",
       width: 80,
       // Defines what buttons are rendered
       getActions: (params) => [
@@ -137,7 +137,7 @@ function Dashboard() {
             // Runs handleLogDelete to delete the log
             handleLogDelete(params.row.id);
           }}
-          label='Delete'
+          label="Delete"
         />,
         // Edit button
         <GridActionsCellItem
@@ -147,7 +147,7 @@ function Dashboard() {
             // Runs handleLogEdit to push the user to the edit page
             handleLogEdit(params.row.id);
           }}
-          label='Edit'
+          label="Edit"
         />,
       ],
     },
@@ -156,10 +156,37 @@ function Dashboard() {
   // Runs this code on every render/update after the DOM has updated if setLogData or loadedLogsNumber have changed
   useEffect(() => {
     // If the log data has not loaded yet
-    if (isLogDataLoading) {
-      // Runs the function that fetches the logs
-      // The required setState function are passed in as well
-      fetchLogs(setIsLogDataLoading);
+    if (!allLogsLoaded) {
+      // Send the a get request to get the logs
+      // loadedLogNumber allows the logs to be progressively loaded
+      // As the user want more logs, the number increase, causing the next set of logs to be returned
+      axiosInstance
+        .get("CRUD/getAllLogs/")
+        // Handles the response
+        .then((response) => {
+          dispatch(addAllLogs(response.data));
+          dispatch(setAllLogsLoaded(true));
+
+          // Set isLogDataLoading to false
+          // This tells the application that the logs loaded
+          setIsLogDataLoading(false);
+        })
+        // Handles errors
+        .catch((error) => {
+          // If the access token is invalid
+          if (
+            error.response.data.detail ===
+            "Invalid token header. No credentials provided."
+          ) {
+            // Adds the reponse data to logs array in the logs redux state
+            dispatch(addAllLogs(error.response.data.requestData.data));
+            dispatch(setAllLogsLoaded(true));
+
+            // Set isLogDataLoading to false
+            // This tells the application that the logs loaded
+            setIsLogDataLoading(false);
+          }
+        });
     }
   }, []);
 
@@ -181,25 +208,10 @@ function Dashboard() {
     }
   }, []);
 
-  // Handles loading more tags
-  function loadMore(event) {
-    // Prevents the default button action
-    event.preventDefault();
-
-    // Add 50 to the current loadedLogsNumber
-    // This causes 50 more tags to be loaded
-    dispatch(addToLoadedLogsNumber(2));
-    // Set isMoreLogLoading to true to show loading animation
-    setIsMoreLogsLoading(true);
-    // Fetchs more logs
-    // setIsMoreLogsLoading is passthrough so that a loading icon can be displayed while data loads
-    fetchLogs(setIsMoreLogsLoading);
-  }
-
   // Handles deleting log
   function handleLogDelete(id) {
     // Generates the url to which a request should be sent
-    const url = '/CRUD/logs/' + id + '/';
+    const url = "/CRUD/logs/" + id + "/";
     // Sends a delete request to delete the log
     axiosInstance.delete(url);
     // Removes the deleted tag from logData
@@ -209,65 +221,35 @@ function Dashboard() {
   // Handles editing log button click
   function handleLogEdit(id) {
     // Dynamically pushes user to edit page of the specific log using it's ID
-    navigate('/edit/' + id);
+    navigate("/edit/" + id);
   }
 
-  // If all the data has loaded
-  if (!isCPDataLoading && !isTagsDataLoading && !isLogDataLoading) {
-    // Render this JSX code
-    return (
-      // Wrapper div
-      <div>
-        {/* App bar */}
-        <Header />
-        {/* LogHeader custom conponent */}
-        <LogHeader />
-        {/* Styled wrapper div */}
-        <div style={{ height: 400, width: '100%' }}>
-          {/* Table for all the logs */}
-          <DataGrid
-            // Sets the rows to logs
-            rows={logData}
-            // Sets the columns to the defined above column structure
-            columns={columns}
-            // Stores the data in descend order by date
-            sortModel={[
-              {
-                field: 'date',
-                sort: 'desc',
-              },
-            ]}
-            // Sets the max page size to 100
-            pageSize={100}
-            // Sets the rowPerPage option to only be setable to 100
-            // This cause the selector for how many row per page to also be removed
-            rowsPerPageOptions={[100]}
-          />
-        </div>
-        {/* Button that loads more logs */}
-        {/* If loading, loading animation will be played */}
-        <Button
-          // Sets the variant of the button to outlined
-          variant='contained'
-          // Runs the function loadMore on click causing more logs to load in
-          onClick={loadMore}
-          // If there are no more logs to load, then the button is disabled
-          disabled={allLogsLoaded}
-          // Add loading animation
-          // Disable shrink is used a otherwise the animation is glitchy
-          startIcon={
-            isMoreLogsLoading ? <CircularProgress disableShrink /> : null
-          }
-        >
-          Load More
-        </Button>
+  return (
+    <div>
+      <Header />
+      <div style={{ height: 400, width: "100%" }}>
+        {/* Table for all the logs */}
+        <DataGrid
+          // Sets the rows to logs
+          rows={logData}
+          // Sets the columns to the defined above column structure
+          columns={columns}
+          // Stores the data in descend order by date
+          sortModel={[
+            {
+              field: "date",
+              sort: "desc",
+            },
+          ]}
+          // Sets the max page size to 100
+          pageSize={100}
+          // Sets the rowPerPage option to only be setable to 100
+          // This cause the selector for how many row per page to also be removed
+          rowsPerPageOptions={[100]}
+        />
       </div>
-    );
-    // If all the data has not loaded yet
-  } else {
-    // Render this JSX code (loading component)
-    return <Skeleton />;
-  }
+    </div>
+  );
 }
 
-export default Dashboard;
+export default Logs;

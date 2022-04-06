@@ -1,13 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import {
-  PieChart,
-  Pie,
-  Tooltip,
   LineChart,
   Line,
   XAxis,
   YAxis,
-  tickFormatDate,
 } from 'recharts';
 
 import Header from './Header';
@@ -33,14 +29,6 @@ import fetchTagsData from './LoadData/LoadTags';
 // Import redux components
 import { useSelector } from 'react-redux';
 
-const data = [
-  { name: 'test1', time: 10 },
-  { name: 'test2', time: 20 },
-  { name: 'test3', time: 30 },
-  { name: 'test4', time: 40 },
-  { name: 'test5', time: 10 },
-  { name: 'test6', time: 50 },
-];
 
 function Reports() {
   // Stores tags
@@ -98,14 +86,6 @@ function Reports() {
       // Otherwise, if the tags have not already been loaded
     }
   }, []);
-
-  function renderCustomizedLabel({ x, y, name, cx }) {
-    return (
-      <text x={x} y={y} fill='black' textAnchor={x > cx ? 'start' : 'end'}>
-        {name}
-      </text>
-    );
-  }
 
   // Handles value (what is output after client/project selected) change
   function handleAutocompleteCPSelectedChange(event, newValue) {

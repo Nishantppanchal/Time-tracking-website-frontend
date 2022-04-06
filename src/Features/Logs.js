@@ -1,10 +1,10 @@
 // Import redux component
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 // Create slice using redux toolkit
 export const logsSlice = createSlice({
   // Defines slice name
-  name: 'logs',
+  name: "logs",
   // Sets inital state value
   initialState: {
     value: {
@@ -25,6 +25,14 @@ export const logsSlice = createSlice({
       state.value = {
         ...state.value,
         logs: [...state.value.logs, ...action.payload],
+      };
+    },
+    // Defines reducer to add all logs
+    addAllLogs: (state, action) => {
+      // Set the payload to the logs key in the state
+      state.value = {
+        ...state.value,
+        logs: action.payload,
       };
     },
     // Defines reducer to delete log
@@ -76,6 +84,7 @@ export const logsSlice = createSlice({
 // Exports actions
 export const {
   addLog,
+  addAllLogs,
   deleteLog,
   updateLog,
   setAllLogsLoaded,

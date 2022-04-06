@@ -17,6 +17,7 @@ import SignUp from "./Components/Signup";
 const Dashboard = lazy(() => import('./Components/Dashboard'));
 const EditPage = lazy(() => import('./Components/Edit'));
 const Reports = lazy(() => import('./Components/Reports.js'));
+const Logs = lazy(() => import('./Components/Logs'));
 
 // Create custom theme
 const theme = createTheme({
@@ -93,11 +94,11 @@ render(
                       </RequireAuth>
                     }
                   />
-                  {/* Reports page */}
-                  <Route path='/reports' element={
+                  {/* Logs page */}
+                  <Route path='/logs' element={
                       // Requires user to be authenicated to visit
                       <RequireAuth>
-                        <Reports />
+                        <Logs />
                       </RequireAuth>
                     }
                   />
