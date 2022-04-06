@@ -9,7 +9,7 @@ import { addCP } from '../Features/CPData';
 // Function that handles creation of new client and projects
 async function handleNewCP(CPSelected) {
   // Create a variable to store the CP selected's data
-  var data = CPSelected
+  var data = CPSelected;
 
   // If the client or project is new
   if (CPSelected.newValue === true) {
@@ -32,7 +32,7 @@ async function handleNewCP(CPSelected) {
           // Adds the new client to CPData redux state
           store.dispatch(addCP(response.data));
           // Returns the new client data
-          return response.data
+          return response.data;
         })
         // Handles errors
         .catch((error) => {
@@ -44,7 +44,7 @@ async function handleNewCP(CPSelected) {
             // Adds the new client passed through by axios intercept to CPData redux state
             store.dispatch(addCP(error.response.data.requestData.data));
             // Returns the new client data passed through by axios intercept
-            return error.response.data.requestData.data
+            return error.response.data.requestData.data;
           }
         });
       // If it is a project
@@ -66,7 +66,7 @@ async function handleNewCP(CPSelected) {
           // Adds the new project to CPData redux state
           store.dispatch(addCP(response.data));
           // Returns the new project data
-          return response.data
+          return response.data;
         })
         // Handles errors
         .catch((error) => {
@@ -78,14 +78,14 @@ async function handleNewCP(CPSelected) {
             // Adds the new project passed through by axios intercept to CPData redux state
             store.dispatch(addCP(error.response.data.requestData.data));
             // Returns the new project data passed through by axios intercept
-            return error.response.data.requestData.data
+            return error.response.data.requestData.data;
           }
         });
     }
   }
 
   // Returns the CP selected's data
-  return data
+  return data;
 }
 
 export default handleNewCP;

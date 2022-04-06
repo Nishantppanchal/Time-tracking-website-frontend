@@ -1,10 +1,10 @@
 // Import redux component
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 // Create slice using redux toolkit
 export const logsSlice = createSlice({
   // Defines slice name
-  name: "logs",
+  name: 'logs',
   // Sets inital state value
   initialState: {
     value: {

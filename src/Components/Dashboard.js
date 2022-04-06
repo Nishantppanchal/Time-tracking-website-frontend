@@ -209,7 +209,7 @@ function Dashboard() {
   // Handles editing log button click
   function handleLogEdit(id) {
     // Dynamically pushes user to edit page of the specific log using it's ID
-    navigate('/edit/' + id);
+    navigate('/logs/edit/' + id);
   }
 
   // If all the data has loaded

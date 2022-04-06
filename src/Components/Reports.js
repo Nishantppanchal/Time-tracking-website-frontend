@@ -1,10 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { LineChart, Line, XAxis, YAxis } from 'recharts';
 
 import Header from './Header';
 
@@ -28,7 +23,6 @@ import fetchCPData from './LoadData/LoadCPData';
 import fetchTagsData from './LoadData/LoadTags';
 // Import redux components
 import { useSelector } from 'react-redux';
-
 
 function Reports() {
   // Stores tags
@@ -149,7 +143,7 @@ function Reports() {
         const date = startDate.plus({ days: i }).toFormat('yyyy-LL-dd');
         if (date === data.logs[j].date) {
           timeProgressArray.push(data.logs[j]);
-          j = j + 1
+          j = j + 1;
         } else {
           timeProgressArray.push({
             date: date,

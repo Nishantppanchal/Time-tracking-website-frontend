@@ -16,6 +16,7 @@ import Alert from '@mui/material/Alert';
 import Collapse from '@mui/material/Collapse';
 import DoneIcon from '@mui/icons-material/Done';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import Typography from '@mui/material/Typography';
 // Import custom component
 import DescriptionWithTagsInput from './DescriptionWithTags';
 import handleDescriptionsAndTagsExtraction from './DescriptionsAndTagsExtraction';
@@ -31,13 +32,16 @@ import { updateLog } from '../Features/Logs';
 // Import luxon component
 import { DateTime } from 'luxon';
 
-function EditPage() {
+function LogsEditPage() {
   // Gets the id from the URL
   const { id } = useParams();
   // Creates a navigate function
   const navigate = useNavigate();
   // Creates a dispatch function to change the redux states
   const dispatch = useDispatch();
+
+  // Defines title
+  const title = "Tag ID: " + id
 
   // Defines all the states
   // The states are kept seperates as state are not update instantly
@@ -309,7 +313,7 @@ function EditPage() {
         {/* App bar */}
         <Header />
         {/* Header with tag id */}
-        <h1>Tag ID: {id}</h1>
+        <Typography>{title}</Typography>
         {/* Date picker */}
         <LocalizationProvider dateAdapter={AdapterLuxon}>
           <DatePicker
@@ -424,4 +428,4 @@ function EditPage() {
 }
 
 // Exports EditPage
-export default EditPage;
+export default LogsEditPage;

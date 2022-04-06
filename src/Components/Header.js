@@ -36,20 +36,12 @@ function Header() {
     navigate('/logs');
   }
 
-  // Handles redirecting to the tags page
-  function handleGoToTags(event) {
-    // Disables the default behavior of the button
-    event.preventDefault();
-    // Redirects to the tags page
-    navigate('/tags');
-  }
-
   // Handles redirecting to the clients and projects page
   function handleGoToCP(event) {
     // Disables the default behavior of the button
     event.preventDefault();
     // Redirects to the clients and projects page
-    navigate('/client-and-projects');
+    navigate('/clients-and-projects');
   }
 
   // Handles redirecting to the user account page
@@ -152,16 +144,6 @@ function Header() {
           onClick={handleGoToReports}
         >
           REPORTS
-        </Button>
-        {/* Tags button */}
-        <Button
-          variant='text'
-          size='large'
-          sx={{ color: 'white' }}
-          // Runs the handleGoToTags function when clicked
-          onClick={handleGoToTags}
-        >
-          TAGS
         </Button>
         {/* Clients and projects button */}
         <Button
