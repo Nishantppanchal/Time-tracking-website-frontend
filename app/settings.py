@@ -13,8 +13,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
-# Import heroku deploying library
+# Import the heroku deployment libraries
 import django_heroku
+import dj_database_url
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -88,14 +90,28 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        
-        'NAME': 'time-tracking-app-database',
-    }
-}
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql',
 
+#         'NAME': 'postgres',
+
+#         'USER': 'postgres',
+
+#         'PASSWORD': 'wbFMM3GJE4d',
+
+#         'HOST': 'localhost',
+
+#         'PORT': '5432',
+
+#     }
+# }
+
+DATABASES = {
+    'default': dj_database_url.config(
+        default=config('DATABASE_URL')
+    )
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -178,9 +194,6 @@ OAUTH2_PROVIDER = {
 
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'time-tracking-django.herokuapp.com'] # change in production
-
-# Activate Django-Heroku.
-django_heroku.settings(locals())
 
 # Need to use cron to run python manage.py cleartokens on server
 # in production https://stackoverflow.com/questions/31507211/how-to-restrict-django-rest-framework-browsable-api-interface-to-admin-users
