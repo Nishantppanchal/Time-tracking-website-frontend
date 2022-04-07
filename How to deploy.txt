@@ -1,0 +1,6 @@
+git add .
+git commit -m "<comment>"
+sudo git push heroku master
+
+Run: django commands:
+sudo heroku run <command>
