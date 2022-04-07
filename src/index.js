@@ -54,92 +54,89 @@ const theme = createTheme({
 
 // Components to render
 render(
-  <React.StrictMode>
-    {/* Remove after development */}
-    <BrowserRouter>
-      {/* Loads custom CSS */}
-      <StyledEngineProvider injectFirst>
-        {/* Assign custom theme */}
-        <ThemeProvider theme={theme}>
-          {/* Provides redux global state to all components */}
-          <Provider store={store}>
-            <Suspense fallback={<Skeleton />}>
-              <Routes>
-                {/* Root directory */}
-                <Route path='/'>
-                  {/* Assigns a component to the root directory */}
-                  <Route index element={<Entry />} />
-                  {/* Login page */}
-                  <Route path='login' element={<Login />} />
-                  {/* Sign Up page */}
-                  <Route path='signup' element={<SignUp />} />
-                  {/* Home page */}
-                  <Route
-                    path='dashboard'
-                    element={
-                      // Requires user to be authenicated to visit
-                      <RequireAuth>
-                        <Dashboard />
-                      </RequireAuth>
-                    }
-                  />
-                  {/* Logs edit page */}
-                  <Route
-                    path='/logs/edit/:id'
-                    element={
-                      // Requires user to be authenicated to visit
-                      <RequireAuth>
-                        <LogsEditPage />
-                      </RequireAuth>
-                    }
-                  />
-                  {/* Reports page */}
-                  <Route
-                    path='/reports'
-                    element={
-                      // Requires user to be authenicated to visit
-                      <RequireAuth>
-                        <Reports />
-                      </RequireAuth>
-                    }
-                  />
-                  {/* Logs page */}
-                  <Route
-                    path='/logs'
-                    element={
-                      // Requires user to be authenicated to visit
-                      <RequireAuth>
-                        <Logs />
-                      </RequireAuth>
-                    }
-                  />
-                  {/* Clients and projects page */}
-                  <Route
-                    path='/clients-and-projects'
-                    element={
-                      // Requires user to be authenicated to visit
-                      <RequireAuth>
-                        <ClientAndProjects />
-                      </RequireAuth>
-                    }
-                  />
-                  {/* Clients and projects edit page */}
-                  <Route
-                    path='/clients-and-projects/edit/:type/:id'
-                    element={
-                      // Requires user to be authenicated to visit
-                      <RequireAuth>
-                        <CPEditPage />
-                      </RequireAuth>
-                    }
-                  />
-                </Route>
-              </Routes>
-            </Suspense>
-          </Provider>
-        </ThemeProvider>
-      </StyledEngineProvider>
-    </BrowserRouter>
-  </React.StrictMode>,
+  <BrowserRouter>
+    {/* Loads custom CSS */}
+    <StyledEngineProvider injectFirst>
+      {/* Assign custom theme */}
+      <ThemeProvider theme={theme}>
+        {/* Provides redux global state to all components */}
+        <Provider store={store}>
+          <Suspense fallback={<Skeleton />}>
+            <Routes>
+              {/* Root directory */}
+              <Route path='/'>
+                {/* Assigns a component to the root directory */}
+                <Route index element={<Entry />} />
+                {/* Login page */}
+                <Route path='login' element={<Login />} />
+                {/* Sign Up page */}
+                <Route path='signup' element={<SignUp />} />
+                {/* Home page */}
+                <Route
+                  path='dashboard'
+                  element={
+                    // Requires user to be authenicated to visit
+                    <RequireAuth>
+                      <Dashboard />
+                    </RequireAuth>
+                  }
+                />
+                {/* Logs edit page */}
+                <Route
+                  path='/logs/edit/:id'
+                  element={
+                    // Requires user to be authenicated to visit
+                    <RequireAuth>
+                      <LogsEditPage />
+                    </RequireAuth>
+                  }
+                />
+                {/* Reports page */}
+                <Route
+                  path='/reports'
+                  element={
+                    // Requires user to be authenicated to visit
+                    <RequireAuth>
+                      <Reports />
+                    </RequireAuth>
+                  }
+                />
+                {/* Logs page */}
+                <Route
+                  path='/logs'
+                  element={
+                    // Requires user to be authenicated to visit
+                    <RequireAuth>
+                      <Logs />
+                    </RequireAuth>
+                  }
+                />
+                {/* Clients and projects page */}
+                <Route
+                  path='/clients-and-projects'
+                  element={
+                    // Requires user to be authenicated to visit
+                    <RequireAuth>
+                      <ClientAndProjects />
+                    </RequireAuth>
+                  }
+                />
+                {/* Clients and projects edit page */}
+                <Route
+                  path='/clients-and-projects/edit/:type/:id'
+                  element={
+                    // Requires user to be authenicated to visit
+                    <RequireAuth>
+                      <CPEditPage />
+                    </RequireAuth>
+                  }
+                />
+              </Route>
+            </Routes>
+          </Suspense>
+        </Provider>
+      </ThemeProvider>
+    </StyledEngineProvider>
+  </BrowserRouter>,
   document.getElementById('root')
 );

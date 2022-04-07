@@ -52,11 +52,6 @@ function Logs() {
     // If tagsData is not empty make it false, else make it true
     tagsData.length > 0 ? false : true
   );
-  // Stores whether the logs have loaded
-  const [isLogDataLoading, setIsLogDataLoading] = useState(
-    // If logData is not empty make it false, else make it true
-    logData.length > 0 ? false : true
-  );
   // Other states
   // Stores whether all the logs have been loaded
   const allLogsLoaded = useSelector((state) => state.logs.value.allLogsLoaded);
@@ -166,10 +161,6 @@ function Logs() {
         .then((response) => {
           dispatch(addAllLogs(response.data));
           dispatch(setAllLogsLoaded(true));
-
-          // Set isLogDataLoading to false
-          // This tells the application that the logs loaded
-          setIsLogDataLoading(false);
         })
         // Handles errors
         .catch((error) => {
@@ -181,10 +172,6 @@ function Logs() {
             // Adds the reponse data to logs array in the logs redux state
             dispatch(addAllLogs(error.response.data.requestData.data));
             dispatch(setAllLogsLoaded(true));
-
-            // Set isLogDataLoading to false
-            // This tells the application that the logs loaded
-            setIsLogDataLoading(false);
           }
         });
     }
@@ -224,7 +211,7 @@ function Logs() {
     navigate('/logs/edit/' + id);
   }
 
-  if (!isCPDataLoading && !isLogDataLoading && !isTagsDataLoading) {
+  if (!isCPDataLoading && allLogsLoaded && !isTagsDataLoading) {
     return (
       <div>
         <Header />

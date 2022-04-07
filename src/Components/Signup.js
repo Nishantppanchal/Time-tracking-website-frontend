@@ -13,7 +13,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import EmailIcon from '@mui/icons-material/EmailOutlined';
 import VisibilityFilled from '@mui/icons-material/Visibility';
 import Typography from '@mui/material/Typography';
-import VisibilityOutlined from '@mui/icons-material/VibrationOutlined';
+import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
 import Grid from '@mui/material/Grid';
 import Collapse from '@mui/material/Collapse';
 import Alert from '@mui/material/Alert';
@@ -110,7 +110,6 @@ function SignUp() {
         });
         // If there are zero errors
       } else {
-        console.log('test');
         setPasswordValidationStatus({
           // Sets hasError to false
           hasError: false,
@@ -207,11 +206,11 @@ function SignUp() {
     if (error === false) {
       // Send a post request to create the user
       axios
-        .post('http://127.0.0.1:8000/api/user/register/', {
+        .post('https://time-tracking-django.herokuapp.com/api/user/register/', {
           // Defines the required field from the inputData state
           first_name: inputData.firstName,
           last_name: inputData.lastName,
-          email: inputData.email,
+          email: inputData.email.toLowerCase(),
           password: inputData.password,
         })
         // Handles the response

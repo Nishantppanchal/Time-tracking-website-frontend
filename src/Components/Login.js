@@ -69,13 +69,13 @@ function Login() {
 
     // Post user login info
     axios
-      .post('http://127.0.0.1:8000/api/auth/token/', {
+      .post('https://time-tracking-django.herokuapp.com/api/auth/token/', {
         // Get the client id from the .env file
         client_id: process.env.REACT_APP_CLIENT_ID,
         // Sets the grant type to password
         grant_type: 'password',
         // Sets the email as the username
-        username: inputData.email,
+        username: inputData.email.toLowerCase(),
         // Sets the password to the password the user entered
         password: inputData.password,
       })
