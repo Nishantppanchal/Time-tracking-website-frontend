@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from pathlib import Path
 from datetime import timedelta
+# Import heroku deploying library
+import django_heroku
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -88,18 +90,9 @@ WSGI_APPLICATION = 'app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-
-        'NAME': 'dac86t52008dnj',
-
-        'USER': 'eqcflszmimcvwq',
-
-        'PASSWORD': 'a00b2c558b345a303577f8f6150fb3d41aedcf9861b3809b242493bf890eb9c3',
-
-        'HOST': 'postgres://eqcflszmimcvwq:a00b2c558b345a303577f8f6150fb3d41aedcf9861b3809b242493bf890eb9c3@ec2-52-73-155-171.compute-1.amazonaws.com:5432/dac86t52008dnj',
-
-        'PORT': '5432',
-
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        
+        'NAME': 'time-tracking-app-database',
     }
 }
 
@@ -185,6 +178,9 @@ OAUTH2_PROVIDER = {
 
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', 'time-tracking-django.herokuapp.com'] # change in production
+
+# Activate Django-Heroku.
+django_heroku.settings(locals())
 
 # Need to use cron to run python manage.py cleartokens on server
 # in production https://stackoverflow.com/questions/31507211/how-to-restrict-django-rest-framework-browsable-api-interface-to-admin-users
