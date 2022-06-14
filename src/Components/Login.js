@@ -23,7 +23,6 @@ import { useState } from 'react';
 // Import Axios
 import axios from 'axios';
 import axiosInstance from '../Axios';
-import {URL} from '../Axios';
 
 function Login() {
   // Creates a navigate function
@@ -70,7 +69,7 @@ function Login() {
 
     // Post user login info
     axios
-      .post(URL + 'auth/token/', {
+      .post('https://time-tracking-django.herokuapp.com/api/auth/token/', {
         // Get the client id from the .env file
         client_id: process.env.REACT_APP_CLIENT_ID,
         // Sets the grant type to password

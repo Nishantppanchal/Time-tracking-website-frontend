@@ -1,12 +1,10 @@
 // Import Axios for queries to restful API
 import axios from 'axios';
 
-const URL = 'http://127.0.0.1:8000/api/'
-
 // Create axios instance
 const axiosInstance = axios.create({
   // Set base url
-  baseURL: URL,
+  baseURL: 'https://time-tracking-django.herokuapp.com/api/',
   // Set timeout to 10 seconds for the server end
   timeout: 1000,
   // Sets headers of request
@@ -55,7 +53,7 @@ axiosInstance.interceptors.response.use(
 
       // Requests a new access token using the refresh token
       const data = await axios
-        .post(URL + 'auth/token/', {
+        .post('https://time-tracking-django.herokuapp.com/api/auth/token/', {
           // Sets the require body fields
           refresh_token: refreshToken,
           grant_type: 'refresh_token',
@@ -136,4 +134,3 @@ axiosInstance.interceptors.response.use(
 
 // Exports axiosInstance
 export default axiosInstance;
-export {URL};
