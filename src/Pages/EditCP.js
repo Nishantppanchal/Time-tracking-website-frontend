@@ -17,21 +17,23 @@ import Collapse from '@mui/material/Collapse';
 import DoneIcon from '@mui/icons-material/Done';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 // Import custom component
-import DescriptionWithTagsInput from './DescriptionWithTags';
-import handleDescriptionsAndTagsExtraction from './DescriptionsAndTagsExtraction';
-import handleNewCP from './NewCP';
-import CPFilter from './CPFilter';
-import Header from './Header';
+import DescriptionWithTagsInput from '../Components/DescriptionWithTags';
+import handleDescriptionsAndTagsExtraction from '../Components/DescriptionsAndTagsExtraction';
+import handleNewCP from '../Components/NewCP';
+import CPFilter from '../Components/CPFilter';
+import Header from '../Components/Header';
 // Import fetch components
-import fetchCPData from './LoadData/LoadCPData';
-import fetchTagsData from './LoadData/LoadTags';
+import fetchCPData from '../Components/LoadData/LoadCPData';
+import fetchTagsData from '../Components/LoadData/LoadTags';
 // Import redux components
 import { useSelector, useDispatch } from 'react-redux';
 import { updateLog } from '../Features/Logs';
 // Import luxon component
 import { DateTime } from 'luxon';
-import { Typography } from '@mui/material';
+import { CssBaseline, Typography } from '@mui/material';
 import { updateCP } from '../Features/CPData';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Grid';
 
 function CPEditPage() {
   const { type, id } = useParams();
@@ -40,7 +42,7 @@ function CPEditPage() {
   // Creates a dispatch function to change the redux states
   const dispatch = useDispatch();
 
-  const title = (type == 'clients' ? 'Client' : 'Project') + ' ID: ' + id;
+  const title = `${type === 'clients' ? 'CLIENT' : 'PROJECT'} ID ${id}`;
 
   const [isCPDataLoading, setIsCPDataLoading] = useState(true);
   const [name, setName] = useState('');
@@ -102,39 +104,57 @@ function CPEditPage() {
 
   if (!isCPDataLoading) {
     return (
-      <div>
-        <Header />
-        <Typography>{title}</Typography>
-        <TextField
-          id='name'
-          label='name'
-          variant='filled'
-          onChange={handleNameChange}
-          value={name}
-        />
-        {/* Update button */}
-        <Button
-          // Sets the button variant to text
-          variant='contained'
-          // Assign handleUpdateButton to be run on click of the button
-          onClick={handleUpdateButton}
-          // Add a button to the start of the icon
-          startIcon={<DoneIcon />}
-        >
-          UPDATE
-        </Button>
-        {/* Back button */}
-        <Button
-          // Sets the button variant to text
-          variant='contained'
-          // Assign handleBackButton to be run on click of the button
-          onClick={handleBackButton}
-          // Add a button to the start of the icon
-          startIcon={<ArrowLeftIcon />}
-        >
-          BACK
-        </Button>
-      </div>
+      <>
+        <CssBaseline />
+        <Header page='clients and projects' />
+        <Paper style={{ margin: '1rem 1rem 0rem', padding: '1rem' }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Typography variant='h6' align='center' width='100%'>
+                {title}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                id='name'
+                label='name'
+                variant='outlined'
+                onChange={handleNameChange}
+                value={name}
+                sx={{ width: '100%' }}
+              />
+            </Grid>
+            <Grid item container justifyContent='flex-end' spacing={2}>
+              <Grid item xs='auto'>
+                {/* Update button */}
+                <Button
+                  // Sets the button variant to text
+                  variant='contained'
+                  // Assign handleUpdateButton to be run on click of the button
+                  onClick={handleUpdateButton}
+                  // Add a button to the start of the icon
+                  startIcon={<DoneIcon />}
+                >
+                  UPDATE
+                </Button>
+              </Grid>
+              <Grid item xs='auto'>
+                {/* Back button */}
+                <Button
+                  // Sets the button variant to text
+                  variant='contained'
+                  // Assign handleBackButton to be run on click of the button
+                  onClick={handleBackButton}
+                  // Add a button to the start of the icon
+                  startIcon={<ArrowLeftIcon />}
+                >
+                  BACK
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Paper>
+      </>
     );
   } else {
     return <Skeleton />;

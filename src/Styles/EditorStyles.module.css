@@ -1,15 +1,68 @@
 .editor {
-    box-sizing: border-box;
-    border: 1px solid #ddd;
-    cursor: text;
-    padding: 16px;
-    border-radius: 2px;
-    margin-bottom: 2em;
-    box-shadow: inset 0px 1px 8px -3px #ABABAB;
-    background: #fefefe;
-    width: 30%;
-  }
-  
+  box-sizing: border-box;
+  cursor: text;
+  padding: 11px;
+  border-radius: 4px;
+  margin-bottom: 2em;
+  box-shadow: none;
+  width: 100%;
+  font-family: 'Roboto', sans-serif;
+  line-height: 200%;
+  margin: 0px;
+  border: 1px solid var(--palette-action-disabled);
+  background-color: var(--palette-background-paper);
+}
+
 .editor :global(.public-DraftEditor-content) {
-    min-height: 140px;
-  }
+  min-height: 22px;
+}
+
+.editor:hover {
+  border: 1px solid var(--palette-text-primary);
+}
+
+.editor:focus-within {
+  border: 2px solid var(--palette-primary-main);
+  padding: 10px;
+}
+
+.readOnly {
+  font-family: 'Roboto', sans-serif;
+}
+
+.mention {
+  border-radius: 4px;
+  padding: 5px;
+}
+
+.label {
+  position: absolute;
+  top: -8px;
+  left: 10px;
+  background-color: var(--palette-background-paper);
+  padding: 0px 5px;
+  color: var(--palette-text-secondary);
+}
+
+.editor:focus-within .label {
+  color: var(--palette-primary-main);
+}
+
+.popover {
+  background-color: var(--palette-background-paper);
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 4px;
+  width: 35%;
+  z-index: 99
+}
+
+.entry {
+  padding: 0.2rem 0.5rem;
+}
+
+.entryFocused {
+  background-color: var(--palette-primary-highlight);
+  padding: 0.2rem 0.5rem;
+}

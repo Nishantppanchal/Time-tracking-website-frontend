@@ -8,10 +8,30 @@ import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
 // Import axios instance
 import AxiosInstance from '../Axios';
+import {
+  IconButton,
+  Switch,
+  ToggleButton,
+  ToggleButtonGroup,
+  Typography,
+} from '@mui/material';
+import { getMode } from '../App';
 
-function Header() {
+import { useState } from 'react';
+
+import { useDispatch, useSelector } from 'react-redux';
+
+import LightModeIcon from '@mui/icons-material/LightMode';
+import DarkModeIcon from '@mui/icons-material/DarkMode';
+import { toggleMode } from '../Features/Mode';
+import Brightness4 from '@mui/icons-material/Brightness4';
+
+function Header(props) {
   // Defines the navigate function used to redirect to the other pages
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const mode = useSelector((state) => state.mode.value);
 
   // Handles redirecting to the dashboard page
   function handleGoToDashboard(event) {
@@ -97,29 +117,43 @@ function Header() {
     navigate('/login');
   }
 
+  function handleChangeMode(event, newMode) {
+    event.preventDefault();
+    if (newMode !== null) {
+      dispatch(toggleMode());
+    }
+  }
+
   // This is the JSX that will be rendered
   return (
     // The app bar component
-    <AppBar position='static'>
+    <AppBar
+      position='sticky'
+      sx={{ bgcolor: 'background.default', boxShadow: 'none' }}
+    >
       {/* Tool bar component as used by MUI documentation */}
       <Toolbar>
         {/* Site name button */}
         <Button
           variant='text'
           size='large'
-          sx={{ color: 'white' }}
+          sx={{ color: 'primary' }}
           // Runs the handleGoToDashboard function when clicked
           onClick={handleGoToDashboard}
         >
           TRACKABLE
         </Button>
-        {/* Divider */}
-        <Divider orientation='vertical' variant='middle' flexItem />
+        {/* Spacer Box */}
+        <Box sx={{ flexGrow: 1 }} />
         {/* Dashboard button */}
         <Button
           variant='text'
           size='large'
-          sx={{ color: 'white' }}
+          sx={
+            props.page === 'dashboard'
+              ? { color: 'primary' }
+              : { color: 'text.primary', ':hover': { color: 'primary' } }
+          }
           // Runs the handleGoToDashboard function when clicked
           onClick={handleGoToDashboard}
         >
@@ -129,7 +163,11 @@ function Header() {
         <Button
           variant='text'
           size='large'
-          sx={{ color: 'white' }}
+          sx={
+            props.page === 'logs'
+              ? { color: 'primary' }
+              : { color: 'text.primary', ':hover': { color: 'primary' } }
+          }
           // Runs the handleGoToLogs function when clicked
           onClick={handleGoToLogs}
         >
@@ -139,7 +177,11 @@ function Header() {
         <Button
           variant='text'
           size='large'
-          sx={{ color: 'white' }}
+          sx={
+            props.page === 'reports'
+              ? { color: 'primary' }
+              : { color: 'text.primary', ':hover': { color: 'primary' } }
+          }
           // Runs the handleGoToReports function when clicked
           onClick={handleGoToReports}
         >
@@ -149,7 +191,11 @@ function Header() {
         <Button
           variant='text'
           size='large'
-          sx={{ color: 'white' }}
+          sx={
+            props.page === 'clients and projects'
+              ? { color: 'primary' }
+              : { color: 'text.primary', ':hover': { color: 'primary' } }
+          }
           // Runs the handleGoToCP function when clicked
           onClick={handleGoToCP}
         >
@@ -159,24 +205,41 @@ function Header() {
         <Button
           variant='text'
           size='large'
-          sx={{ color: 'white' }}
+          sx={
+            props.page === 'account'
+              ? { color: 'primary' }
+              : { color: 'text.primary', ':hover': { color: 'primary' } }
+          }
           // Runs the handleGoToAccount function when clicked
           onClick={handleGoToAccount}
         >
           ACCOUNT
         </Button>
-        {/* Spacer Box */}
-        <Box sx={{ flexGrow: 1 }} />
         {/* Logout button */}
         <Button
           variant='text'
           size='large'
-          sx={{ color: 'white' }}
+          sx={{ color: 'text.primary', ':hover': { color: 'primary' } }}
+          onHover
           // Runs the handleLogout function when clicked
           onClick={handleLogout}
         >
           LOGOUT
         </Button>
+        <ToggleButtonGroup
+          value={mode}
+          exclusive
+          onChange={handleChangeMode}
+          size='small'
+          sx={{ paddingLeft: '10px' }}
+        >
+          <ToggleButton value='light'>
+            <LightModeIcon />
+          </ToggleButton>
+          <ToggleButton value='dark'>
+            <DarkModeIcon />
+          </ToggleButton>
+        </ToggleButtonGroup>
       </Toolbar>
     </AppBar>
   );

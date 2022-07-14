@@ -23,6 +23,8 @@ import { useState } from 'react';
 // Import Axios
 import axios from 'axios';
 import axiosInstance from '../Axios';
+import { baseURL } from '../Axios'
+import { CssBaseline } from '@mui/material';
 
 function Login() {
   // Creates a navigate function
@@ -69,7 +71,7 @@ function Login() {
 
     // Post user login info
     axios
-      .post('https://time-tracking-django.herokuapp.com/api/auth/token/', {
+      .post(baseURL + 'auth/token/', {
         // Get the client id from the .env file
         client_id: process.env.REACT_APP_CLIENT_ID,
         // Sets the grant type to password
@@ -187,6 +189,7 @@ function Login() {
   return (
     // Wraps all element with a form to comply with chrome guidelines
     <form>
+      <CssBaseline />
       {/* Container box */}
       <Box className='containerBox'>
         {/* Paper for shadow effect */}

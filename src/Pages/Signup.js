@@ -20,9 +20,11 @@ import Alert from '@mui/material/Alert';
 // Import React Components
 import { useNavigate } from 'react-router-dom';
 // Import Custom Components
-import passwordValidator from './PasswordValidator';
+import passwordValidator from '../Components/PasswordValidator';
 // Import Axios
 import axios from 'axios';
+import { baseURL } from '../Axios';
+import { CssBaseline } from '@mui/material';
 
 function SignUp() {
   // Creates navigate function
@@ -206,7 +208,7 @@ function SignUp() {
     if (error === false) {
       // Send a post request to create the user
       axios
-        .post('https://time-tracking-django.herokuapp.com/api/user/register/', {
+        .post(baseURL + 'user/register/', {
           // Defines the required field from the inputData state
           first_name: inputData.firstName,
           last_name: inputData.lastName,
@@ -239,6 +241,7 @@ function SignUp() {
   return (
     // Wraps all element with a form to comply with chrome guidelines
     <form>
+      <CssBaseline />
       {/* Wrapper box */}
       <Box className='containerBox'>
         {/* Paper for shadow effect */}

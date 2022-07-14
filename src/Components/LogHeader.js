@@ -6,12 +6,19 @@ import Autocomplete from '@mui/material/Autocomplete';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import Box from '@mui/material/Box';
-import AdapterLuxon from '@mui/lab/AdapterLuxon';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DatePicker from '@mui/lab/DatePicker';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import Collapse from '@mui/material/Collapse';
 import Button from '@mui/material/Button';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import CalendarMonthIcon from '@mui/icons-material/CalendarToday';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import ArrowBackwardIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { CalendarPicker } from '@mui/x-date-pickers/CalendarPicker';
 // Import custom component
 import DescriptionWithTagsInput from './DescriptionWithTags';
 import handleNewCP from './NewCP';
@@ -26,6 +33,7 @@ import { addLog } from '../Features/Logs';
 import { useState } from 'react';
 // Import luxon component
 import { DateTime } from 'luxon';
+import { Modal, Typography } from '@mui/material';
 
 function LogHeader(props) {
   // Creates dispatch function to update redux state
@@ -40,6 +48,7 @@ function LogHeader(props) {
   // Stores the values in fields
   // Stores the value in the date field with the initial value as date time now
   const [date, setDate] = useState(DateTime.now());
+  const [tempDate, setTempDate] = useState(null);
   // Stores the client or project selected
   const [CPSelected, setCPSelected] = useState(null);
   // Stores the duration
@@ -51,38 +60,10 @@ function LogHeader(props) {
   // The value inputed by the user in the client and project selection field
   const [inputValue, setInputValue] = useState('');
   // Other
-  // Stores the current date tab the user is on
-  const [currentTab, setCurrentTab] = useState(2);
   // Allow field clearing on value change
   const [clearField, setClearField] = useState(true);
 
-  // Handles tab changing
-  function handleTabChange(event, newTab) {
-    // Sets the currentTab state to the new tab
-    setCurrentTab(newTab);
-    // If the newTab is the first tab
-    if (newTab === 0) {
-      // Sets the date state to 2 days minus the date today
-      setDate(DateTime.now().plus({ days: -2 }));
-      // If the newTab is the second tab
-    } else if (newTab === 1) {
-      // Sets the date state to 1 days minus the date today
-      setDate(DateTime.now().plus({ days: -1 }));
-      // If the newTab is the third tab
-    } else if (newTab === 2) {
-      // Sets the date state to today's date
-      setDate(DateTime.now());
-    }
-  }
-
-  // Handles the date change using the date picker
-  function handleDateChange(newDate) {
-    // If the date has changed
-    if (newDate !== date) {
-      // Set the date state to the nee date
-      setDate(newDate);
-    }
-  }
+  const [modalOpen, setModalOpen] = useState(false);
 
   // Handles duration change
   function handleDurationChange(event) {
@@ -157,6 +138,7 @@ function LogHeader(props) {
           // Sets the time field
           time: duration,
           // Sets the date field after formatting the date
+          date: date.toFormat('yyyy-LL-dd'),
           // Sets descriptionRaw which stores the raw js code for the description field
           descriptionRaw: descriptionRaw,
           // Sets the selected tags
@@ -182,6 +164,8 @@ function LogHeader(props) {
           ) {
             // The response data passed through by axios intercept is added to logData
             dispatch(addLog([error.response.data.requestData.data]));
+          } else {
+            console.log(error);
           }
         });
     }
@@ -208,135 +192,189 @@ function LogHeader(props) {
     setInputValue(newInputValue);
   }
 
+  function handleModalOpenClose(event) {
+    event.preventDefault();
+    setTempDate(date);
+    setModalOpen(!modalOpen);
+  }
+
+  function handleDatePicked(newDate) {
+    if (newDate !== date) {
+      setTempDate(newDate);
+    }
+  }
+
+  function handleDatePickedCancel() {
+    setModalOpen(!modalOpen);
+  }
+
+  function handleDatePickedConfirm() {
+    setDate(tempDate);
+    setModalOpen(!modalOpen);
+  }
+
+  function handleBackDate(event) {
+    event.preventDefault();
+    setDate(date.plus({ days: -1 }));
+  }
+
+  function handleForwardDate(event) {
+    event.preventDefault();
+    setDate(date.plus({ days: 1 }));
+  }
+
   // This is the JSX code rendered
   return (
     // Wrapper paper component
-    <Paper>
-      {/* Wrapper box component from tabs */}
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        {/* Tab selection UI */}
-        <Tabs
-          // Sets current tab to the currentTab state
-          value={currentTab}
-          // Runs the handleTabChange function when the tab is changed
-          onChange={handleTabChange}
-          aria-label='Date'
-        >
-          {/* Tab for two days ago */}
-          <Tab
-            label={
-              // Generates two days ago text
-              DateTime.now().plus({ days: -2 }).monthShort +
-              ' ' +
-              DateTime.now().plus({ days: -2 }).day
-            }
-          />
-          {/* Tab for one day ago */}
-          <Tab
-            label={
-              // Generates one day ago text
-              DateTime.now().plus({ days: -1 }).monthShort +
-              ' ' +
-              DateTime.now().plus({ days: -1 }).day
-            }
-          />
-          {/* Tab for today */}
-          <Tab label='Today' />
-          {/* Tab for custom date */}
-          <Tab label='Custom Date' />
-        </Tabs>
-      </Box>
-      {/* Collapse component to hide date picker */}
-      <Collapse
-        // Sets the the collapse animation direction to vertical
-        orientation='vertical'
-        // Date picker only visible if currentTab is the fourth tab
-        in={currentTab === 3 ? true : false}
-        sx={{ width: '40%' }}
+    <Paper
+      sx={{
+        margin: '1rem 1rem 0rem',
+        padding: '1rem',
+      }}
+    >
+      <Stack
+        direction='column'
+        width='100%'
+        justifyContent='center'
+        spacing={2}
       >
-        {/* Sets the library to be used for date picker */}
-        <LocalizationProvider dateAdapter={AdapterLuxon}>
-          {/* Let user pick the date */}
-          <DatePicker
-            label='Date'
-            // Sets the value of the date picker to the date state
-            value={date}
-            // Run handleDateChange when the user changes the date
-            onChange={handleDateChange}
-            // Defines what component is rendered as the date picker field
-            renderInput={(params) => <TextField {...params} />}
-          />
-        </LocalizationProvider>
-      </Collapse>
-      {/* Stacks components horizontial */}
-      <Stack direction='row' spacing={2}>
-        {/* Textfield for duration */}
-        <TextField
-          // Sets id to duration
-          id='duration'
-          // Sets label to duration
-          label='DURATION'
-          // Sets the variant/style to filled
-          variant='filled'
-          // Sets width to 15%
-          sx={{ width: '15%' }}
-          // Runs handleDurationChange whenever the textfield value changed
-          onChange={handleDurationChange}
-          // Sets value of the date field to the duration state
-          value={duration}
-        />
-        {/* Client and project textfield with suggestions */}
-        <Autocomplete
-          // Sets id to CP
-          id='CP'
-          // Sets the possible inputs to CPData
-          options={CPData}
-          // Set the option selected value in the textfield to client/project's names
-          getOptionLabel={(option) => option.name}
-          // Group the options by whether they are clients or projects
-          groupBy={(option) => option.type}
-          // Sets the width to 30%
-          sx={{ width: '30%' }}
-          // Assigns filterOptions to a function that filter the client and project based on the input          filterOptions={CPFilter}
-          filterOptions={CPFilter}
-          // Defines what is render as the input field
-          renderInput={(params) => (
-            <TextField {...params} label='CLIENT OR PROJECT' variant='filled' />
-          )}
-          // Assign handleAutocompleteSelectedChange to be run on change of client or project selected
-          onChange={handleAutocompleteSelectedChange}
-          // Sets the value of the client or project selected to the CPSelected state
-          value={CPSelected}
-          // Assign handleAutocompleteInputValueChange to be run on change of input entered by the user
-          onInputChange={handleAutocompleteInputValueChange}
-          // Sets the input value to the state inputValue
-          inputValue={inputValue}
-        />
-        {/* Custom field for description with tags */}
-        <DescriptionWithTagsInput
-          // Set initial of this component not to be empty
-          empty={true}
-          // Pass through all the tags
-          tags={tagsData}
-          // Assign handleDescriptionWithTagsData to be run to process the content in this component
-          data={handleDescriptionWithTagsData}
-          // Assign clear to null as field clearing is not required here
-          clear={clearField}
-          // Sets readOnly to false so user can edit the description
-          readOnly={false}
-        />
-        {/* Log button */}
-        <Button
-          // Sets the button variant to text
-          variant='contained'
-          // Assign handleUpdateButton to be run on click of the button
-          onClick={handleLogButton}
-          // Adds a icon to the start of the button
-          startIcon={<AddCircleIcon />}
-        >
-          LOG
-        </Button>
+        <Typography variant='h6' align='center' width='100%'>
+          LOG TIME
+        </Typography>
+        <Stack direction='row' justifyContent='center' spacing={2}>
+          <IconButton aria-label='delete' onClick={handleBackDate}>
+            <ArrowBackwardIcon />
+          </IconButton>
+          <Button
+            variant='contained'
+            onClick={handleModalOpenClose}
+            endIcon={<CalendarMonthIcon />}
+          >
+            {date.toFormat('dd/MM/yyyy')}
+          </Button>
+          <IconButton aria-label='delete' onClick={handleForwardDate}>
+            <ArrowForwardIcon />
+          </IconButton>
+        </Stack>
+        <div width='100%'>
+          <Grid container spacing={2}>
+            <Grid item xs={3} height='72px'>
+              {/* Textfield for duration */}
+              <TextField
+                // Sets id to duration
+                id='duration'
+                // Sets label to duration
+                label='DURATION'
+                // Sets the variant/style to filled
+                variant='outlined'
+                // Runs handleDurationChange whenever the textfield value changed
+                onChange={handleDurationChange}
+                // Sets value of the date field to the duration state
+                value={duration}
+                sx={{ width: '100%' }}
+              />
+            </Grid>
+            <Grid item xs={3} height='72px'>
+              {/* Client and project textfield with suggestions */}
+              <Autocomplete
+                // Sets id to CP
+                id='CP'
+                // Sets the possible inputs to CPData
+                options={CPData}
+                // Set the option selected value in the textfield to client/project's names
+                getOptionLabel={(option) => option.name}
+                // Group the options by whether they are clients or projects
+                groupBy={(option) => option.type}
+                // Assigns filterOptions to a function that filter the client and project based on the input          filterOptions={CPFilter}
+                filterOptions={CPFilter}
+                // Defines what is render as the input field
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label='CLIENT OR PROJECT'
+                    variant='outlined'
+                  />
+                )}
+                // Assign handleAutocompleteSelectedChange to be run on change of client or project selected
+                onChange={handleAutocompleteSelectedChange}
+                // Sets the value of the client or project selected to the CPSelected state
+                value={CPSelected}
+                // Assign handleAutocompleteInputValueChange to be run on change of input entered by the user
+                onInputChange={handleAutocompleteInputValueChange}
+                // Sets the input value to the state inputValue
+                inputValue={inputValue}
+                sx={{ width: '100%' }}
+              />
+            </Grid>
+            <Grid item xs={6} height='72px'>
+              {/* Custom field for description with tags */}
+              <DescriptionWithTagsInput
+                // Set initial of this component not to be empty
+                empty={true}
+                // Pass through all the tags
+                tags={tagsData}
+                // Assign handleDescriptionWithTagsData to be run to process the content in this component
+                data={handleDescriptionWithTagsData}
+                // Assign clear to null as field clearing is not required here
+                clear={clearField}
+                // Sets readOnly to false so user can edit the description
+                readOnly={false}
+              />
+            </Grid>
+          </Grid>
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'end', width: '100%' }}>
+          {/* Log button */}
+          <Button
+            // Sets the button variant to text
+            variant='contained'
+            // Assign handleUpdateButton to be run on click of the button
+            onClick={handleLogButton}
+            // Adds a icon to the start of the button
+            startIcon={<AddCircleIcon />}
+          >
+            LOG
+          </Button>
+        </div>
       </Stack>
+      <Modal open={modalOpen} onClose={handleModalOpenClose}>
+        <Paper
+          sx={{
+            padding: '0.5rem',
+            position: 'absolute',
+            top: '50%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+          }}
+        >
+          <Typography variant='h6' align='center' margin='0.5rem'>
+            SELECT A DATE
+          </Typography>
+          {/* Sets the library to be used for date picker */}
+          <LocalizationProvider dateAdapter={AdapterLuxon}>
+            <StaticDatePicker
+              displayStaticWrapperAs='desktop'
+              openTo='day'
+              value={tempDate}
+              onChange={handleDatePicked}
+              renderInput={(params) => <TextField {...params} />}
+            />
+          </LocalizationProvider>
+          <Stack
+            direction='row'
+            spacing={1}
+            justifyContent='flex-end'
+            marginTop='0.5rem'
+          >
+            <Button variant='text' onClick={handleDatePickedCancel}>
+              CANCEL
+            </Button>
+            <Button variant='text' onClick={handleDatePickedConfirm}>
+              CONFIRM
+            </Button>
+          </Stack>
+        </Paper>
+      </Modal>
     </Paper>
   );
 }

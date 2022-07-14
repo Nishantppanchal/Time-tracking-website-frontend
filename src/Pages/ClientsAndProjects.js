@@ -9,23 +9,26 @@ import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import CircularProgress from '@mui/material/CircularProgress';
+import Grid from '@mui/material/Grid';
 // Import axios instance
 import axiosInstance from '../Axios.js';
 // Import fetching components
-import fetchTagsData from './LoadData/LoadTags';
-import fetchLogs from './LoadData/LoadLogs';
-import fetchCPData from './LoadData/LoadCPData';
+import fetchTagsData from '../Components/LoadData/LoadTags';
+import fetchLogs from '../Components/LoadData/LoadLogs';
+import fetchCPData from '../Components/LoadData/LoadCPData';
 // Import redux components
 import { useSelector, useDispatch } from 'react-redux';
 import { addToLoadedLogsNumber, deleteLog } from '../Features/Logs';
 // Import custom components
-import LogHeader from './LogHeader';
-import Header from './Header';
-import DescriptionWithTagsInput from './DescriptionWithTags';
+import LogHeader from '../Components/LogHeader';
+import Header from '../Components/Header';
+import DescriptionWithTagsInput from '../Components/DescriptionWithTags';
 // Import luxon component
 import { DateTime } from 'luxon';
 import { deleteCP } from '../Features/CPData';
-import { Typography } from '@mui/material';
+import { CssBaseline, Typography } from '@mui/material';
+import CPLister from '../Components/CPLister';
+import ClientsAndProjectsLoading from '../Loading Components/ClientsAndProjectsLoading';
 
 function ClientAndProjects() {
   // Creates dispatch function to update redux state
@@ -119,7 +122,7 @@ function ClientAndProjects() {
 
     setClientData(clients);
     setProjectData(projects);
-  });
+  }, [CPData]);
 
   // Runs this code on every render/update after the DOM has updated
   useEffect(() => {
@@ -153,40 +156,27 @@ function ClientAndProjects() {
 
   if (!isCPDataLoading) {
     return (
-      <div>
-        <Header />
-        <Typography>Clients</Typography>
-        <div style={{ height: 400, width: '100%' }}>
-          <DataGrid
-            // Sets the rows to logs
-            rows={clientData}
-            // Sets the columns to the defined above column structure
-            columns={clientColumns}
-            // Sets the max page size to 100
-            pageSize={100}
-            // Sets the rowPerPage option to only be setable to 100
-            // This cause the selector for how many row per page to also be removed
-            rowsPerPageOptions={[100]}
-          />
-        </div>
-        <Typography>Projects</Typography>
-        <div style={{ height: 400, width: '100%' }}>
-          <DataGrid
-            // Sets the rows to logs
-            rows={projectData}
-            // Sets the columns to the defined above column structure
-            columns={projectColumns}
-            // Sets the max page size to 100
-            pageSize={100}
-            // Sets the rowPerPage option to only be setable to 100
-            // This cause the selector for how many row per page to also be removed
-            rowsPerPageOptions={[100]}
-          />
-        </div>
+      <div width='100%'>
+        <CssBaseline />
+        <Header page='clients and projects' />
+        <Grid container spacing={2} justifyContent='center' alignItems='flex-start' margin='1rem' width='auto'>
+          <Grid item xs={6}>
+            <Typography variant='h6' width='100%' align='center'>Clients</Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <Typography variant='h6' width='100%' align='center'>Projects</Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <CPLister CPData={clientData} type='client' />
+          </Grid>
+          <Grid item xs={6}>
+            <CPLister CPData={projectData} type='project' />
+          </Grid>
+        </Grid>
       </div>
     );
   } else {
-    return <Skeleton />;
+    return <ClientsAndProjectsLoading />;
   }
 }
 

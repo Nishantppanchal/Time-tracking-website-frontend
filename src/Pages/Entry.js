@@ -8,6 +8,7 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Grid from "@mui/material/Grid";
 import Container from "@mui/material/Container";
+import { CssBaseline } from "@mui/material";
 
 function Home() {
   // Define navigate function
@@ -24,10 +25,11 @@ function Home() {
     navigate("/signup/");
   }
 
-  // Thsi is the JSX rendered on page
+  // This is the JSX rendered on page
   return (
     // Container Box
     <Box className='containerBox'>
+      <CssBaseline />
       {/* Website title */}
       <Typography variant='h1' color='primary'>
         TRACKABLE
@@ -70,8 +72,6 @@ function Home() {
     </Box>
   );
 }
-
-
 
 // Exports Home
 export default Home;

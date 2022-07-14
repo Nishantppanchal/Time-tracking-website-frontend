@@ -22,74 +22,41 @@ async function handleDescriptionsAndTagsExtraction(
   for (let tag of data.tags) {
     // If the tag has the key newValue set to true
     if (tag.newValue) {
-      // Get a get request to determine if the tag exists
-      var doesTagExist = await axiosInstance
-        .get('doesTagExist/', {
-          // Add the parameter name to the url
-          // Name would be the name of the tag
-          params: { name: tag.name },
+      // Create a new tag with a post request
+      var tagData = await axiosInstance
+        .post('CRUD/tags/', {
+          // Defines the body content of the post request
+          // Sets the name to the tag name
+          name: tag.name,
+          billable: tag.billable,
+          // Get the user id from the local storage
+          user: localStorage.getItem('user_id')
+            ? localStorage.getItem('user_id')
+            : sessionStorage.getItem('user_id'),
         })
-        // Handle response to the get request
+        // Handles the response
         .then((response) => {
           // Return the response data
-          // This would be stored in doesTagExist
+          // This would be stored in the variable data
           return response.data;
         })
         // Handles errors
         .catch((error) => {
-          // If access token is invalid
+          // If the access token is invalid
           if (
             error.response.data.detail ===
             'Invalid token header. No credentials provided.'
           ) {
             // Return the response data passed through by axios intercept
-            // This would be stored in doesTagExist
+            // This would be stored in the variable data
             return error.response.data.requestData.data;
           }
         });
 
-      // If the tag doesn't exist
-      if (!doesTagExist.exists) {
-        // Create a new tag with a post request
-        var tagData = await axiosInstance
-          .post('CRUD/tags/', {
-            // Defines the body content of the post request
-            // Sets the name to the tag name
-            name: tag.name,
-            billable: tag.billable,
-            // Get the user id from the local storage
-            user: localStorage.getItem('user_id')
-              ? localStorage.getItem('user_id')
-              : sessionStorage.getItem('user_id'),
-          })
-          // Handles the response
-          .then((response) => {
-            // Return the response data
-            // This would be stored in the variable data
-            return response.data;
-          })
-          // Handles errors
-          .catch((error) => {
-            // If the access token is invalid
-            if (
-              error.response.data.detail ===
-              'Invalid token header. No credentials provided.'
-            ) {
-              // Return the response data passed through by axios intercept
-              // This would be stored in the variable data
-              return error.response.data.requestData.data;
-            }
-          });
-
-        // Add the new tag's ID to the tags array
-        tags.push(tagData.id);
-        // Add the new tag's data to the newTags array
-        newTags.push(tagData);
-        // Otherwise, if the new tag has already been created
-      } else {
-        // Add the new tag's ID to the tags array
-        tags.push(doesTagExist.id);
-      }
+      // Add the new tag's ID to the tags array
+      tags.push(tagData.id);
+      // Add the new tag's data to the newTags array
+      newTags.push(tagData);
       // Otherwise, if the tag is not a new tag
     } else {
       // Add the tag's ID to the tags array
@@ -103,6 +70,7 @@ async function handleDescriptionsAndTagsExtraction(
   if (newTags.length !== 0) {
     // Add new tags to the tags redux state
     store.dispatch(addTag(newTags));
+    data.updateTags(newTags)
   }
 }
 
