@@ -99,7 +99,7 @@ function CPEditPage() {
     // Prevents the default actions
     event.preventDefault();
     // Sends the url to the dashboard page
-    navigate('/dashboard');
+    navigate(-1);
   }
 
   if (!isCPDataLoading) {

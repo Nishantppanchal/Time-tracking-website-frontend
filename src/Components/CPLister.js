@@ -130,17 +130,17 @@ function CPLister(props) {
       <Modal open={modalOpen} onClose={handleModalClose}>
         <Paper
           sx={{
-            bgcolor: '#ebf3fa',
             padding: '0.5rem',
             position: 'absolute',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
             width: '20rem',
+            backgroundColor: 'background.paper',
           }}
         >
           <Typography variant='h6' align='center' margin='0.5rem'>
-            WOULD YOU LIKE TO DELETE THIS LOG
+            WOULD YOU LIKE TO DELETE THIS {props.type.toUpperCase()}
           </Typography>
           <Typography variant='body1' align='center' margin='0.5rem'>
             Deleting this {props.type} will mean that you will not be able to
@@ -155,7 +155,6 @@ function CPLister(props) {
             <Button
               variant='text'
               onClick={handleModalClose}
-              sx={{ color: '#3181CB' }}
             >
               CANCEL
             </Button>

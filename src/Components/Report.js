@@ -67,12 +67,61 @@ import Stack from '@mui/material/Stack';
 import { createBrowserHistory } from 'history';
 import { getThemeDict } from '../App';
 
+const hoursPieColours = ['#92e492', 'red'];
+
 function Report(props) {
-  const { reportData, theme, CPData } = props;
-  const hoursPieColours = ['#92e492', 'red'];
+  const {
+    report,
+    timeProgress,
+    billableArray,
+    CPPieColours,
+    theme,
+    CPData,
+    exportPage,
+  } = props;
+
+  const [billableLogsOpen, setBillableLogsOpen] = useState(true);
+  const [unbillableLogsOpen, setUnbillableLogsOpen] = useState(true);
+
+  const handleNewReport = props.handleNewReport ?? (() => {});
+  const handleExportReport = props.handleExportReport ?? (() => {});
+
+  function CustomTooltip({ active, payload, label }) {
+    if (active && payload && payload.length) {
+      return (
+        <Paper sx={{ padding: '10px' }}>
+          {label === undefined ? (
+            <Typography align='center' fontWeight='bold'>
+              {payload[0].name}
+            </Typography>
+          ) : (
+            <Typography align='center' fontWeight='bold'>
+              {label}
+            </Typography>
+          )}
+
+          <Typography align='center'>
+            {Duration.fromObject({
+              minutes: payload[0].value,
+            }).toFormat("hh'h' mm'm'")}
+          </Typography>
+        </Paper>
+      );
+    }
+
+    return null;
+  }
+
+  function handleToggleBillable() {
+    setBillableLogsOpen(!billableLogsOpen);
+  }
+
+  function handleToggleUnbillable() {
+    setUnbillableLogsOpen(!unbillableLogsOpen);
+  }
 
   return (
-    <Grid container spacing={3}>
+    <Grid container spacing={3} color='text.primary'>
       <Grid
         container
         item
@@ -81,26 +130,26 @@ function Report(props) {
         rowSpacing={3}
         columnSpacing={1}
         id='selectedData'
-        key='test111'
       >
+        <Grid item>
+          <Typography variant='h4' width='100%' align='center'>
+            REPORT
+          </Typography>
+        </Grid>
         <Grid container item spacing={1} id='clients'>
           <Grid item xs={12}>
-            <Typography
-              variant='body1'
-              fontWeight='bold'
-            >
+            <Typography variant='body1' key='title' fontWeight='bold'>
               CLIENTS
             </Typography>
           </Grid>
-          {reportData.report.CPTimes.filter((CP) => CP.type === 'clients')
-            .length !== 0 ? (
-            reportData.report.CPTimes.map((CP) =>
+          {report.CPTimes.filter((CP) => CP.type === 'clients').length !== 0 ? (
+            report.CPTimes.map((CP) =>
               CP.type === 'clients' ? (
                 <Grid item xs='auto' key={CP.id}>
                   <span
                     style={{
                       backgroundColor: theme.palette.secondary.light,
-                      color: theme.palette.text.primary,
+                      color: theme.palette.secondary.main,
                       borderRadius: '4px',
                       padding: '5px',
                       fontFamily: 'Roboto, san-serif',
@@ -121,19 +170,19 @@ function Report(props) {
         </Grid>
         <Grid container item spacing={1} id='projects'>
           <Grid item xs={12}>
-            <Typography variant='body1' fontWeight='bold'>
+            <Typography variant='body1' key='title' fontWeight='bold'>
               PROJECTS
             </Typography>
           </Grid>
-          {reportData.report.CPTimes.filter((CP) => CP.type === 'projects')
-            .length !== 0 ? (
-            reportData.report.CPTimes.map((CP) =>
+          {report.CPTimes.filter((CP) => CP.type === 'projects').length !==
+          0 ? (
+            report.CPTimes.map((CP) =>
               CP.type === 'projects' ? (
                 <Grid item xs='auto' key={CP.id}>
                   <span
                     style={{
                       backgroundColor: theme.palette.secondary.light,
-                      color: theme.palette.text.primary,
+                      color: theme.palette.secondary.main,
                       borderRadius: '4px',
                       padding: '5px',
                     }}
@@ -153,17 +202,17 @@ function Report(props) {
         </Grid>
         <Grid container item spacing={1} id='tags'>
           <Grid item xs={12}>
-            <Typography variant='body1' key='title' fontWeight='bold'>
+            <Typography variant='body1' fontWeight='bold'>
               TAGS
             </Typography>
           </Grid>
-          {reportData.report.tagTimes.length !== 0 ? (
-            reportData.report.tagTimes.map((tag) => (
+          {report.tagTimes.length !== 0 ? (
+            report.tagTimes.map((tag) => (
               <Grid item xs='auto' key={tag.id}>
                 <span
                   style={{
                     backgroundColor: theme.palette.secondary.light,
-                    color: theme.palette.text.primary,
+                    color: theme.palette.secondary.main,
                     borderRadius: '4px',
                     padding: '5px',
                   }}
@@ -190,7 +239,7 @@ function Report(props) {
         <Grid item>
           <Typography variant='h4'>
             {Duration.fromObject({
-              minutes: reportData.report.totalTime,
+              minutes: report.totalTime,
             }).toFormat("hh'h' mm'm'")}
           </Typography>
         </Grid>
@@ -198,9 +247,10 @@ function Report(props) {
       <Grid item xs={12} id='barChart'>
         <ResponsiveContainer width='100%' height={340}>
           <BarChart
-            data={reportData.timeProgress}
+            data={timeProgress}
             margin={{ top: 5, right: 40, left: 40, bottom: 30 }}
           >
+            {!exportPage && <Tooltip content={<CustomTooltip />} />}
             <CartesianGrid strokeDasharray='3 3' />
             <Bar
               barSize={20}
@@ -241,16 +291,17 @@ function Report(props) {
         <Grid item xs={6}>
           <ResponsiveContainer width='100%' aspect={1.7}>
             <PieChart>
+              {!exportPage && <Tooltip content={<CustomTooltip />} />}
               <Pie
-                data={reportData.report.CPTimes}
+                data={report.CPTimes}
                 dataKey='time'
                 cx='50%'
                 cy='50%'
                 outerRadius='70%'
                 stroke={theme.palette.background.default}
               >
-                {reportData.report.CPTimes.map((CP, index) => (
-                  <Cell key={index} fill={reportData.CPPieColours[index]} />
+                {report.CPTimes.map((CP, index) => (
+                  <Cell key={index} fill={CPPieColours[index]} />
                 ))}
               </Pie>
               <Legend verticalAlign='bottom' iconType='circle' height={36} />
@@ -260,15 +311,16 @@ function Report(props) {
         <Grid item xs={6}>
           <ResponsiveContainer width='100%' aspect={1.7}>
             <PieChart>
+              {!exportPage && <Tooltip content={<CustomTooltip />} />}
               <Pie
-                data={reportData.billableArray}
+                data={billableArray}
                 dataKey='number'
                 cx='50%'
                 cy='50%'
                 outerRadius='70%'
                 stroke={theme.palette.background.default}
               >
-                {reportData.billableArray.map((CP, index) => (
+                {billableArray.map((CP, index) => (
                   <Cell key={index} fill={hoursPieColours[index]} />
                 ))}
               </Pie>
@@ -282,36 +334,97 @@ function Report(props) {
           <Typography variant='body1' id='logsTitle' fontWeight='bold'>
             LOGS
           </Typography>
-          <Typography
-            id='billableLogsTitle'
-            sx={{ color: hoursPieColours[0], fontWeight: 'bold' }}
-          >
-            BILLABLE LOGS
-          </Typography>
+          {exportPage ? (
+            <Typography
+              id='billableLogsTitle'
+              sx={{ color: hoursPieColours[0], fontWeight: 'bold' }}
+            >
+              BILLABLE LOGS
+            </Typography>
+          ) : (
+            <div>
+              <Button
+                sx={{ color: hoursPieColours[0], fontWeight: 'bold' }}
+                onClick={handleToggleBillable}
+                startIcon={
+                  billableLogsOpen ? <ArrowUpIcon /> : <ArrowDownIcon />
+                }
+              >
+                BILLABLE LOGS
+              </Button>
+            </div>
+          )}
           <div id='billableLogsLister'>
-            <LogsLister
-              logs={reportData.report.logs.filter((log) => log.billable)}
-              CPData={CPData}
-              edit={false}
-            />
+            <Collapse in={billableLogsOpen}>
+              <LogsLister
+                logs={report.logs.filter((log) => log.billable)}
+                CPData={CPData}
+                edit={false}
+              />
+            </Collapse>
           </div>
-          <Typography
-            id='unbillableLogsTitle'
-            sx={{ color: hoursPieColours[1], fontWeight: 'bold' }}
-          >
-            UNBILLABLE LOGS
-          </Typography>
+          {exportPage ? (
+            <Typography
+              id='unbillableLogsTitle'
+              sx={{ color: hoursPieColours[1], fontWeight: 'bold' }}
+            >
+              UNBILLABLE LOGS
+            </Typography>
+          ) : (
+            <div>
+              <Button
+                sx={{ color: hoursPieColours[1], fontWeight: 'bold' }}
+                onClick={handleToggleUnbillable}
+                startIcon={
+                  unbillableLogsOpen ? <ArrowUpIcon /> : <ArrowDownIcon />
+                }
+              >
+                UNBILLABLE LOGS
+              </Button>
+            </div>
+          )}
           <div id='unbillableLogsLister'>
-            <LogsLister
-              logs={reportData.report.logs.filter((log) => !log.billable)}
-              CPData={CPData}
-              edit={false}
-            />
+            <Collapse in={unbillableLogsOpen}>
+              <LogsLister
+                logs={report.logs.filter((log) => !log.billable)}
+                CPData={CPData}
+                edit={false}
+              />
+            </Collapse>
           </div>
         </Stack>
       </Grid>
+      {!exportPage && (
+        <Grid
+          item
+          container
+          direction='row'
+          justifyContent='flex-end'
+          spacing={3}
+        >
+          <Grid item>
+            <Button
+              variant='contained'
+              startIcon={<DownloadIcon />}
+              onClick={handleExportReport}
+            >
+              EXPORT
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              variant='contained'
+              startIcon={<AddCircleIcon />}
+              onClick={handleNewReport}
+            >
+              NEW REPORT
+            </Button>
+          </Grid>
+        </Grid>
+      )}
     </Grid>
   );
 }
 
 export default Report;
+export { hoursPieColours }

@@ -1,12 +1,12 @@
 // Import Axios for queries to restful API
 import axios from 'axios';
 
-const baseURL = 'http://127.0.0.1:8000/api/';
+// Set base url
+// const baseURL = 'http://127.0.0.1:8000/api/';
+const baseURL = 'https://time-tracking-django.herokuapp.com/api/';
 
 // Create axios instance
 const axiosInstance = axios.create({
-  // Set base url
-  // baseURL: 'https://time-tracking-django.herokuapp.com/api/',
   baseURL: baseURL,
   // Set timeout to 10 seconds for the server end
   timeout: 1000,

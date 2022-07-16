@@ -31,7 +31,6 @@ const ClientAndProjects = lazy(() => import('./Pages/ClientsAndProjects'));
 const CPEditPage = lazy(() => import('./Pages/EditCP'));
 
 function getThemeDict(mode) {
-
   var theme = {
     palette: {
       //Dark or light theme
@@ -40,7 +39,7 @@ function getThemeDict(mode) {
       secondary: {
         // main: '#F79256',
         main: '#e87c17',
-        light: '#fae2cc'
+        light: '#fae2cc',
       },
       // Password visible on colour
       visiblity: {
@@ -84,15 +83,15 @@ function getThemeDict(mode) {
           root: ({ ownerState }) => ({
             ...(ownerState.variant === 'contained' && {
               borderRadius: 100,
-              fontFamily: "Roboto",
+              fontFamily: 'Roboto',
               backgroundColor: '#cee7fd',
               color: '#0284fe',
               boxShadow: 'none',
               padding: '10px 20px',
               '&:hover': {
-                background: "#a9d7ff",
+                background: '#a9d7ff',
                 boxShadow: 'none',
-             },
+              },
             }),
           }),
         },
@@ -113,15 +112,15 @@ function getThemeDict(mode) {
           root: ({ ownerState }) => ({
             ...(ownerState.variant === 'contained' && {
               borderRadius: 100,
-              fontFamily: "Roboto",
+              fontFamily: 'Roboto',
               backgroundColor: '#cee7fd',
               color: '#0284fe',
               boxShadow: 'none',
               padding: '10px 20px',
               '&:hover': {
-                background: "#a9d7ff",
+                background: '#a9d7ff',
                 boxShadow: 'none',
-             },
+              },
             }),
           }),
         },

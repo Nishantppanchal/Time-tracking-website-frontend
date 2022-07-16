@@ -196,7 +196,6 @@ function LogLister(props) {
       <Modal open={modalOpen} onClose={handleModalClose}>
         <Paper
           sx={{
-            bgcolor: '#ebf3fa',
             padding: '0.5rem',
             position: 'absolute',
             top: '50%',
@@ -222,7 +221,6 @@ function LogLister(props) {
             <Button
               variant='text'
               onClick={handleModalClose}
-              sx={{ color: '#3181CB' }}
             >
               CANCEL
             </Button>

@@ -66,6 +66,7 @@ import Stack from '@mui/material/Stack';
 
 import { createBrowserHistory } from 'history';
 import { getThemeDict } from '../App';
+import Report from '../Components/Report';
 
 function ReportExport() {
   // const theme = getTheme();
@@ -89,7 +90,7 @@ function ReportExport() {
     return createTheme(getThemeDict('light'));
   });
 
-  history.listen(({ location, action }) => {
+  const stopListening = history.listen(({ location, action }) => {
     if (action === 'POP') {
       navigate('/reports', { replace: true });
     }
@@ -100,6 +101,10 @@ function ReportExport() {
       navigate('/reports', { replace: true });
     }
   }, []);
+
+  useEffect(() => {
+    return () => {stopListening()}
+  })
 
   function getOffsetLeft(...elements) {
     var sum = 0;
@@ -138,13 +143,14 @@ function ReportExport() {
 
     const billableLogsTitle = document.getElementById('billableLogsTitle');
     const billableLogsLister =
-      document.getElementById('billableLogsLister').children[0];
+      document.getElementById('billableLogsLister').children[0].children[0]
+        .children[0].children[0];
     const billableHeader = billableLogsLister.children[0].children[0];
     const billableLogs = billableLogsLister.children[0].children[1].children;
 
     const unbillableLogsTitle = document.getElementById('unbillableLogsTitle');
     const unbillableLogsLister = document.getElementById('unbillableLogsLister')
-      .children[0];
+      .children[0].children[0].children[0].children[0];
     const unbillableHeader = unbillableLogsLister.children[0].children[0];
     const unbillableLogs =
       unbillableLogsLister.children[0].children[1].children;
@@ -154,6 +160,7 @@ function ReportExport() {
       logsContainerOffset +
       getOffsetLeft(
         document.getElementById('billableLogsLister'),
+        document.getElementById('billableLogsLister').children[0],
         billableLogsLister
       );
     const headerOffset =
@@ -185,10 +192,18 @@ function ReportExport() {
       { component: pieCharts, offset: 0 },
       { component: logsTitle, offset: logsTitleOffset },
       { component: billableLogsTitle, offset: logsTitleOffset },
-      { component: billableHeader, offset: headerOffset, marginRight: logsOffset, },
+      {
+        component: billableHeader,
+        offset: headerOffset,
+        marginRight: logsOffset,
+      },
       ...billableLogsArray,
       { component: unbillableLogsTitle, offset: logsTitleOffset },
-      { component: unbillableHeader, offset: headerOffset, marginRight: logsOffset, },
+      {
+        component: unbillableHeader,
+        offset: headerOffset,
+        marginRight: logsOffset,
+      },
       ...unbillableLogsArray,
     ];
 
@@ -305,292 +320,15 @@ function ReportExport() {
                   }}
                   id='doc'
                 >
-                  <Grid container spacing={3} color='text.primary'>
-                    <Grid
-                      container
-                      item
-                      xs={12}
-                      direction='column'
-                      rowSpacing={3}
-                      columnSpacing={1}
-                      id='selectedData'
-                    >
-                      <Grid container item spacing={1} id='clients'>
-                        <Grid item xs={12}>
-                          <Typography
-                            variant='body1'
-                            key='title'
-                            fontWeight='bold'
-                          >
-                            CLIENTS
-                          </Typography>
-                        </Grid>
-                        {reportData.report.CPTimes.filter(
-                          (CP) => CP.type === 'clients'
-                        ).length !== 0 ? (
-                          reportData.report.CPTimes.map((CP) =>
-                            CP.type === 'clients' ? (
-                              <Grid item xs='auto' key={CP.id}>
-                                <span
-                                  style={{
-                                    backgroundColor:
-                                      theme.palette.secondary.light,
-                                    color: theme.palette.text.primary,
-                                    borderRadius: '4px',
-                                    padding: '5px',
-                                    fontFamily: 'Roboto, san-serif',
-                                  }}
-                                >
-                                  {CP.name}
-                                </span>
-                              </Grid>
-                            ) : null
-                          )
-                        ) : (
-                          <Grid item xs='auto'>
-                            <Typography variant='body1' fontStyle='italic'>
-                              No clients selected
-                            </Typography>
-                          </Grid>
-                        )}
-                      </Grid>
-                      <Grid container item spacing={1} id='projects'>
-                        <Grid item xs={12}>
-                          <Typography
-                            variant='body1'
-                            key='title'
-                            fontWeight='bold'
-                          >
-                            PROJECTS
-                          </Typography>
-                        </Grid>
-                        {reportData.report.CPTimes.filter(
-                          (CP) => CP.type === 'projects'
-                        ).length !== 0 ? (
-                          reportData.report.CPTimes.map((CP) =>
-                            CP.type === 'projects' ? (
-                              <Grid item xs='auto' key={CP.id}>
-                                <span
-                                  style={{
-                                    backgroundColor:
-                                      theme.palette.secondary.light,
-                                    color: theme.palette.text.primary,
-                                    borderRadius: '4px',
-                                    padding: '5px',
-                                  }}
-                                >
-                                  {CP.name}
-                                </span>
-                              </Grid>
-                            ) : null
-                          )
-                        ) : (
-                          <Grid item xs='auto'>
-                            <Typography variant='body1' fontStyle='italic'>
-                              No projects selected
-                            </Typography>
-                          </Grid>
-                        )}
-                      </Grid>
-                      <Grid container item spacing={1} id='tags'>
-                        <Grid item xs={12}>
-                          <Typography
-                            variant='body1'
-                            fontWeight='bold'
-                          >
-                            TAGS
-                          </Typography>
-                        </Grid>
-                        {reportData.report.tagTimes.length !== 0 ? (
-                          reportData.report.tagTimes.map((tag) => (
-                            <Grid item xs='auto' key={tag.id}>
-                              <span
-                                style={{
-                                  backgroundColor:
-                                    theme.palette.secondary.light,
-                                  color: theme.palette.text.primary,
-                                  borderRadius: '4px',
-                                  padding: '5px',
-                                }}
-                              >
-                                {tag.name}
-                              </span>
-                            </Grid>
-                          ))
-                        ) : (
-                          <Grid item xs='auto'>
-                            <Typography variant='body1' fontStyle='italic'>
-                              No tags selected
-                            </Typography>
-                          </Grid>
-                        )}
-                      </Grid>
-                    </Grid>
-                    <Grid
-                      container
-                      item
-                      direction='column'
-                      spacing={1}
-                      id='totalTime'
-                    >
-                      <Grid item>
-                        <Typography variant='body1' fontWeight='bold'>
-                          TIME LOGGED
-                        </Typography>
-                      </Grid>
-                      <Grid item>
-                        <Typography variant='h4'>
-                          {Duration.fromObject({
-                            minutes: reportData.report.totalTime,
-                          }).toFormat("hh'h' mm'm'")}
-                        </Typography>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={12} id='barChart'>
-                      <ResponsiveContainer width='100%' height={340}>
-                        <BarChart
-                          data={reportData.timeProgress}
-                          margin={{ top: 5, right: 40, left: 40, bottom: 30 }}
-                        >
-                          <CartesianGrid strokeDasharray='3 3' />
-                          <Bar
-                            barSize={20}
-                            dataKey='time'
-                            fill={theme.palette.primary.main}
-                          />
-                          <XAxis
-                            dataKey='date'
-                            stroke={theme.palette.text.primary}
-                          >
-                            <Label
-                              value='DATE'
-                              offset={-15}
-                              position='insideBottom'
-                              fill={theme.palette.text.primary}
-                            />
-                          </XAxis>
-                          <YAxis stroke={theme.palette.text.primary}>
-                            <Label
-                              value='MINUTES'
-                              offset={-5}
-                              angle={-90}
-                              position='insideLeft'
-                              fill={theme.palette.text.primary}
-                            />
-                          </YAxis>
-                        </BarChart>
-                      </ResponsiveContainer>
-                    </Grid>
-                    <Grid container item xs={12} spacing={1} id='pieCharts'>
-                      <Grid item xs={6}>
-                        <Typography variant='body1' fontWeight='bold'>
-                          CLIENTS AND PROJECTS BREAKDOWN
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <Typography
-                          variant='body1'
-                          fontWeight='bold'
-                          id='hourBreakdown'
-                        >
-                          HOURS BREAKDOWN
-                        </Typography>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <ResponsiveContainer width='100%' aspect={1.7}>
-                          <PieChart>
-                            <Pie
-                              data={reportData.report.CPTimes}
-                              dataKey='time'
-                              cx='50%'
-                              cy='50%'
-                              outerRadius='70%'
-                              stroke={theme.palette.background.default}
-                            >
-                              {reportData.report.CPTimes.map((CP, index) => (
-                                <Cell
-                                  key={index}
-                                  fill={reportData.CPPieColours[index]}
-                                />
-                              ))}
-                            </Pie>
-                            <Legend
-                              verticalAlign='bottom'
-                              iconType='circle'
-                              height={36}
-                            />
-                          </PieChart>
-                        </ResponsiveContainer>
-                      </Grid>
-                      <Grid item xs={6}>
-                        <ResponsiveContainer width='100%' aspect={1.7}>
-                          <PieChart>
-                            <Pie
-                              data={reportData.billableArray}
-                              dataKey='number'
-                              cx='50%'
-                              cy='50%'
-                              outerRadius='70%'
-                              stroke={theme.palette.background.default}
-                            >
-                              {reportData.billableArray.map((CP, index) => (
-                                <Cell
-                                  key={index}
-                                  fill={hoursPieColours[index]}
-                                />
-                              ))}
-                            </Pie>
-                            <Legend
-                              verticalAlign='bottom'
-                              iconType='circle'
-                              height={36}
-                            />
-                          </PieChart>
-                        </ResponsiveContainer>
-                      </Grid>
-                    </Grid>
-                    <Grid item xs={12} id='logsContainer'>
-                      <Stack direction='column' spacing={1}>
-                        <Typography
-                          variant='body1'
-                          id='logsTitle'
-                          fontWeight='bold'
-                        >
-                          LOGS
-                        </Typography>
-                        <Typography
-                          id='billableLogsTitle'
-                          sx={{ color: hoursPieColours[0], fontWeight: 'bold' }}
-                        >
-                          BILLABLE LOGS
-                        </Typography>
-                        <div id='billableLogsLister'>
-                          <LogsLister
-                            logs={reportData.report.logs.filter(
-                              (log) => log.billable
-                            )}
-                            CPData={CPData}
-                            edit={false}
-                          />
-                        </div>
-                        <Typography
-                          id='unbillableLogsTitle'
-                          sx={{ color: hoursPieColours[1], fontWeight: 'bold' }}
-                        >
-                          UNBILLABLE LOGS
-                        </Typography>
-                        <div id='unbillableLogsLister'>
-                          <LogsLister
-                            logs={reportData.report.logs.filter(
-                              (log) => !log.billable
-                            )}
-                            CPData={CPData}
-                            edit={false}
-                          />
-                        </div>
-                      </Stack>
-                    </Grid>
-                  </Grid>
+                  <Report
+                    report={reportData.report}
+                    timeProgress={reportData.timeProgress}
+                    billableArray={reportData.billableArray}
+                    CPPieColours={reportData.CPPieColours}
+                    theme={theme}
+                    CPData={CPData}
+                    exportPage={true}
+                  />
                 </div>
               </ThemeProvider>
             </Paper>
