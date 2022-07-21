@@ -1,12 +1,14 @@
 // Import redux component
 import { createSlice } from '@reduxjs/toolkit';
 
+const initialValue = [];
+
 // Create slice using redux toolkit
 export const CPDataSlice = createSlice({
   // Defines slice name
   name: 'CPData',
   // Sets inital state value
-  initialState: { value: [] },
+  initialState: { value: initialValue },
   // Defines reduces
   reducers: {
     // Defines reducer to load all clients and projects
@@ -35,17 +37,21 @@ export const CPDataSlice = createSlice({
         // If the it is the client/project we are looking for
         if (CP.id == action.payload.id && CP.type == action.payload.type) {
           // Return an updated dictionary
-          return {...CP, name: action.payload.name };
+          return { ...CP, name: action.payload.name };
         } else {
           // Otherwise return the original dictionary
           return CP;
         }
       });
     },
+    clearCP: (state) => {
+      state.value = initialValue;
+    },
   },
 });
 
 // Exports actions
-export const { loadCPData, addCP, deleteCP, updateCP } = CPDataSlice.actions;
+export const { loadCPData, addCP, deleteCP, updateCP, clearCP } =
+  CPDataSlice.actions;
 // Export reducer
 export default CPDataSlice.reducer;

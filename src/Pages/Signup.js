@@ -80,26 +80,19 @@ function SignUp() {
     }
 
     // If the field changed is the password or retyped password field
-    if (event.target.name == 'password' || event.target.name == 'retypedPassword') {
-      const inputs =
+    if (
+      event.target.name == 'password' ||
+      event.target.name == 'retypedPassword'
+    ) {
+      const errors =
         // If the changed field is the password field
-        event.target.name == 'password'
-          ? {
-              // Sets the password to the event value
-              password: event.target.value,
-              // Sets the retypedPassword to the retypedPassword value in the inputData state
-              retypedPassword: inputData.retypedPassword,
-            }
-          : {
-              // Sets the password to the password value in the inputData state
-              password: inputData.password,
-              // Sets the retypedPassword to the event value
-              retypedPassword: event.target.value,
-            };
-
-      // Run the password and retypedPassword through password validation
-      // The constant error stores the errors array
-      const errors = passwordValidator(inputs);
+        event.target.name === 'password'
+          ? // Run the password and retypedPassword through password validation
+            // The constant error stores the errors array
+            passwordValidator(event.target.value, inputData.retypedPassword)
+          : // Run the password and retypedPassword through password validation
+            // The constant error stores the errors array
+            passwordValidator(inputData.password, event.target.value);
 
       // If there are more than one error
       if (errors.length > 0) {
@@ -323,7 +316,7 @@ function SignUp() {
             // Text the is displayed before the user types in the field
             placeholder='jamesdoe@gmail.com'
             // Sets the autocomplete type for the browser
-            autoComplete='email'
+            autoComplete='email'autoComplete='given-name'
             // Run handleRegisterChange when the field input changes
             onChange={handleRegisterChange}
             // Add a email icon at the end of the the textfield
@@ -455,7 +448,7 @@ function SignUp() {
           <Box width='80%'>
             {/* Sign up button */}
             <Button
-              // Sets the type to submit 
+              // Sets the type to submit
               // This allows the enter to submit the form
               type='submit'
               // Sets the style to contained

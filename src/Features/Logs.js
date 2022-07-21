@@ -1,20 +1,22 @@
 // Import redux component
 import { createSlice } from '@reduxjs/toolkit';
 
+const initialValue = {
+  // Stores logs
+  logs: [],
+  // Store whether all the logs have loaded
+  allLogsLoaded: false,
+  // Stores the number of logs that have been loaded in
+  loadedLogsNumber: 0,
+};
+
 // Create slice using redux toolkit
 export const logsSlice = createSlice({
   // Defines slice name
   name: 'logs',
   // Sets inital state value
   initialState: {
-    value: {
-      // Stores logs
-      logs: [],
-      // Store whether all the logs have loaded
-      allLogsLoaded: false,
-      // Stores the number of logs that have been loaded in
-      loadedLogsNumber: 0,
-    },
+    value: initialValue,
   },
   // Defines reduces
   reducers: {
@@ -78,6 +80,9 @@ export const logsSlice = createSlice({
         loadedLogsNumber: state.value.loadedLogsNumber + action.payload,
       };
     },
+    clearLogs: (state) => {
+      state.value = initialValue;
+    },
   },
 });
 
@@ -89,6 +94,7 @@ export const {
   updateLog,
   setAllLogsLoaded,
   addToLoadedLogsNumber,
+  clearLogs,
 } = logsSlice.actions;
 // Export reducer
 export default logsSlice.reducer;

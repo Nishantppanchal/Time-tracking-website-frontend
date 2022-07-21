@@ -23,10 +23,12 @@ export const reportDataSlice = createSlice({
     editReportData: (state, action) => {
       state.value = action.payload;
     },
+    clearReportData: (state) => {
+      state.value = initialValue;
+    },
   },
 });
 
-export const { editReportData } = reportDataSlice.actions;
-export { initialValue };
+export const { editReportData, clearReportData } = reportDataSlice.actions;
 
 export default reportDataSlice.reducer;

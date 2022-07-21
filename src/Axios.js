@@ -61,7 +61,7 @@ axiosInstance.interceptors.response.use(
           refresh_token: refreshToken,
           grant_type: 'refresh_token',
           // Gets client ID from .env file
-          client_id: process.env.REACT_APP_CLIENT_ID,
+          client_id: process.env.REACT_APP_DJANGO_CLIENT_ID,
         })
         // Handles reseponse
         .then((response) => {

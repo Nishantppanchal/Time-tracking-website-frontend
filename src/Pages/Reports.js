@@ -52,7 +52,7 @@ import LogsLister from '../Components/LogsLister';
 
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
-import { editReportData, initialValue } from '../Features/ReportData';
+import { clearReportData, editReportData } from '../Features/ReportData';
 import { useNavigate } from 'react-router-dom';
 import { toggleMode, toggleToWhite } from '../Features/Mode';
 import LoadingButton from '@mui/lab/LoadingButton';
@@ -306,7 +306,7 @@ function Reports() {
 
     setReportGenerated(false);
 
-    dispatch(editReportData(initialValue));
+    dispatch(clearReportData());
   }
 
   function handleToggleBillable() {

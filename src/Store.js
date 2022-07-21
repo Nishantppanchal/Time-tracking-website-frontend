@@ -7,6 +7,7 @@ import logsReducer from './Features/Logs';
 import themeReducer from './Features/Theme';
 import modeReducer from './Features/Mode';
 import reportData from './Features/ReportData';
+import loginMethod from './Features/LoginMethod';
 
 // Defines redux store
 const store = configureStore({
@@ -24,6 +25,8 @@ const store = configureStore({
     mode: modeReducer,
     // Set report data reducer
     reportData: reportData,
+    // Set login method reducer
+    loginMethod: loginMethod,
   },
 });
 

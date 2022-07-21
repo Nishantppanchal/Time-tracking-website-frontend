@@ -23,13 +23,23 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import LightModeIcon from '@mui/icons-material/LightMode';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
-import { toggleMode } from '../Features/Mode';
+import { clearMode, toggleMode } from '../Features/Mode';
 import Brightness4 from '@mui/icons-material/Brightness4';
+import { clearLoginMethod, loginMethodStates } from '../Features/LoginMethod';
+import { googleLogout } from '@react-oauth/google';
+import ModeToggle from './ModeToggle';
+import { clearCP } from '../Features/CPData';
+import { clearLogs } from '../Features/Logs';
+import { clearReportData } from '../Features/ReportData';
+import { clearTags } from '../Features/Tags';
+import { clearTheme } from '../Features/Theme';
 
 function Header(props) {
   // Defines the navigate function used to redirect to the other pages
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const loginMethod = useSelector((state) => state.loginMethod.value);
 
   const mode = useSelector((state) => state.mode.value);
 
@@ -73,7 +83,7 @@ function Header(props) {
   }
 
   // Handles logging out the user
-  function handleLogout(event) {
+  function handleLogout() {
     // Sends a POST request to revoke the refresh token
     AxiosInstance.post('auth/revoke-token/', {
       // Sets the refresh token to be revoked
@@ -83,7 +93,9 @@ function Header(props) {
       // Sets the token type to refresh token
       token_type_hint: 'refresh_token',
       // Get the client id from the .env file
-      client_id: process.env.REACT_APP_CLIENT_ID,
+      client_id: process.env.REACT_APP_DJANGO_CLIENT_ID,
+    }).catch((error) => {
+      console.log(error.response);
     });
 
     // Sends a POST request to revoke the access token
@@ -95,7 +107,7 @@ function Header(props) {
       // Sets the token type to access token
       token_type_hint: 'access_token',
       // Get the client id from the .env file
-      client_id: process.env.REACT_APP_CLIENT_ID,
+      client_id: process.env.REACT_APP_DJANGO_CLIENT_ID,
     });
 
     if (localStorage.getItem('access_token')) {
@@ -113,6 +125,24 @@ function Header(props) {
       // Removes user id from sessionstorage
       sessionStorage.removeItem('user_id');
     }
+
+    switch (loginMethod) {
+      case loginMethodStates.trackable:
+        break;
+      case loginMethodStates.google:
+        googleLogout();
+        break;
+      default:
+        console.error('Login in method not detected');
+    }
+
+    dispatch(clearCP());
+    dispatch(clearLoginMethod());
+    dispatch(clearLogs());
+    dispatch(clearMode());
+    dispatch(clearReportData());
+    dispatch(clearTags());
+
     // Redirects to the login page
     navigate('/login');
   }
@@ -137,7 +167,15 @@ function Header(props) {
         <Button
           variant='text'
           size='large'
-          sx={{ color: 'primary' }}
+          sx={{
+            bgcolor: '#0093E9',
+            backgroundImage:
+              'linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)',
+            '-webkit-background-clip': 'text',
+            '-webkit-text-fill-color': 'transparent',
+            backgroundSize: '100%',
+            fontWeight: 'bold',
+          }}
           // Runs the handleGoToDashboard function when clicked
           onClick={handleGoToDashboard}
         >
@@ -226,20 +264,7 @@ function Header(props) {
         >
           LOGOUT
         </Button>
-        <ToggleButtonGroup
-          value={mode}
-          exclusive
-          onChange={handleChangeMode}
-          size='small'
-          sx={{ paddingLeft: '10px' }}
-        >
-          <ToggleButton value='light'>
-            <LightModeIcon />
-          </ToggleButton>
-          <ToggleButton value='dark'>
-            <DarkModeIcon />
-          </ToggleButton>
-        </ToggleButtonGroup>
+        <ModeToggle sx={{ paddingLeft: '10px' }} />
       </Toolbar>
     </AppBar>
   );

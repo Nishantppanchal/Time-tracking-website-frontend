@@ -76,7 +76,7 @@ function ReportExport() {
 
   const [generatingReport, setGeneratingReport] = useState(false);
 
-  const hoursPieColours = ['#92e492', 'red'];
+  const hoursPieColours = ['#81c784', '#ff5252'];
 
   const reportData = useSelector((state) => state.reportData.value);
   // Stores clients and projects data

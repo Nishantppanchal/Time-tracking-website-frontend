@@ -15,9 +15,14 @@ export const modeSlice = createSlice({
     restoreMode: (state) => {
       state.value = localStorage.getItem('mode') ?? 'light';
     },
+    clearMode: (state) => {
+      localStorage.removeItem('mode');
+      state.value = 'light';
+    },
   },
 });
 
-export const { toggleMode, toggleToWhite, restoreMode } = modeSlice.actions;
+export const { toggleMode, toggleToWhite, restoreMode, clearMode } =
+  modeSlice.actions;
 
 export default modeSlice.reducer;

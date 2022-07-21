@@ -23,6 +23,9 @@ import { setTheme } from './Features/Theme';
 
 import themeParser from './Components/ThemeToCSS';
 
+import { GoogleOAuthProvider } from '@react-oauth/google';
+import Account from './Pages/Account';
+
 const Dashboard = lazy(() => import('./Pages/Dashboard'));
 const LogsEditPage = lazy(() => import('./Pages/EditLogs'));
 const Reports = lazy(() => import('./Pages/Reports.js'));
@@ -44,10 +47,6 @@ function getThemeDict(mode) {
       // Password visible on colour
       visiblity: {
         main: '#81c784',
-      },
-      // Password visible off colour
-      visibilityOff: {
-        main: '#b4b2b2',
       },
       divider: {
         main: 'black',
@@ -88,6 +87,8 @@ function getThemeDict(mode) {
               color: '#0284fe',
               boxShadow: 'none',
               padding: '10px 20px',
+              fontWeight: '900',
+              letterSpacing: '1.5px',
               '&:hover': {
                 background: '#a9d7ff',
                 boxShadow: 'none',
@@ -168,94 +169,106 @@ function App() {
       <StyledEngineProvider injectFirst>
         {/* Assign custom theme */}
         <ThemeProvider theme={theme}>
-          <Suspense fallback={<Skeleton />}>
-            <Routes>
-              {/* Root directory */}
-              <Route path='/'>
-                {/* Assigns a component to the root directory */}
-                <Route index element={<Entry />} />
-                {/* Login page */}
-                <Route path='login' element={<Login />} />
-                {/* Sign Up page */}
-                <Route path='signup' element={<SignUp />} />
-                {/* Home page */}
-                <Route
-                  path='dashboard'
-                  element={
-                    // Requires user to be authenicated to visit
-                    <RequireAuth>
-                      <Suspense fallback={<DashboardLoading />}>
-                        <Dashboard />
-                      </Suspense>
-                    </RequireAuth>
-                  }
-                />
-                {/* Logs edit page */}
-                <Route
-                  path='logs/edit/:id'
-                  element={
-                    // Requires user to be authenicated to visit
-                    <RequireAuth>
-                      <LogsEditPage />
-                    </RequireAuth>
-                  }
-                />
-                {/* Reports page */}
-                <Route
-                  path='reports'
-                  element={
-                    // Requires user to be authenicated to visit
-                    <RequireAuth>
-                      <Reports />
-                    </RequireAuth>
-                  }
-                />
-                {/* Logs page */}
-                <Route
-                  path='logs'
-                  element={
-                    // Requires user to be authenicated to visit
-                    <RequireAuth>
-                      <Suspense fallback={<LogsLoading />}>
-                        <Logs />
-                      </Suspense>
-                    </RequireAuth>
-                  }
-                />
-                {/* Clients and projects page */}
-                <Route
-                  path='clients-and-projects'
-                  element={
-                    // Requires user to be authenicated to visit
-                    <RequireAuth>
-                      <Suspense fallback={<ClientsAndProjectsLoading />}>
-                        <ClientAndProjects />
-                      </Suspense>
-                    </RequireAuth>
-                  }
-                />
-                {/* Clients and projects edit page */}
-                <Route
-                  path='clients-and-projects/edit/:type/:id'
-                  element={
-                    // Requires user to be authenicated to visit
-                    <RequireAuth>
-                      <CPEditPage />
-                    </RequireAuth>
-                  }
-                />
-                <Route
-                  path='report-export'
-                  element={
-                    <RequireAuth>
-                      <ReportPDF />
-                    </RequireAuth>
-                  }
-                />
-              </Route>
-              {/* Path of report PDF elements */}
-            </Routes>
-          </Suspense>
+          <GoogleOAuthProvider
+            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+          >
+            <Suspense fallback={<Skeleton />}>
+              <Routes>
+                {/* Root directory */}
+                <Route path='/'>
+                  {/* Assigns a component to the root directory */}
+                  <Route index element={<Entry />} />
+                  {/* Login page */}
+                  <Route path='login' element={<Login />} />
+                  {/* Sign Up page */}
+                  <Route path='signup' element={<SignUp />} />
+                  {/* Home page */}
+                  <Route
+                    path='dashboard'
+                    element={
+                      // Requires user to be authenicated to visit
+                      <RequireAuth>
+                        <Suspense fallback={<DashboardLoading />}>
+                          <Dashboard />
+                        </Suspense>
+                      </RequireAuth>
+                    }
+                  />
+                  {/* Logs edit page */}
+                  <Route
+                    path='logs/edit/:id'
+                    element={
+                      // Requires user to be authenicated to visit
+                      <RequireAuth>
+                        <LogsEditPage />
+                      </RequireAuth>
+                    }
+                  />
+                  {/* Reports page */}
+                  <Route
+                    path='reports'
+                    element={
+                      // Requires user to be authenicated to visit
+                      <RequireAuth>
+                        <Reports />
+                      </RequireAuth>
+                    }
+                  />
+                  {/* Logs page */}
+                  <Route
+                    path='logs'
+                    element={
+                      // Requires user to be authenicated to visit
+                      <RequireAuth>
+                        <Suspense fallback={<LogsLoading />}>
+                          <Logs />
+                        </Suspense>
+                      </RequireAuth>
+                    }
+                  />
+                  {/* Clients and projects page */}
+                  <Route
+                    path='clients-and-projects'
+                    element={
+                      // Requires user to be authenicated to visit
+                      <RequireAuth>
+                        <Suspense fallback={<ClientsAndProjectsLoading />}>
+                          <ClientAndProjects />
+                        </Suspense>
+                      </RequireAuth>
+                    }
+                  />
+                  {/* Clients and projects edit page */}
+                  <Route
+                    path='clients-and-projects/edit/:type/:id'
+                    element={
+                      // Requires user to be authenicated to visit
+                      <RequireAuth>
+                        <CPEditPage />
+                      </RequireAuth>
+                    }
+                  />
+                  {/* Path of report PDF elements */}
+                  <Route
+                    path='report-export'
+                    element={
+                      <RequireAuth>
+                        <ReportPDF />
+                      </RequireAuth>
+                    }
+                  />
+                  <Route
+                    path='account'
+                    element={
+                      <RequireAuth>
+                        <Account />
+                      </RequireAuth>
+                    }
+                  />
+                </Route>
+              </Routes>
+            </Suspense>
+          </GoogleOAuthProvider>
         </ThemeProvider>
       </StyledEngineProvider>
     </div>

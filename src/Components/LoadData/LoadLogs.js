@@ -18,6 +18,7 @@ function fetchLogs(loadingState) {
     .get('CRUD/logs/', { params: { number: loadedLogsNumber } })
     // Handles the response
     .then((response) => {
+      console.log(response)
       // If there is one or more logs in the response data
       if (response.data.length > 0) {
         // Adds the reponse data to logs array in the logs redux state
@@ -35,6 +36,7 @@ function fetchLogs(loadingState) {
     })
     // Handles errors
     .catch((error) => {
+      console.log(error)
       // If the access token is invalid
       if (
         error.response.data.detail ===

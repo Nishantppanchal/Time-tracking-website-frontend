@@ -67,7 +67,7 @@ import Stack from '@mui/material/Stack';
 import { createBrowserHistory } from 'history';
 import { getThemeDict } from '../App';
 
-const hoursPieColours = ['#92e492', 'red'];
+const hoursPieColours = ['#81c784', '#ff5252'];
 
 function Report(props) {
   const {
