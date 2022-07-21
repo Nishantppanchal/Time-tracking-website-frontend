@@ -18,6 +18,7 @@ function fetchCPData(setIsCPDataLoading) {
     })
     // Handles error
     .catch((error) => {
+      console.error(error.response);
       // If the access token is invalid
       if (
         error.response.data.detail ===
