@@ -30,6 +30,7 @@ import GoogleLoginButton from '../Components/GoogleLoginButton';
 import { useDispatch } from 'react-redux';
 import { loginMethodStates, setLoginMethod } from '../Features/LoginMethod';
 import ModeToggle from '../Components/ModeToggle';
+import LoginRequest from '../Components/LoginRequest';
 
 function Login() {
   // Creates a navigate function
@@ -81,118 +82,7 @@ function Login() {
     // Prevents the default action on button click
     event.preventDefault();
 
-    // Post user login info
-    axios
-      .post(baseURL + 'auth/token/', {
-        // Get the client id from the .env file
-        client_id: process.env.REACT_APP_DJANGO_CLIENT_ID,
-        // Sets the grant type to password
-        grant_type: 'password',
-        // Sets the email as the username
-        username: inputData.email.toLowerCase(),
-        // Sets the password to the password the user entered
-        password: inputData.password,
-      })
-      // Handles the response
-      .then((response) => {
-        // Clears all the local storage and session storage values if there are any
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
-        sessionStorage.removeItem('access_token');
-        sessionStorage.removeItem('refresh_token');
-
-        // If the user checked remember me
-        if (rememberMe) {
-          // Set the access token in localStorage
-          // Under the name access_token
-          localStorage.setItem('access_token', response.data.access_token);
-          // Set the refresh token in localStorage
-          // Under the name refresh_token
-          localStorage.setItem('refresh_token', response.data.refresh_token);
-          // Otherwise, if the user has not checked remember me
-        } else {
-          // Set the access token in sessionStorage
-          // Under the name access_token
-          sessionStorage.setItem('access_token', response.data.access_token);
-          // Set the refresh token in sessionStorage
-          // Under the name refresh_token
-          sessionStorage.setItem('refresh_token', response.data.refresh_token);
-        }
-
-        // Forces the access token in the header fo the axiosInstance to change
-        axiosInstance.defaults.headers['Authorization'] =
-          'Bearer ' + response.data.access_token;
-      })
-      // After the tokens are stored
-      .then(() => {
-        // Clears the local storage and session storage values if there are any
-        localStorage.removeItem('user_id');
-        sessionStorage.removeItem('user_id');
-
-        // Gets the user ID
-        axiosInstance
-          .get('user/id/')
-          // Handles the response
-          .then((response) => {
-            // If the user has checked remember me
-            if (rememberMe) {
-              // Stores the user ID in localStorage
-              // Under the name user_id
-              localStorage.setItem('user_id', response.data[0].id);
-              // Otherwise, if the user has not checked remember me
-            } else {
-              // Stores the user ID in sessionStorage
-              // Under the name user_id
-              sessionStorage.setItem('user_id', response.data[0].id);
-            }
-
-            // Pushs the user to the dashboard page
-            // Replace prevent the user from going back to the login page
-            navigate('/dashboard', { replace: true });
-          })
-          .catch((error) => {
-            console.error(error.response.data);
-            // If the access token was invalid
-            if (
-              error.response.data.detail ===
-              'In1valid token header. No credentials provided.'
-            ) {
-              // If the user has checked remember me
-              if (rememberMe) {
-                // Stores the user ID in localStorage
-                // Under the name user_id
-                localStorage.setItem(
-                  'user_id',
-                  error.response.data.requestData.data[0].id
-                );
-                // Otherwise, if the user has not checked remember me
-              } else {
-                // Stores the user ID in sessionStorage
-                // Under the name user_id
-                sessionStorage.setItem(
-                  'user_id',
-                  error.response.data.requestData.data[0].id
-                );
-              }
-
-              // Pushes the user to the dashboard page
-              // Replace prevent the user from going back to the login page
-              navigate('/dashboard', { replace: true });
-            }
-          });
-
-        dispatch(setLoginMethod(loginMethodStates.trackable));
-      })
-      // Handles errors
-      .catch((error) => {
-        console.error(error.response.data);
-        // If the error's status code is 400
-        if (error.response.status === 400) {
-          // Set the invalidEmailOrPassword to true
-          // This cause an error prompt
-          setInvalidEmailOrPassword(true);
-        }
-      });
+    LoginRequest(inputData, rememberMe, setInvalidEmailOrPassword, navigate);
   }
 
   // Handle remember me check box change
@@ -233,7 +123,7 @@ function Login() {
               <Grid item container direction='column' spacing={0.5}>
                 <Grid item>
                   <Typography variant='h5' width='100%' align='center'>
-                    Login into your account
+                    LOGIN INTO YOUR ACCOUNT
                   </Typography>
                 </Grid>
                 <Grid item>
@@ -245,7 +135,7 @@ function Login() {
                     width='center'
                   >
                     <Typography className='loginCreateAccountCaption'>
-                      Don't have an account yet?
+                      Don't have an account?
                     </Typography>
                     {/* Creates a link to the signup page */}
                     <Typography
@@ -266,7 +156,7 @@ function Login() {
                   // Sets the id to email
                   id='email'
                   // Sets the label to email
-                  label='email'
+                  label='EMAIL'
                   variant='outlined'
                   // Sets the autocomplete type for the browser
                   autoComplete='email'
@@ -293,7 +183,7 @@ function Login() {
                   id='password'
                   variant='outlined'
                   // Sets the label to password
-                  label='password'
+                  label='PASSWORD'
                   // Text the is displayed before the user types in the field
                   placeholder='password'
                   // Sets the type to text of password based on between passwordVisiblity is true of false
@@ -394,7 +284,12 @@ function Login() {
                 </Button>
               </Grid>
               <Grid item>
-                <GoogleLoginButton signIn={false} sx={{ width: '100%' }} />
+                <Typography align='center' width='100%'>
+                  OR
+                </Typography>
+              </Grid>
+              <Grid item>
+                <GoogleLoginButton signUp={false} sx={{ width: '100%' }} />
               </Grid>
             </Grid>
           </Paper>

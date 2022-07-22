@@ -10,6 +10,7 @@ import Grid from '@mui/material/Grid';
 import Container from '@mui/material/Container';
 import { CssBaseline } from '@mui/material';
 import ModeToggle from '../Components/ModeToggle';
+import ClockIcon from '../SVG/Clock.svg';
 
 function Home() {
   // Define navigate function
@@ -48,7 +49,14 @@ function Home() {
         }}
       />
       {/* Grid for the two buttons */}
-      <Grid container direction='row' spacing={8} width='40%'>
+      <Grid container direction='row' rowSpacing={4} columnSpacing={8} width='40%'>
+        <Grid item xs={12}>
+          <div
+            style={{ width: '100%', display: 'flex', justifyContent: 'center' }}
+          >
+            <img src={ClockIcon} alt='logo' width='50%' />
+          </div>
+        </Grid>
         <Grid item xs={12}>
           {/* Website title */}
           <Typography
@@ -59,8 +67,8 @@ function Home() {
               bgcolor: '#0093E9',
               backgroundImage:
                 'linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)',
-              '-webkit-background-clip': 'text',
-              '-webkit-text-fill-color': 'transparent',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
               backgroundSize: '100%',
             }}
           >

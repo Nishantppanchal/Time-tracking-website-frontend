@@ -101,7 +101,7 @@ function Dashboard() {
 
     // Add 50 to the current loadedLogsNumber
     // This causes 50 more tags to be loaded
-    dispatch(addToLoadedLogsNumber(2));
+    dispatch(addToLoadedLogsNumber(25));
     // Set isMoreLogLoading to true to show loading animation
     setIsMoreLogsLoading(true);
     // Fetchs more logs

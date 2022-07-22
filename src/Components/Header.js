@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 // Import axios instance
 import AxiosInstance from '../Axios';
 import {
+  Icon,
   IconButton,
   Switch,
   ToggleButton,
@@ -33,6 +34,7 @@ import { clearLogs } from '../Features/Logs';
 import { clearReportData } from '../Features/ReportData';
 import { clearTags } from '../Features/Tags';
 import { clearTheme } from '../Features/Theme';
+import ClockIcon from '../SVG/Clock.svg';
 
 function Header(props) {
   // Defines the navigate function used to redirect to the other pages
@@ -171,13 +173,29 @@ function Header(props) {
             bgcolor: '#0093E9',
             backgroundImage:
               'linear-gradient(160deg, #0093E9 0%, #80D0C7 100%)',
-            '-webkit-background-clip': 'text',
-            '-webkit-text-fill-color': 'transparent',
+            WebkitBackgroundClip: 'text',
+            WebkitTextFillColor: 'transparent',
             backgroundSize: '100%',
             fontWeight: 'bold',
           }}
           // Runs the handleGoToDashboard function when clicked
           onClick={handleGoToDashboard}
+          startIcon={
+            <Icon>
+              <div style={{ position: 'relative' }}>
+                <img
+                  src={ClockIcon}
+                  alt='logo'
+                  style={{
+                    aspectRatio: 1,
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                  }}
+                />
+              </div>
+            </Icon>
+          }
         >
           TRACKABLE
         </Button>
@@ -258,7 +276,6 @@ function Header(props) {
           variant='text'
           size='large'
           sx={{ color: 'text.primary', ':hover': { color: 'primary' } }}
-          onHover
           // Runs the handleLogout function when clicked
           onClick={handleLogout}
         >

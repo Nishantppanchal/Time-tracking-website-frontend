@@ -89,7 +89,11 @@ function LogLister(props) {
       <Stack
         direction='column'
         spacing={0}
-        sx={editable ? { width: '95%', margin: '2rem auto 0 auto' } : { width: '95%', margin: '0 auto' }}
+        sx={
+          editable
+            ? { width: '95%', margin: '2rem auto 0 auto' }
+            : { width: '95%', margin: '0 auto' }
+        }
       >
         {/* Grouper div to enclose the header */}
         <Stack
@@ -115,11 +119,15 @@ function LogLister(props) {
         <TransitionGroup>
           {logs.map((log) => (
             <Collapse key={log.id}>
-              <Divider orientation='horizontial' flexItem />
+              <Divider orientation='horizontal' flexItem />
               <Stack
                 direction='row'
                 spacing={1}
-                sx={{ display: 'flex', alignItems: 'center', minHeight: '40px' }}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  minHeight: '40px',
+                }}
                 margin='0.2rem 0'
               >
                 <Typography variant='body1' sx={{ width: '15%' }}>
@@ -148,7 +156,7 @@ function LogLister(props) {
                     // Set initial of this component not to be empty
                     empty={false}
                     // Pass through all the tags
-                    tags={null}
+                    tags={[]}
                     // Assign handleDescriptionWithTagsData to be run to process the content in this component
                     data={() => {
                       return null;
@@ -218,10 +226,7 @@ function LogLister(props) {
             justifyContent='flex-end'
             marginTop='0.5rem'
           >
-            <Button
-              variant='text'
-              onClick={handleModalClose}
-            >
+            <Button variant='text' onClick={handleModalClose}>
               CANCEL
             </Button>
             <Button

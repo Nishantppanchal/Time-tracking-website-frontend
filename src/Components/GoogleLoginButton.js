@@ -6,7 +6,7 @@ import { loginMethodStates, setLoginMethod } from '../Features/LoginMethod';
 import { useGoogleLogin } from '@react-oauth/google';
 import { Button, Icon } from '@mui/material';
 import getTheme from './GetTheme';
-import googleIcon from '../SVG/GoogleIcon.svg';
+import GoogleIcon from '../SVG/GoogleIcon.svg';
 import { useNavigate } from 'react-router-dom';
 
 function GoogleLoginButton(props) {
@@ -76,7 +76,7 @@ function GoogleLoginButton(props) {
         }}
       >
         <img
-          src={googleIcon}
+          src={GoogleIcon}
           alt='Google Icon'
           style={{ height: '1.5rem', aspectRatio: 1, paddingRight: '1em' }}
         />
