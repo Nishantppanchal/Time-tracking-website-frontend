@@ -203,15 +203,6 @@ function LogsEditPage() {
     }
   }
 
-  // Handles date change
-  function handleDateChange(newDate) {
-    // If the date has changed
-    if (newDate !== date) {
-      // Set the date state to the new date selected by the user
-      setDate(newDate);
-    }
-  }
-
   // Handles when the update button is clicked
   async function handleUpdateButton(event) {
     // Prevents the default actions

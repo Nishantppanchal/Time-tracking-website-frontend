@@ -1,5 +1,5 @@
 // Import React components
-import React, { lazy } from 'react';
+import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter } from 'react-router-dom';
 // Import material UI components

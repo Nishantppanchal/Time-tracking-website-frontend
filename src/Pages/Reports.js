@@ -67,8 +67,6 @@ function Reports() {
   const [timeProgress, setTimeProgress] = useState(data.timeProgress);
   const [CPPieColours, setCPPieColours] = useState(data.CPPieColours);
   const [billableArray, setBillableArray] = useState(data.billableArray);
-  const [billableLogsOpen, setBillableLogsOpen] = useState(true);
-  const [unbillableLogsOpen, setUnbillableLogsOpen] = useState(true);
 
   // Creates a filter function
   const CPFilter = createFilterOptions();
@@ -235,7 +233,7 @@ function Reports() {
     (report.CPTimes.length >= report.tagTimes.length
       ? report.CPTimes
       : report.tagTimes
-    ).forEach((CP) => {
+    ).forEach(() => {
       const randomColour = generateRandomColour(CPcolorArray);
       CPcolorArray.push(randomColour);
     });
@@ -276,14 +274,6 @@ function Reports() {
     setReportGenerated(false);
 
     dispatch(clearReportData());
-  }
-
-  function handleToggleBillable() {
-    setBillableLogsOpen(!billableLogsOpen);
-  }
-
-  function handleToggleUnbillable() {
-    setUnbillableLogsOpen(!unbillableLogsOpen);
   }
 
   function handleExportReport() {

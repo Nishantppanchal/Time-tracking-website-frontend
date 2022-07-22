@@ -18,7 +18,7 @@ import { googleLogout } from '@react-oauth/google';
 import { clearCP } from '../Features/CPData';
 import { clearLoginMethod, loginMethodStates } from '../Features/LoginMethod';
 import { clearLogs } from '../Features/Logs';
-import { clearMode, toggleMode } from '../Features/Mode';
+import { clearMode } from '../Features/Mode';
 import { clearReportData } from '../Features/ReportData';
 import { clearTags } from '../Features/Tags';
 import ClockIcon from '../SVG/Clock.svg';

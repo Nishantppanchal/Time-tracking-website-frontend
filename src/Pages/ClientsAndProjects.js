@@ -1,32 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // Import MUI components
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import Grid from '@mui/material/Grid';
-import { GridActionsCellItem } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import './../Styles/Home.css';
 // Import axios instance
-import axiosInstance from '../Axios.js';
 // Import fetching components
 import fetchCPData from '../Components/LoadData/LoadCPData';
 // Import redux components
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 // Import custom components
 import Header from '../Components/Header';
 // Import luxon component
 import { CssBaseline, Typography } from '@mui/material';
 import CPLister from '../Components/CPLister';
-import { deleteCP } from '../Features/CPData';
 import ClientsAndProjectsLoading from '../Loading Components/ClientsAndProjectsLoading';
 
 function ClientAndProjects() {
-  // Creates dispatch function to update redux state
-  const dispatch = useDispatch();
-  // Create navigate function
-  const navigate = useNavigate();
-
   // Stores clients and projects
   const CPData = useSelector((state) => state.CPData.value);
   const [isCPDataLoading, setIsCPDataLoading] = useState(
@@ -40,7 +29,7 @@ function ClientAndProjects() {
     var clients = [];
     var projects = [];
     for (const CP of CPData) {
-      if (CP.type == 'clients') {
+      if (CP.type === 'clients') {
         clients.push(CP);
       } else {
         projects.push(CP);

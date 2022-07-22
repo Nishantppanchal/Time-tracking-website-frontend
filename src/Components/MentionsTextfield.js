@@ -203,7 +203,7 @@ class MentionsTextfield extends React.Component {
     for (let key in raw.entityMap) {
       if (
         raw.entityMap[key].type === '#mention' &&
-        raw.entityMap[key].data.mention.newValue == true
+        raw.entityMap[key].data.mention.newValue === true
       ) {
         const name = raw.entityMap[key].data.mention.name;
         raw.entityMap[key].data.mention = tags.find((tag) => tag.name === name);

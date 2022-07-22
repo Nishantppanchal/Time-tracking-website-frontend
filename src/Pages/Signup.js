@@ -125,7 +125,7 @@ function SignUp() {
         }
       }
       // If the field changed is empty
-    } else if (event.target.value != '') {
+    } else if (event.target.value !== '') {
       // Resets the formValidationStatus state for the field to no errors
       setFormValidationStatus({
         ...formValidationStatus,
