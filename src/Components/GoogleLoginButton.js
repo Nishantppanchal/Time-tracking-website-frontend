@@ -1,13 +1,11 @@
-import { GoogleLogin } from '@react-oauth/google';
+import { Button } from '@mui/material';
+import { useGoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { baseURL } from '../Axios';
 import { loginMethodStates, setLoginMethod } from '../Features/LoginMethod';
-import { useGoogleLogin } from '@react-oauth/google';
-import { Button, Icon } from '@mui/material';
-import getTheme from './GetTheme';
 import GoogleIcon from '../SVG/GoogleIcon.svg';
-import { useNavigate } from 'react-router-dom';
 
 function GoogleLoginButton(props) {
   const styles = props.sx ?? {};

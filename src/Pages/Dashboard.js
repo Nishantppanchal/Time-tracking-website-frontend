@@ -1,40 +1,29 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // Import MUI components
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Skeleton from '@mui/material/Skeleton';
-import LoadingButton from '@mui/lab/LoadingButton';
-import './../Styles/Home.css';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import CircularProgress from '@mui/material/CircularProgress';
-import Stack from '@mui/material/Stack';
 import ArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import LoadingButton from '@mui/lab/LoadingButton';
+import { useEffect, useState } from 'react';
+import './../Styles/Home.css';
 // Import axios instance
-import axiosInstance from '../Axios.js';
 // Import fetching components
-import fetchTagsData from '../Components/LoadData/LoadTags';
-import fetchLogs from '../Components/LoadData/LoadLogs';
 import fetchCPData from '../Components/LoadData/LoadCPData';
+import fetchLogs from '../Components/LoadData/LoadLogs';
+import fetchTagsData from '../Components/LoadData/LoadTags';
 // Import redux components
-import { useSelector, useDispatch } from 'react-redux';
-import { addToLoadedLogsNumber, deleteLog } from '../Features/Logs';
+import { useDispatch, useSelector } from 'react-redux';
+import { addToLoadedLogsNumber } from '../Features/Logs';
 // Import custom components
-import LogHeader from '../Components/LogHeader';
 import Header from '../Components/Header';
-import DescriptionWithTagsInput from '../Components/DescriptionWithTags';
+import LogHeader from '../Components/LogHeader';
 import LogsLister from '../Components/LogsLister';
 // Import luxon component
-import { DateTime } from 'luxon';
-import DashboardLoading from '../Loading Components/DashboardLoading';
 import { CssBaseline } from '@mui/material';
+import DashboardLoading from '../Loading Components/DashboardLoading';
 
 function Dashboard() {
   // Creates dispatch function to update redux state
   const dispatch = useDispatch();
   // Create navigate function
-  const navigate = useNavigate();
 
   // Defines all the states
   // Stores data from server
@@ -107,22 +96,6 @@ function Dashboard() {
     // Fetchs more logs
     // setIsMoreLogsLoading is passthrough so that a loading icon can be displayed while data loads
     fetchLogs(setIsMoreLogsLoading);
-  }
-
-  // Handles deleting log
-  function handleLogDelete(id) {
-    // Generates the url to which a request should be sent
-    const url = '/CRUD/logs/' + id + '/';
-    // Sends a delete request to delete the log
-    axiosInstance.delete(url);
-    // Removes the deleted tag from logData
-    dispatch(deleteLog(id));
-  }
-
-  // Handles editing log button click
-  function handleLogEdit(id) {
-    // Dynamically pushes user to edit page of the specific log using it's ID
-    navigate('/logs/edit/' + id);
   }
 
   // If all the data has loaded

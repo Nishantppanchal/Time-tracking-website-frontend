@@ -1,46 +1,45 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // Import React components
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // Import the axios instance
 import axiosInstance from '../Axios';
 // Import MUI components
-import Skeleton from '@mui/material/Skeleton';
-import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import AdapterLuxon from '@mui/lab/AdapterLuxon';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import DatePicker from '@mui/lab/DatePicker';
-import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import Collapse from '@mui/material/Collapse';
-import DoneIcon from '@mui/icons-material/Done';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import Typography from '@mui/material/Typography';
-import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
 import ArrowBackwardIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
-import Stack from '@mui/material/Stack';
-import Paper from '@mui/material/Paper';
-import Modal from '@mui/material/Modal';
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import CalendarMonthIcon from '@mui/icons-material/CalendarToday';
+import DoneIcon from '@mui/icons-material/Done';
+import AdapterLuxon from '@mui/lab/AdapterLuxon';
+import Alert from '@mui/material/Alert';
+import Autocomplete from '@mui/material/Autocomplete';
+import Button from '@mui/material/Button';
+import Collapse from '@mui/material/Collapse';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import Modal from '@mui/material/Modal';
+import Paper from '@mui/material/Paper';
+import Skeleton from '@mui/material/Skeleton';
+import Stack from '@mui/material/Stack';
+import TextField from '@mui/material/TextField';
+import Typography from '@mui/material/Typography';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 // Import custom component
-import DescriptionWithTagsInput from '../Components/DescriptionWithTags';
-import handleDescriptionsAndTagsExtraction from '../Components/DescriptionsAndTagsExtraction';
-import handleNewCP from '../Components/NewCP';
 import CPFilter from '../Components/CPFilter';
+import handleDescriptionsAndTagsExtraction from '../Components/DescriptionsAndTagsExtraction';
+import DescriptionWithTagsInput from '../Components/DescriptionWithTags';
 import Header from '../Components/Header';
+import handleNewCP from '../Components/NewCP';
 // Import fetch components
 import fetchCPData from '../Components/LoadData/LoadCPData';
 import fetchTagsData from '../Components/LoadData/LoadTags';
 // Import redux components
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { updateLog } from '../Features/Logs';
 // Import luxon component
-import { DateTime } from 'luxon';
 import { CssBaseline } from '@mui/material';
+import { DateTime } from 'luxon';
 
 function LogsEditPage() {
   // Gets the id from the URL

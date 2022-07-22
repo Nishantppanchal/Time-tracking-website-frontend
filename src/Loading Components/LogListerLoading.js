@@ -1,11 +1,7 @@
+import { Skeleton } from '@mui/material';
+import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import Divider from '@mui/material/Divider';
-import Box from '@mui/material/Box';
-import { Skeleton } from '@mui/material';
 
 function LogListerLoading() {
   return (

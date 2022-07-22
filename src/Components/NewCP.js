@@ -4,7 +4,7 @@ import axiosInstance from '../Axios';
 import store from '../Store';
 import { addCP } from '../Features/CPData';
 
-// The state CPSelected stateis not directly changed due to there being a delay causing the request to be made before the CPSelected can change
+// The state CPSelected state is not directly changed due to there being a delay causing the request to be made before the CPSelected can change
 
 // Function that handles creation of new client and projects
 async function handleNewCP(CPSelected) {

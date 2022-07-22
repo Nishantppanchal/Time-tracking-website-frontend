@@ -1,41 +1,27 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // Import MUI components
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import Skeleton from '@mui/material/Skeleton';
-import Button from '@mui/material/Button';
 import './../Styles/Home.css';
-import { DataGrid, GridActionsCellItem } from '@mui/x-data-grid';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import CircularProgress from '@mui/material/CircularProgress';
 // Import axios instance
 import axiosInstance from '../Axios.js';
 // Import fetching components
-import fetchTagsData from '../Components/LoadData/LoadTags';
-import fetchLogs from '../Components/LoadData/LoadLogs';
 import fetchCPData from '../Components/LoadData/LoadCPData';
+import fetchTagsData from '../Components/LoadData/LoadTags';
 // Import redux components
-import { useSelector, useDispatch } from 'react-redux';
-import { addToLoadedLogsNumber, deleteLog } from '../Features/Logs';
+import { useDispatch, useSelector } from 'react-redux';
 // Import custom components
-import LogHeader from '../Components/LogHeader';
 import Header from '../Components/Header';
-import DescriptionWithTagsInput from '../Components/DescriptionWithTags';
 // Import luxon component
-import { DateTime } from 'luxon';
 
-import { addAllLogs, setAllLogsLoaded } from '../Features/Logs';
-import LogLister from '../Components/LogsLister';
-import LogListerLoading from '../Loading Components/LogListerLoading';
-import LogsLoading from '../Loading Components/LogsLoading';
 import { CssBaseline } from '@mui/material';
+import LogLister from '../Components/LogsLister';
+import { addAllLogs, setAllLogsLoaded } from '../Features/Logs';
+import LogsLoading from '../Loading Components/LogsLoading';
 
 function Logs() {
   // Creates dispatch function to update redux state
   const dispatch = useDispatch();
   // Create navigate function
-  const navigate = useNavigate();
 
   // Defines all the states
   // Stores data from server

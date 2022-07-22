@@ -3,12 +3,11 @@ import './../Styles/Global.css';
 // Import React components
 import { useNavigate } from 'react-router-dom';
 // Import Material UI components
-import Typography from '@mui/material/Typography';
+import { CssBaseline } from '@mui/material';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
-import Container from '@mui/material/Container';
-import { CssBaseline } from '@mui/material';
+import Typography from '@mui/material/Typography';
 import ModeToggle from '../Components/ModeToggle';
 import ClockIcon from '../SVG/Clock.svg';
 

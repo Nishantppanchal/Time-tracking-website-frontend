@@ -3,10 +3,10 @@ import {
   CssBaseline,
   Grid,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material';
 import { Box } from '@mui/system';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import axiosInstance from '../Axios';
 import Header from '../Components/Header';
 import passwordValidator, { errorsText } from '../Components/PasswordValidator';

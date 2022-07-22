@@ -23,7 +23,7 @@ function passwordValidator(password, retypedPassword) {
   // Sets hasSpecialChar to whether password has atleast one special character
   const hasSpecialChar = /[ `!@#$%^&*()_+\-=\]{};':"\\|,.<>?~]/.test(password);
   // Sets doesMatch to whether password and retyped password are the same
-  const doesMatch = password == retypedPassword;
+  const doesMatch = password === retypedPassword;
 
   // Create a variable error which stores the errors are arrays
   var errors = [];

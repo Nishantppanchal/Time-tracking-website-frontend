@@ -1,39 +1,33 @@
 // Import MUI components
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import ArrowBackwardIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
+import CalendarMonthIcon from '@mui/icons-material/CalendarToday';
+import Autocomplete from '@mui/material/Autocomplete';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
 import Paper from '@mui/material/Paper';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Box from '@mui/material/Box';
 import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import Collapse from '@mui/material/Collapse';
-import Button from '@mui/material/Button';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import CalendarMonthIcon from '@mui/icons-material/CalendarToday';
-import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import ArrowBackwardIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForwardIos';
-import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { CalendarPicker } from '@mui/x-date-pickers/CalendarPicker';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 // Import custom component
-import DescriptionWithTagsInput from './DescriptionWithTags';
-import handleNewCP from './NewCP';
 import CPFilter from './CPFilter';
 import handleDescriptionsAndTagsExtraction from './DescriptionsAndTagsExtraction';
+import DescriptionWithTagsInput from './DescriptionWithTags';
+import handleNewCP from './NewCP';
 // Import axios instance
 import axiosInstance from '../Axios';
 // Import redux components
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addLog } from '../Features/Logs';
 // Import React components
 import { useState } from 'react';
 // Import luxon component
-import { DateTime } from 'luxon';
 import { Modal, Typography } from '@mui/material';
+import { DateTime } from 'luxon';
 
 function LogHeader(props) {
   // Creates dispatch function to update redux state
@@ -57,7 +51,7 @@ function LogHeader(props) {
   const [descriptionRaw, setDescriptionRaw] = useState();
   // Stores the tags selected
   const [tagsSelected, setTagsSelected] = useState([]);
-  // The value inputed by the user in the client and project selection field
+  // The value inputted by the user in the client and project selection field
   const [inputValue, setInputValue] = useState('');
   // Other
   // Allow field clearing on value change

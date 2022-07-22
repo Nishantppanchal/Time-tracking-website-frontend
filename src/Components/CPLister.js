@@ -1,24 +1,20 @@
-import Stack from '@mui/material/Stack';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+import Divider from '@mui/material/Divider';
+import IconButton from '@mui/material/IconButton';
+import Modal from '@mui/material/Modal';
 import Paper from '@mui/material/Paper';
-// Import luxon component
-import { DateTime } from 'luxon';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 
 import { useNavigate } from 'react-router-dom';
 // Import axios instance
 import axiosInstance from '../Axios.js';
 // Import redux components
 import { useDispatch } from 'react-redux';
-import { deleteLog } from '../Features/Logs';
 
-import DescriptionWithTagsInput from './DescriptionWithTags';
 
 import { useState } from 'react';
 

@@ -7,7 +7,7 @@ const initialValue = [];
 export const CPDataSlice = createSlice({
   // Defines slice name
   name: 'CPData',
-  // Sets inital state value
+  // Sets initial state value
   initialState: { value: initialValue },
   // Defines reduces
   reducers: {
@@ -35,7 +35,7 @@ export const CPDataSlice = createSlice({
       // For each client and project in state
       state.value = state.value.map((CP) => {
         // If the it is the client/project we are looking for
-        if (CP.id == action.payload.id && CP.type == action.payload.type) {
+        if (CP.id === action.payload.id && CP.type === action.payload.type) {
           // Return an updated dictionary
           return { ...CP, name: action.payload.name };
         } else {

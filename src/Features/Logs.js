@@ -47,7 +47,7 @@ export const logsSlice = createSlice({
         }),
       };
     },
-    // Defines reducter to update log
+    // Defines reducer to update log
     updateLog: (state, action) => {
       // Findes the index of the log changed
       const index = state.value.logs.findIndex(

@@ -5,7 +5,7 @@ function RequireAuth({ children }) {
   // If the access token is present, render the children
   return localStorage.getItem('access_token') ||
     sessionStorage.getItem('access_token') ? (
-    // Renders the childern
+    // Renders the children
     children
   ) : (
     // Otherwise, if the user is not logged in, redirect to the login page

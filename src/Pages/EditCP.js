@@ -1,39 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 // Import React components
 import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 // Import the axios instance
 import axiosInstance from '../Axios';
 // Import MUI components
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
+import DoneIcon from '@mui/icons-material/Done';
+import Button from '@mui/material/Button';
 import Skeleton from '@mui/material/Skeleton';
 import TextField from '@mui/material/TextField';
-import Autocomplete from '@mui/material/Autocomplete';
-import AdapterLuxon from '@mui/lab/AdapterLuxon';
-import LocalizationProvider from '@mui/lab/LocalizationProvider';
-import DatePicker from '@mui/lab/DatePicker';
-import Button from '@mui/material/Button';
-import Alert from '@mui/material/Alert';
-import Collapse from '@mui/material/Collapse';
-import DoneIcon from '@mui/icons-material/Done';
-import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 // Import custom component
-import DescriptionWithTagsInput from '../Components/DescriptionWithTags';
-import handleDescriptionsAndTagsExtraction from '../Components/DescriptionsAndTagsExtraction';
-import handleNewCP from '../Components/NewCP';
-import CPFilter from '../Components/CPFilter';
 import Header from '../Components/Header';
 // Import fetch components
-import fetchCPData from '../Components/LoadData/LoadCPData';
-import fetchTagsData from '../Components/LoadData/LoadTags';
 // Import redux components
-import { useSelector, useDispatch } from 'react-redux';
-import { updateLog } from '../Features/Logs';
+import { useDispatch } from 'react-redux';
 // Import luxon component
-import { DateTime } from 'luxon';
 import { CssBaseline, Typography } from '@mui/material';
-import { updateCP } from '../Features/CPData';
-import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
+import Paper from '@mui/material/Paper';
+import { updateCP } from '../Features/CPData';
 
 function CPEditPage() {
   const { type, id } = useParams();

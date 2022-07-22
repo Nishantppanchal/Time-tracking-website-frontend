@@ -1,45 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  BarChart,
-  Line,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-  Label,
-  Tooltip,
-  CartesianGrid,
-  Bar,
-  PieChart,
-  Legend,
-  Cell,
-  Pie,
-} from 'recharts';
 
 import Header from '../Components/Header';
 
-import { useState, useEffect, createRef } from 'react';
+import { useEffect, useState } from 'react';
 
+import AddCircleIcon from '@mui/icons-material/AddCircle';
 import {
   CssBaseline,
   Grid,
-  Paper,
-  Skeleton,
-  TextField,
+  Paper, TextField,
   Typography,
-  Zoom,
+  Zoom
 } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import { createFilterOptions } from '@mui/material/Autocomplete';
-import Button from '@mui/material/Button';
+import Autocomplete, { createFilterOptions } from '@mui/material/Autocomplete';
 import Collapse from '@mui/material/Collapse';
-import DownloadIcon from '@mui/icons-material/Download';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import CircularProgress from '@mui/material/CircularProgress';
-import ArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import ArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
-import { Duration, Interval } from 'luxon';
-import { DateTime } from 'luxon';
+import { DateTime, Interval } from 'luxon';
 
 import axiosInstance from '../Axios';
 
@@ -48,25 +24,18 @@ import fetchTagsData from '../Components/LoadData/LoadTags';
 // Import redux components
 import { useDispatch, useSelector } from 'react-redux';
 import getTheme from '../Components/GetTheme';
-import LogsLister from '../Components/LogsLister';
 
-import html2canvas from 'html2canvas';
-import { jsPDF } from 'jspdf';
-import { clearReportData, editReportData } from '../Features/ReportData';
-import { useNavigate } from 'react-router-dom';
-import { toggleMode, toggleToWhite } from '../Features/Mode';
 import LoadingButton from '@mui/lab/LoadingButton';
-import ReportsLoading from '../Loading Components/ReportsLoading';
-import Stack from '@mui/material/Stack';
+import { useNavigate } from 'react-router-dom';
 import Report from '../Components/Report';
+import { clearReportData, editReportData } from '../Features/ReportData';
+import ReportsLoading from '../Loading Components/ReportsLoading';
 
 function Reports() {
   const dispatch = useDispatch();
 
   const animationDuration = 400;
   const theme = getTheme();
-
-  const hoursPieColours = ['#92e492', 'red'];
 
   // Stores tags
   const tagsData = useSelector((state) => state.tags.value);

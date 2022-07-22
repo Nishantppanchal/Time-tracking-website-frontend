@@ -4,31 +4,30 @@ import { useState } from 'react';
 import './../Styles/Global.css';
 import './../Styles/Signup.css';
 // Import Material UI Components
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import InputBase from '@mui/material/InputBase';
-import InputAdornment from '@mui/material/InputAdornment';
 import EmailIcon from '@mui/icons-material/EmailOutlined';
 import VisibilityFilled from '@mui/icons-material/Visibility';
-import Typography from '@mui/material/Typography';
 import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
-import Grid from '@mui/material/Grid';
-import Collapse from '@mui/material/Collapse';
 import Alert from '@mui/material/Alert';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Collapse from '@mui/material/Collapse';
+import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Paper from '@mui/material/Paper';
+import Typography from '@mui/material/Typography';
 // Import React Components
 import { Link, useNavigate } from 'react-router-dom';
 // Import Custom Components
 import passwordValidator from '../Components/PasswordValidator';
 // Import Axios
-import axios from 'axios';
-import { baseURL } from '../Axios';
 import { CssBaseline, TextField } from '@mui/material';
-import ModeToggle from '../Components/ModeToggle';
 import Stack from '@mui/material/Stack';
+import axios from 'axios';
 import { TransitionGroup } from 'react-transition-group';
+import { baseURL } from '../Axios';
 import GoogleLoginButton from '../Components/GoogleLoginButton';
+import ModeToggle from '../Components/ModeToggle';
 
 function SignUp() {
   // Creates navigate function

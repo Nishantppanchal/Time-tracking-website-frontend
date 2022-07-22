@@ -7,13 +7,13 @@ const initialValue = [];
 export const tagsSlice = createSlice({
   // Defines slice name
   name: 'tags',
-  // Sets inital state value
+  // Sets initial state value
   initialState: { value: initialValue },
   // Defines reduces
   reducers: {
     // Defines reducer to load all tags
     loadTags: (state, action) => {
-      // Setes state to action payload
+      // Sets state to action payload
       state.value = action.payload;
     },
     // Defines reducer to add tags

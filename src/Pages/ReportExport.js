@@ -1,68 +1,30 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import {
-  BarChart,
-  Line,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
-  Label,
-  Tooltip,
-  CartesianGrid,
-  Bar,
-  PieChart,
-  Legend,
-  Cell,
-  Pie,
-} from 'recharts';
 
-import Header from '../Components/Header';
 import LoadingButton from '@mui/lab/LoadingButton';
 
-import { useState, useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
+import ImageIcon from '@mui/icons-material/Image';
 import {
   createTheme,
   CssBaseline,
   Grid,
-  Paper,
-  Skeleton,
-  TextField,
-  ThemeProvider,
-  Typography,
-  Zoom,
+  Paper, ThemeProvider
 } from '@mui/material';
-import Autocomplete from '@mui/material/Autocomplete';
-import { createFilterOptions } from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
-import Collapse from '@mui/material/Collapse';
-import DownloadIcon from '@mui/icons-material/Download';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import CircularProgress from '@mui/material/CircularProgress';
-import ArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import ArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import ImageIcon from '@mui/icons-material/Image';
 
-import { Duration, Interval } from 'luxon';
-import { DateTime } from 'luxon';
 
-import axiosInstance from '../Axios';
 
-import fetchCPData from '../Components/LoadData/LoadCPData';
-import fetchTagsData from '../Components/LoadData/LoadTags';
 // Import redux components
 import { useDispatch, useSelector } from 'react-redux';
-import getTheme from '../Components/GetTheme';
-import LogsLister from '../Components/LogsLister';
 
 import html2canvas from 'html2canvas';
 import { jsPDF } from 'jspdf';
 
 import PdfIcon from '@mui/icons-material/PictureAsPdf';
 import { useNavigate } from 'react-router-dom';
-import { restoreMode, toggleToWhite } from '../Features/Mode';
-import { padding } from '@mui/system';
+import { restoreMode } from '../Features/Mode';
 
-import Stack from '@mui/material/Stack';
 
 import { createBrowserHistory } from 'history';
 import { getThemeDict } from '../App';
@@ -76,13 +38,9 @@ function ReportExport() {
 
   const [generatingReport, setGeneratingReport] = useState(false);
 
-  const hoursPieColours = ['#81c784', '#ff5252'];
-
   const reportData = useSelector((state) => state.reportData.value);
   // Stores clients and projects data
   const CPData = useSelector((state) => state.CPData.value);
-
-  const mode = useSelector((state) => state.mode.value);
 
   const history = createBrowserHistory();
 
@@ -90,7 +48,7 @@ function ReportExport() {
     return createTheme(getThemeDict('light'));
   });
 
-  const stopListening = history.listen(({ location, action }) => {
+  const stopListening = history.listen(({ action }) => {
     if (action === 'POP') {
       navigate('/reports', { replace: true });
     }

@@ -1,22 +1,20 @@
 // Import React components
 import React from 'react';
 // Import draft.js components
-import { EditorState, convertToRaw, convertFromRaw } from 'draft-js';
+import { convertFromRaw, convertToRaw, EditorState } from 'draft-js';
 // Import draftJS Plugins components
 import Editor from '@draft-js-plugins/editor';
 import createMentionPlugin, {
   defaultSuggestionsFilter,
 } from '@draft-js-plugins/mention';
 // Import CSS styles
-import editorStyles from './../Styles/EditorStyles.module.css';
 import '@draft-js-plugins/mention/lib/plugin.css';
+import editorStyles from './../Styles/EditorStyles.module.css';
 
 import Typography from '@mui/material/Typography';
 import getTheme from './GetTheme';
 
 import { connect } from 'react-redux';
-import { makeStyles, withStyles } from '@mui/styles';
-import { Paper } from '@mui/material';
 
 // Create custom react class component
 class MentionsTextfield extends React.Component {
@@ -183,8 +181,8 @@ class MentionsTextfield extends React.Component {
     });
 
     if (!isOpen) {
-      this.onChange(this.state.editorState)
-    } 
+      this.onChange(this.state.editorState);
+    }
   };
 
   // Handles clearing the textfield
@@ -197,15 +195,16 @@ class MentionsTextfield extends React.Component {
   };
 
   updateTags = (tags) => {
-    // Sets states to contain with new editorState
-    const { editorState } = this.state;
     // get the content in the textfield
     const contentState = this.state.editorState.getCurrentContent();
     // Converts the contentState to raw javascript
     const raw = convertToRaw(contentState);
 
     for (let key in raw.entityMap) {
-      if (raw.entityMap[key].type === '#mention' && raw.entityMap[key].data.mention.newValue == true) {
+      if (
+        raw.entityMap[key].type === '#mention' &&
+        raw.entityMap[key].data.mention.newValue == true
+      ) {
         const name = raw.entityMap[key].data.mention.name;
         raw.entityMap[key].data.mention = tags.find((tag) => tag.name === name);
       }

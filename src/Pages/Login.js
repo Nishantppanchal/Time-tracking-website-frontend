@@ -2,40 +2,33 @@
 import './../Styles/Global.css';
 import './../Styles/Login.css';
 // Import Material UI Components
-import Box from '@mui/material/Box';
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import InputBase from '@mui/material/InputBase';
-import InputAdornment from '@mui/material/InputAdornment';
 import EmailIcon from '@mui/icons-material/EmailOutlined';
 import VisibilityFilled from '@mui/icons-material/Visibility';
-import Typography from '@mui/material/Typography';
 import VisibilityOutlined from '@mui/icons-material/VisibilityOutlined';
-import Stack from '@mui/material/Stack';
-import Collapse from '@mui/material/Collapse';
 import Alert from '@mui/material/Alert';
-import FormControlLabel from '@mui/material/FormControlLabel';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
+import Collapse from '@mui/material/Collapse';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import Grid from '@mui/material/Grid';
+import IconButton from '@mui/material/IconButton';
+import InputAdornment from '@mui/material/InputAdornment';
+import Paper from '@mui/material/Paper';
+import Stack from '@mui/material/Stack';
+import Typography from '@mui/material/Typography';
 // Import React Components
-import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 // Import Axios
-import axios from 'axios';
-import axiosInstance from '../Axios';
-import { baseURL } from '../Axios';
 import { CssBaseline, TextField } from '@mui/material';
 import GoogleLoginButton from '../Components/GoogleLoginButton';
-import { useDispatch } from 'react-redux';
-import { loginMethodStates, setLoginMethod } from '../Features/LoginMethod';
-import ModeToggle from '../Components/ModeToggle';
 import LoginRequest from '../Components/LoginRequest';
+import ModeToggle from '../Components/ModeToggle';
 
 function Login() {
   // Creates a navigate function
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   // Sets all the state
   // Store the email and password field

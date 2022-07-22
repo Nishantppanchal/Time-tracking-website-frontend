@@ -1,40 +1,28 @@
 // Import MUI components
-import Toolbar from '@mui/material/Toolbar';
 import AppBar from '@mui/material/AppBar';
-import Button from '@mui/material/Button';
-import Divider from '@mui/material/Divider';
 import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Toolbar from '@mui/material/Toolbar';
 // Import React components
 import { useNavigate } from 'react-router-dom';
 // Import axios instance
-import AxiosInstance from '../Axios';
 import {
-  Icon,
-  IconButton,
-  Switch,
-  ToggleButton,
-  ToggleButtonGroup,
-  Typography,
+  Icon
 } from '@mui/material';
-import { getMode } from '../App';
+import AxiosInstance from '../Axios';
 
-import { useState } from 'react';
 
 import { useDispatch, useSelector } from 'react-redux';
 
-import LightModeIcon from '@mui/icons-material/LightMode';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import { clearMode, toggleMode } from '../Features/Mode';
-import Brightness4 from '@mui/icons-material/Brightness4';
-import { clearLoginMethod, loginMethodStates } from '../Features/LoginMethod';
 import { googleLogout } from '@react-oauth/google';
-import ModeToggle from './ModeToggle';
 import { clearCP } from '../Features/CPData';
+import { clearLoginMethod, loginMethodStates } from '../Features/LoginMethod';
 import { clearLogs } from '../Features/Logs';
+import { clearMode, toggleMode } from '../Features/Mode';
 import { clearReportData } from '../Features/ReportData';
 import { clearTags } from '../Features/Tags';
-import { clearTheme } from '../Features/Theme';
 import ClockIcon from '../SVG/Clock.svg';
+import ModeToggle from './ModeToggle';
 
 function Header(props) {
   // Defines the navigate function used to redirect to the other pages
@@ -42,8 +30,6 @@ function Header(props) {
   const dispatch = useDispatch();
 
   const loginMethod = useSelector((state) => state.loginMethod.value);
-
-  const mode = useSelector((state) => state.mode.value);
 
   // Handles redirecting to the dashboard page
   function handleGoToDashboard(event) {
@@ -149,12 +135,6 @@ function Header(props) {
     navigate('/login');
   }
 
-  function handleChangeMode(event, newMode) {
-    event.preventDefault();
-    if (newMode !== null) {
-      dispatch(toggleMode());
-    }
-  }
 
   // This is the JSX that will be rendered
   return (

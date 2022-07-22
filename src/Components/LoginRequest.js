@@ -1,7 +1,7 @@
 import axios from 'axios';
-import store from '../Store';
 import axiosInstance, { baseURL } from '../Axios';
 import { loginMethodStates, setLoginMethod } from '../Features/LoginMethod';
+import store from '../Store';
 
 function LoginRequest(
   inputData,

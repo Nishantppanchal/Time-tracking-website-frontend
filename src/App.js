@@ -1,24 +1,21 @@
 // Import React components
-import React, { Suspense, lazy, useState } from 'react';
-import { render } from 'react-dom';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import React, { lazy, Suspense } from 'react';
+import { Route, Routes } from 'react-router-dom';
 // Import material UI components
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { StyledEngineProvider } from '@mui/material/styles';
 import Skeleton from '@mui/material/Skeleton';
+import { createTheme, StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 // Import custom components
 import RequireAuth from './Components/RequireAuth';
-import Entry from './Pages/Entry';
-import Login from './Pages/Login';
-import SignUp from './Pages/Signup';
+import ClientsAndProjectsLoading from './Loading Components/ClientsAndProjectsLoading';
 import DashboardLoading from './Loading Components/DashboardLoading';
 import LogsLoading from './Loading Components/LogsLoading';
-import ClientsAndProjectsLoading from './Loading Components/ClientsAndProjectsLoading';
+import Entry from './Pages/Entry';
+import Login from './Pages/Login';
 import ReportPDF from './Pages/ReportExport';
+import SignUp from './Pages/Signup';
 
-import { useSelector } from 'react-redux';
 import { useMemo } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setTheme } from './Features/Theme';
 
 import themeParser from './Components/ThemeToCSS';
@@ -277,3 +274,4 @@ function App() {
 
 export default App;
 export { getThemeDict };
+
