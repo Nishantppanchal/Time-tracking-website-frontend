@@ -1,10 +1,10 @@
 
-# Trackable
+# Trackable Frontend
 Trackable is a  web app that allows users to be able to track how much time they spend on projects or working for clients.
 
 The site is hosted on: https://dashboard.heroku.com/apps/time-tracking-reactjs
 
-The front is developed in Reactjs.
+The frontend is developed in Reactjs.
 
 ## Packages used
 * [draft-js-plugins](https://www.draft-js-plugins.com/)
