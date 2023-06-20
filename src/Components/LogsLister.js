@@ -25,6 +25,8 @@ import { useMemo, useState } from 'react';
 import { Collapse } from '@mui/material';
 import { TransitionGroup } from 'react-transition-group';
 
+import { Duration } from 'luxon';
+
 function LogLister(props) {
   const editable = props.edit ?? true;
 
@@ -136,7 +138,9 @@ function LogLister(props) {
                   )}
                 </Typography>
                 <Typography variant='body1' sx={{ width: '15%' }}>
-                  {log.time}
+                  {Duration.fromObject({
+                    minutes: log.time,
+                  }).toFormat("h'h' m'm'")}
                 </Typography>
                 <Typography variant='body1' sx={{ width: '25%' }}>
                   {log.client

@@ -18,6 +18,7 @@ function fetchTagsData(setIsTagsDataLoading) {
     })
     // Handle error
     .catch((error) => {
+      console.log(error)
       // If the access token is invalid
       if (
         error.response.data.detail ===
