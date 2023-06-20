@@ -1,0 +1,35 @@
+{
+  "files": {
+    "main.css": "/Time-tracking-website-frontend/static/css/main.6c119cec.css",
+    "main.js": "/Time-tracking-website-frontend/static/js/main.642089d6.js",
+    "static/js/186.25626e04.chunk.js": "/Time-tracking-website-frontend/static/js/186.25626e04.chunk.js",
+    "static/js/501.6fee0f9c.chunk.js": "/Time-tracking-website-frontend/static/js/501.6fee0f9c.chunk.js",
+    "static/js/634.ecdd9262.chunk.js": "/Time-tracking-website-frontend/static/js/634.ecdd9262.chunk.js",
+    "static/js/974.29122bc1.chunk.js": "/Time-tracking-website-frontend/static/js/974.29122bc1.chunk.js",
+    "static/js/128.bd1ffd41.chunk.js": "/Time-tracking-website-frontend/static/js/128.bd1ffd41.chunk.js",
+    "static/js/582.7960b18b.chunk.js": "/Time-tracking-website-frontend/static/js/582.7960b18b.chunk.js",
+    "static/js/703.1caa89a9.chunk.js": "/Time-tracking-website-frontend/static/js/703.1caa89a9.chunk.js",
+    "static/js/598.d4ad7391.chunk.js": "/Time-tracking-website-frontend/static/js/598.d4ad7391.chunk.js",
+    "static/js/688.4c952387.chunk.js": "/Time-tracking-website-frontend/static/js/688.4c952387.chunk.js",
+    "static/js/314.3f97a5d7.chunk.js": "/Time-tracking-website-frontend/static/js/314.3f97a5d7.chunk.js",
+    "static/media/Clock.svg": "/Time-tracking-website-frontend/static/media/Clock.2a68b46425ed99299f4b04f822c39d1f.svg",
+    "index.html": "/Time-tracking-website-frontend/index.html",
+    "static/media/GoogleIcon.svg": "/Time-tracking-website-frontend/static/media/GoogleIcon.9a7800d06783d80a1c12249a8ca58e9d.svg",
+    "main.6c119cec.css.map": "/Time-tracking-website-frontend/static/css/main.6c119cec.css.map",
+    "main.642089d6.js.map": "/Time-tracking-website-frontend/static/js/main.642089d6.js.map",
+    "186.25626e04.chunk.js.map": "/Time-tracking-website-frontend/static/js/186.25626e04.chunk.js.map",
+    "501.6fee0f9c.chunk.js.map": "/Time-tracking-website-frontend/static/js/501.6fee0f9c.chunk.js.map",
+    "634.ecdd9262.chunk.js.map": "/Time-tracking-website-frontend/static/js/634.ecdd9262.chunk.js.map",
+    "974.29122bc1.chunk.js.map": "/Time-tracking-website-frontend/static/js/974.29122bc1.chunk.js.map",
+    "128.bd1ffd41.chunk.js.map": "/Time-tracking-website-frontend/static/js/128.bd1ffd41.chunk.js.map",
+    "582.7960b18b.chunk.js.map": "/Time-tracking-website-frontend/static/js/582.7960b18b.chunk.js.map",
+    "703.1caa89a9.chunk.js.map": "/Time-tracking-website-frontend/static/js/703.1caa89a9.chunk.js.map",
+    "598.d4ad7391.chunk.js.map": "/Time-tracking-website-frontend/static/js/598.d4ad7391.chunk.js.map",
+    "688.4c952387.chunk.js.map": "/Time-tracking-website-frontend/static/js/688.4c952387.chunk.js.map",
+    "314.3f97a5d7.chunk.js.map": "/Time-tracking-website-frontend/static/js/314.3f97a5d7.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.6c119cec.css",
+    "static/js/main.642089d6.js"
+  ]
+}
