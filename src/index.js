@@ -1,7 +1,7 @@
 // Import React components
 import React from 'react';
 import { render } from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { HashRouter } from "react-router-dom";
 // Import material UI components
 // Import redux components
 import { Provider } from 'react-redux';
@@ -11,11 +11,11 @@ import App from './App';
 
 // Components to render
 render(
-  <BrowserRouter>
+  <HashRouter>
     {/* Provides redux global state to all components */}
     <Provider store={store}>
       <App />
     </Provider>
-  </BrowserRouter>,
+  </HashRouter>,
   document.getElementById('root')
 );
